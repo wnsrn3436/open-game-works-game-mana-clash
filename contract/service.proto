@@ -1,0 +1,39 @@
+syntax = "proto3";
+package game;
+
+import "ogw/options.proto";
+
+option (ogw.core_errors) = "StartPlaySession:GAME_ERROR_OPPONENT_NOT_FOUND,GAME_ERROR_OPPONENT_LOCKED";
+
+service Game {
+}
+
+// What one battle against a CPU opponent starts from. `prepare_play_session` builds it from the opponent row
+// (`level_id`) and `ProgressUserState`; the client simulation shuffles both decks with `seed`.
+message PlaySessionLoadout {
+  // The `opponent` ID value of the battle.
+  int32 opponent_id = 1;
+  // `card` ID values of the player deck, one entry per copy.
+  repeated int32 player_deck_ids = 2;
+  // `card` ID values of the opponent deck, one entry per copy.
+  repeated int32 opponent_deck_ids = 3;
+  // Base of the simulation random (`play_session_simulation`).
+  int64 seed = 4;
+}
+
+// The result of one finished battle. The client simulation decides it; `verify_play_session` checks it against the
+// opponent row and `game_setting` before `apply_play_session` counts it and gives the first-win reward.
+message PlaySessionResult {
+  // The opponent hero reached 0 health.
+  bool won = 1;
+  // The player gave up the battle from the pause popup.
+  bool conceded = 2;
+  // Turns played, both sides counted. The player's first turn is 1.
+  int32 turns = 3 [(ogw.v) = {min: 0, max: 1000}];
+  // Health of the player hero at the end.
+  int32 player_health = 4 [(ogw.v) = {min: 0, max: 1000}];
+  // Health of the opponent hero at the end.
+  int32 opponent_health = 5 [(ogw.v) = {min: 0, max: 1000}];
+  // Cards the player played.
+  int32 cards_played = 6 [(ogw.v) = {min: 0, max: 1000}];
+}

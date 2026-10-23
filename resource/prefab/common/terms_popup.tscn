@@ -1,0 +1,321 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://core/auth_core/terms_popup.gd" id="1_script"]
+[ext_resource type="Script" path="res://core/ui_core/ui_button.gd" id="2_script"]
+[ext_resource type="Script" path="res://common/common_terms_hint.gd" id="3_script"]
+[ext_resource type="Script" path="res://common/common_terms_agree_all.gd" id="4_script"]
+[ext_resource type="Script" path="res://core/ui_core/ui_anchor.gd" id="5_script"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/button.png" id="tex_nine_slice_ui_button"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/glow_ring.png" id="tex_nine_slice_ui_glow_ring"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/panel_frame.png" id="tex_nine_slice_ui_panel_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/name_plate.png" id="tex_nine_slice_ui_name_plate"]
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+
+[sub_resource type="StyleBoxTexture" id="btn_hover"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.18, 1.12, 1.02, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.78, 0.72, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_focus"]
+expand_margin_left = 6.0
+expand_margin_top = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 6.0
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+modulate_color = Color(1, 0.878, 0.4, 1)
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="btn_disabled"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.5, 0.5, 0.52, 0.9)
+
+[sub_resource type="StyleBoxTexture" id="frame"]
+texture = ExtResource("tex_nine_slice_ui_panel_frame")
+texture_margin_left = 56
+texture_margin_top = 56
+texture_margin_right = 56
+texture_margin_bottom = 56
+
+[sub_resource type="StyleBoxTexture" id="plate"]
+content_margin_left = 28.0
+content_margin_right = 28.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="Gradient" id="box_off_gradient"]
+offsets = PackedFloat32Array(0, 0.62, 0.7, 1)
+colors = PackedColorArray(0.078, 0.067, 0.059, 1, 0.078, 0.067, 0.059, 1, 0.91, 0.722, 0.29, 1, 0.91, 0.722, 0.29, 1)
+
+[sub_resource type="GradientTexture2D" id="box_off"]
+gradient = SubResource("box_off_gradient")
+width = 44
+height = 44
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="box_on_gradient"]
+offsets = PackedFloat32Array(0, 0.42, 0.5, 0.62, 0.7, 1)
+colors = PackedColorArray(1, 0.827, 0.302, 1, 1, 0.827, 0.302, 1, 0.078, 0.067, 0.059, 1, 0.078, 0.067, 0.059, 1, 1, 0.827, 0.302, 1, 1, 0.827, 0.302, 1)
+
+[sub_resource type="GradientTexture2D" id="box_on"]
+gradient = SubResource("box_on_gradient")
+width = 44
+height = 44
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StyleBoxTexture" id="btn_on"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.1, 1.05, 0.75, 1)
+
+[node name="TermsPopup" type="Control" node_paths=PackedStringArray("title_label", "terms_toggle", "privacy_toggle", "terms_view_button", "privacy_view_button", "confirm_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+dim = true
+title_label = NodePath("Frame/Box/Title")
+terms_toggle = NodePath("Frame/Box/TermsRow/Terms")
+privacy_toggle = NodePath("Frame/Box/PrivacyRow/Privacy")
+terms_view_button = NodePath("Frame/Box/TermsRow/TermsView")
+privacy_view_button = NodePath("Frame/Box/PrivacyRow/PrivacyView")
+confirm_button = NodePath("Frame/Box/Confirm")
+
+[node name="Frame" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -470.0
+offset_top = -360.0
+offset_right = 470.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("frame")
+
+[node name="Box" type="VBoxContainer" parent="Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 48.0
+offset_top = 40.0
+offset_right = -48.0
+offset_bottom = -40.0
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="Frame/Box"]
+layout_mode = 2
+autowrap_mode = 3
+theme_override_colors/font_color = Color(0.91, 0.722, 0.29, 1)
+theme_override_font_sizes/font_size = 52
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AgreeAll" type="CheckBox" parent="Frame/Box" node_paths=PackedStringArray("terms_toggle", "privacy_toggle")]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_constants/h_separation = 20
+theme_override_font_sizes/font_size = 34
+theme_override_icons/checked = SubResource("box_on")
+theme_override_icons/unchecked = SubResource("box_off")
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_on")
+theme_override_styles/hover_pressed = SubResource("btn_on")
+theme_override_styles/focus = SubResource("btn_focus")
+autowrap_mode = 3
+script = ExtResource("4_script")
+terms_toggle = NodePath("../TermsRow/Terms")
+privacy_toggle = NodePath("../PrivacyRow/Privacy")
+
+[node name="UIButton" type="Node" parent="Frame/Box/AgreeAll"]
+script = ExtResource("2_script")
+
+[node name="UIAnchor" type="Node" parent="Frame/Box/AgreeAll"]
+script = ExtResource("5_script")
+anchor_name = "terms_agree_all"
+
+[node name="TermsRow" type="HBoxContainer" parent="Frame/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Terms" type="CheckBox" parent="Frame/Box/TermsRow"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_constants/h_separation = 20
+theme_override_font_sizes/font_size = 32
+theme_override_icons/checked = SubResource("box_on")
+theme_override_icons/unchecked = SubResource("box_off")
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_on")
+theme_override_styles/hover_pressed = SubResource("btn_on")
+theme_override_styles/focus = SubResource("btn_focus")
+autowrap_mode = 3
+
+[node name="UIButton" type="Node" parent="Frame/Box/TermsRow/Terms"]
+script = ExtResource("2_script")
+
+[node name="TermsView" type="Button" parent="Frame/Box/TermsRow"]
+custom_minimum_size = Vector2(170, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.722, 0.29, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Frame/Box/TermsRow/TermsView"]
+script = ExtResource("2_script")
+
+[node name="PrivacyRow" type="HBoxContainer" parent="Frame/Box"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Privacy" type="CheckBox" parent="Frame/Box/PrivacyRow"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_constants/h_separation = 20
+theme_override_font_sizes/font_size = 32
+theme_override_icons/checked = SubResource("box_on")
+theme_override_icons/unchecked = SubResource("box_off")
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_on")
+theme_override_styles/hover_pressed = SubResource("btn_on")
+theme_override_styles/focus = SubResource("btn_focus")
+autowrap_mode = 3
+
+[node name="UIButton" type="Node" parent="Frame/Box/PrivacyRow/Privacy"]
+script = ExtResource("2_script")
+
+[node name="PrivacyView" type="Button" parent="Frame/Box/PrivacyRow"]
+custom_minimum_size = Vector2(170, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.722, 0.29, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Frame/Box/PrivacyRow/PrivacyView"]
+script = ExtResource("2_script")
+
+[node name="AgreeHint" type="Label" parent="Frame/Box" node_paths=PackedStringArray("terms_toggle", "privacy_toggle", "confirm_button")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+script = ExtResource("3_script")
+terms_toggle = NodePath("../TermsRow/Terms")
+privacy_toggle = NodePath("../PrivacyRow/Privacy")
+confirm_button = NodePath("../Confirm")
+
+[node name="Confirm" type="Button" parent="Frame/Box"]
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.62, 0.659, 0.749, 0.6)
+theme_override_styles/disabled = SubResource("btn_disabled")
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+autowrap_mode = 3
+
+[node name="UIButton" type="Node" parent="Frame/Box/Confirm"]
+script = ExtResource("2_script")
+
+[node name="UIAnchor" type="Node" parent="Frame/Box/Confirm"]
+script = ExtResource("5_script")
+anchor_name = "terms_confirm"

@@ -1,0 +1,454 @@
+{
+  "app_icon/main": {
+    "path": "res://resource/app_icon/main.png",
+    "variants": 1
+  },
+  "splash/main": {
+    "path": "res://resource/splash/main.png",
+    "variants": 1
+  },
+  "font/main": {
+    "path": "res://resource/font/main.ttf",
+    "variants": 1
+  },
+  "background/battle_board": {
+    "path": "res://resource/background/battle_board.png",
+    "variants": 1
+  },
+  "background/lobby": {
+    "path": "res://resource/background/lobby.png",
+    "variants": 1
+  },
+  "image/card_back": {
+    "path": "res://resource/image/card_back.png",
+    "variants": 1
+  },
+  "image/hero_player": {
+    "path": "res://resource/image/hero_player.png",
+    "variants": 1
+  },
+  "image/card_ember_imp": {
+    "path": "res://resource/image/card_ember_imp.png",
+    "variants": 1
+  },
+  "image/card_moss_guard": {
+    "path": "res://resource/image/card_moss_guard.png",
+    "variants": 1
+  },
+  "image/card_mana_bolt": {
+    "path": "res://resource/image/card_mana_bolt.png",
+    "variants": 1
+  },
+  "image/card_gale_hound": {
+    "path": "res://resource/image/card_gale_hound.png",
+    "variants": 1
+  },
+  "image/card_crystal_turtle": {
+    "path": "res://resource/image/card_crystal_turtle.png",
+    "variants": 1
+  },
+  "image/card_apprentice_scholar": {
+    "path": "res://resource/image/card_apprentice_scholar.png",
+    "variants": 1
+  },
+  "image/card_blessing": {
+    "path": "res://resource/image/card_blessing.png",
+    "variants": 1
+  },
+  "image/card_iron_wolf": {
+    "path": "res://resource/image/card_iron_wolf.png",
+    "variants": 1
+  },
+  "image/card_dawn_knight": {
+    "path": "res://resource/image/card_dawn_knight.png",
+    "variants": 1
+  },
+  "image/card_herb_healer": {
+    "path": "res://resource/image/card_herb_healer.png",
+    "variants": 1
+  },
+  "image/card_ash_wraith": {
+    "path": "res://resource/image/card_ash_wraith.png",
+    "variants": 1
+  },
+  "image/card_insight": {
+    "path": "res://resource/image/card_insight.png",
+    "variants": 1
+  },
+  "image/card_lightning_lance": {
+    "path": "res://resource/image/card_lightning_lance.png",
+    "variants": 1
+  },
+  "image/card_storm_rider": {
+    "path": "res://resource/image/card_storm_rider.png",
+    "variants": 1
+  },
+  "image/card_magma_golem": {
+    "path": "res://resource/image/card_magma_golem.png",
+    "variants": 1
+  },
+  "image/card_war_drummer": {
+    "path": "res://resource/image/card_war_drummer.png",
+    "variants": 1
+  },
+  "image/card_firestorm": {
+    "path": "res://resource/image/card_firestorm.png",
+    "variants": 1
+  },
+  "image/card_elder_treant": {
+    "path": "res://resource/image/card_elder_treant.png",
+    "variants": 1
+  },
+  "image/card_flame_wyvern": {
+    "path": "res://resource/image/card_flame_wyvern.png",
+    "variants": 1
+  },
+  "image/card_sky_colossus": {
+    "path": "res://resource/image/card_sky_colossus.png",
+    "variants": 1
+  },
+  "image/opp_apprentice": {
+    "path": "res://resource/image/opp_apprentice.png",
+    "variants": 1
+  },
+  "image/opp_warden": {
+    "path": "res://resource/image/opp_warden.png",
+    "variants": 1
+  },
+  "image/opp_archmage": {
+    "path": "res://resource/image/opp_archmage.png",
+    "variants": 1
+  },
+  "bgm/lobby": {
+    "path": "res://resource/bgm/lobby.ogg",
+    "variants": 1
+  },
+  "bgm/battle": {
+    "path": "res://resource/bgm/battle.ogg",
+    "variants": 1
+  },
+  "sfx/ui_click": {
+    "path": "res://resource/sfx/ui_click.wav",
+    "variants": 2
+  },
+  "sfx/card_play": {
+    "path": "res://resource/sfx/card_play.wav",
+    "variants": 2
+  },
+  "sfx/card_draw": {
+    "path": "res://resource/sfx/card_draw.wav",
+    "variants": 2
+  },
+  "sfx/spell_cast": {
+    "path": "res://resource/sfx/spell_cast.wav",
+    "variants": 1
+  },
+  "sfx/attack_hit": {
+    "path": "res://resource/sfx/attack_hit.wav",
+    "variants": 3
+  },
+  "sfx/hero_hit": {
+    "path": "res://resource/sfx/hero_hit.wav",
+    "variants": 2
+  },
+  "sfx/minion_death": {
+    "path": "res://resource/sfx/minion_death.wav",
+    "variants": 1
+  },
+  "sfx/heal": {
+    "path": "res://resource/sfx/heal.wav",
+    "variants": 1
+  },
+  "sfx/ward_break": {
+    "path": "res://resource/sfx/ward_break.wav",
+    "variants": 1
+  },
+  "sfx/buff": {
+    "path": "res://resource/sfx/buff.wav",
+    "variants": 1
+  },
+  "sfx/your_turn": {
+    "path": "res://resource/sfx/your_turn.wav",
+    "variants": 1
+  },
+  "sfx/end_turn": {
+    "path": "res://resource/sfx/end_turn.wav",
+    "variants": 1
+  },
+  "sfx/victory": {
+    "path": "res://resource/sfx/victory.wav",
+    "variants": 1
+  },
+  "sfx/defeat": {
+    "path": "res://resource/sfx/defeat.wav",
+    "variants": 1
+  },
+  "sfx/reward": {
+    "path": "res://resource/sfx/reward.wav",
+    "variants": 1
+  },
+  "sfx/error": {
+    "path": "res://resource/sfx/error.wav",
+    "variants": 1
+  },
+  "scene/title/title": {
+    "path": "res://resource/scene/title/title.tscn",
+    "variants": 1
+  },
+  "scene/lobby/lobby": {
+    "path": "res://resource/scene/lobby/lobby.tscn",
+    "variants": 1
+  },
+  "scene/battle/battle": {
+    "path": "res://resource/scene/battle/battle.tscn",
+    "variants": 1
+  },
+  "prefab/common/loading_screen": {
+    "path": "res://resource/prefab/common/loading_screen.tscn",
+    "variants": 1
+  },
+  "prefab/common/terms_popup": {
+    "path": "res://resource/prefab/common/terms_popup.tscn",
+    "variants": 1
+  },
+  "prefab/lobby/lobby_panel": {
+    "path": "res://resource/prefab/lobby/lobby_panel.tscn",
+    "variants": 1
+  },
+  "prefab/lobby/deck_panel": {
+    "path": "res://resource/prefab/lobby/deck_panel.tscn",
+    "variants": 1
+  },
+  "prefab/lobby/option_panel": {
+    "path": "res://resource/prefab/lobby/option_panel.tscn",
+    "variants": 1
+  },
+  "prefab/battle/board_panel": {
+    "path": "res://resource/prefab/battle/board_panel.tscn",
+    "variants": 1
+  },
+  "prefab/battle/result_panel": {
+    "path": "res://resource/prefab/battle/result_panel.tscn",
+    "variants": 1
+  },
+  "prefab/battle/pause_popup": {
+    "path": "res://resource/prefab/battle/pause_popup.tscn",
+    "variants": 1
+  },
+  "tween/battle/summon": {
+    "path": "res://resource/tween/battle/summon.tres",
+    "variants": 1
+  },
+  "tween/battle/attack_lunge": {
+    "path": "res://resource/tween/battle/attack_lunge.tres",
+    "variants": 1
+  },
+  "tween/battle/hit": {
+    "path": "res://resource/tween/battle/hit.tres",
+    "variants": 1
+  },
+  "tween/battle/number_pop": {
+    "path": "res://resource/tween/battle/number_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/death": {
+    "path": "res://resource/tween/battle/death.tres",
+    "variants": 1
+  },
+  "tween/battle/card_reveal": {
+    "path": "res://resource/tween/battle/card_reveal.tres",
+    "variants": 1
+  },
+  "tween/battle/turn_banner": {
+    "path": "res://resource/tween/battle/turn_banner.tres",
+    "variants": 1
+  },
+  "tween/battle/buff_pop": {
+    "path": "res://resource/tween/battle/buff_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/hand_draw": {
+    "path": "res://resource/tween/battle/hand_draw.tres",
+    "variants": 1
+  },
+  "tween/battle/board_shake": {
+    "path": "res://resource/tween/battle/board_shake.tres",
+    "variants": 1
+  },
+  "tween/battle/glow_pulse": {
+    "path": "res://resource/tween/battle/glow_pulse.tres",
+    "variants": 1
+  },
+  "tween/battle/reward_reveal": {
+    "path": "res://resource/tween/battle/reward_reveal.tres",
+    "variants": 1
+  },
+  "tween/battle/heal_pop": {
+    "path": "res://resource/tween/battle/heal_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/hero_break": {
+    "path": "res://resource/tween/battle/hero_break.tres",
+    "variants": 1
+  },
+  "tween/battle/ward_break": {
+    "path": "res://resource/tween/battle/ward_break.tres",
+    "variants": 1
+  },
+  "tween/battle/victory_flash": {
+    "path": "res://resource/tween/battle/victory_flash.tres",
+    "variants": 1
+  },
+  "particle/battle/summon_burst": {
+    "path": "res://resource/particle/battle/summon_burst.tscn",
+    "variants": 1
+  },
+  "particle/battle/impact": {
+    "path": "res://resource/particle/battle/impact.tscn",
+    "variants": 1
+  },
+  "particle/battle/spell_burst": {
+    "path": "res://resource/particle/battle/spell_burst.tscn",
+    "variants": 1
+  },
+  "particle/battle/buff_sparkle": {
+    "path": "res://resource/particle/battle/buff_sparkle.tscn",
+    "variants": 1
+  },
+  "particle/battle/hero_shatter": {
+    "path": "res://resource/particle/battle/hero_shatter.tscn",
+    "variants": 1
+  },
+  "tween/battle/attack_return": {
+    "path": "res://resource/tween/battle/attack_return.tres",
+    "variants": 1
+  },
+  "tween/battle/press_pop": {
+    "path": "res://resource/tween/battle/press_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/impact_shake": {
+    "path": "res://resource/tween/battle/impact_shake.tres",
+    "variants": 1
+  },
+  "tween/battle/land_thump": {
+    "path": "res://resource/tween/battle/land_thump.tres",
+    "variants": 1
+  },
+  "tween/battle/stat_pop": {
+    "path": "res://resource/tween/battle/stat_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/defeat_flash": {
+    "path": "res://resource/tween/battle/defeat_flash.tres",
+    "variants": 1
+  },
+  "nine_slice/ui/panel_frame": {
+    "path": "res://resource/nine_slice/ui/panel_frame.png",
+    "variants": 1
+  },
+  "nine_slice/ui/button": {
+    "path": "res://resource/nine_slice/ui/button.png",
+    "variants": 1
+  },
+  "nine_slice/ui/glow_ring": {
+    "path": "res://resource/nine_slice/ui/glow_ring.png",
+    "variants": 1
+  },
+  "nine_slice/ui/name_plate": {
+    "path": "res://resource/nine_slice/ui/name_plate.png",
+    "variants": 1
+  },
+  "nine_slice/ui/inset": {
+    "path": "res://resource/nine_slice/ui/inset.png",
+    "variants": 1
+  },
+  "nine_slice/battle/card_frame": {
+    "path": "res://resource/nine_slice/battle/card_frame.png",
+    "variants": 1
+  },
+  "image/battle/minion_frame": {
+    "path": "res://resource/image/battle/minion_frame.png",
+    "variants": 1
+  },
+  "image/battle/minion_guard_frame": {
+    "path": "res://resource/image/battle/minion_guard_frame.png",
+    "variants": 1
+  },
+  "image/battle/minion_glow": {
+    "path": "res://resource/image/battle/minion_glow.png",
+    "variants": 1
+  },
+  "image/battle/ward_bubble": {
+    "path": "res://resource/image/battle/ward_bubble.png",
+    "variants": 1
+  },
+  "image/battle/hero_frame": {
+    "path": "res://resource/image/battle/hero_frame.png",
+    "variants": 1
+  },
+  "icon/battle/gem_mana": {
+    "path": "res://resource/icon/battle/gem_mana.png",
+    "variants": 1
+  },
+  "icon/battle/gem_attack": {
+    "path": "res://resource/icon/battle/gem_attack.png",
+    "variants": 1
+  },
+  "icon/battle/gem_health": {
+    "path": "res://resource/icon/battle/gem_health.png",
+    "variants": 1
+  },
+  "icon/battle/mana_crystal": {
+    "path": "res://resource/icon/battle/mana_crystal.png",
+    "variants": 1
+  },
+  "tween/battle/card_fly": {
+    "path": "res://resource/tween/battle/card_fly.tres",
+    "variants": 1
+  },
+  "tween/battle/end_banner": {
+    "path": "res://resource/tween/battle/end_banner.tres",
+    "variants": 1
+  },
+  "tween/battle/card_lift": {
+    "path": "res://resource/tween/battle/card_lift.tres",
+    "variants": 1
+  },
+  "tween/battle/summon_settle": {
+    "path": "res://resource/tween/battle/summon_settle.tres",
+    "variants": 1
+  },
+  "tween/battle/dust_ring": {
+    "path": "res://resource/tween/battle/dust_ring.tres",
+    "variants": 1
+  },
+  "tween/battle/refuse_shake": {
+    "path": "res://resource/tween/battle/refuse_shake.tres",
+    "variants": 1
+  },
+  "tween/battle/refusal_pop": {
+    "path": "res://resource/tween/battle/refusal_pop.tres",
+    "variants": 1
+  },
+  "tween/battle/mana_flash": {
+    "path": "res://resource/tween/battle/mana_flash.tres",
+    "variants": 1
+  },
+  "tween/battle/fade_in": {
+    "path": "res://resource/tween/battle/fade_in.tres",
+    "variants": 1
+  },
+  "tween/battle/reward_burst": {
+    "path": "res://resource/tween/battle/reward_burst.tres",
+    "variants": 1
+  },
+  "tween/battle/impact_ring": {
+    "path": "res://resource/tween/battle/impact_ring.tres",
+    "variants": 1
+  },
+  "tween/battle/hit_flash": {
+    "path": "res://resource/tween/battle/hit_flash.tres",
+    "variants": 1
+  }
+}

@@ -1,0 +1,6 @@
+,,
+All,None,All
+id(key),string,string
+id,target,value
+[battle_mode],All,[mode_battle]
+[starter_deck],All,[deck_starter]

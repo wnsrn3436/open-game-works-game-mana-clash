@@ -1,0 +1,10 @@
+{
+  "cases": [
+    {"name": "first opponent with nothing beaten", "input": {"order": 1, "cleared_orders": []}, "expected": true},
+    {"name": "second opponent before the first is beaten", "input": {"order": 2, "cleared_orders": []}, "expected": false},
+    {"name": "second opponent after the first is beaten", "input": {"order": 2, "cleared_orders": [1]}, "expected": true},
+    {"name": "third opponent with only the first beaten", "input": {"order": 3, "cleared_orders": [1]}, "expected": false},
+    {"name": "third opponent after the second is beaten", "input": {"order": 3, "cleared_orders": [1, 2]}, "expected": true},
+    {"name": "first opponent again after all are beaten", "input": {"order": 1, "cleared_orders": [1, 2, 3]}, "expected": true}
+  ]
+}

@@ -1,0 +1,201 @@
+,
+All,All
+id(key),tstring<id>
+id,text
+[auth_terms_title],이용약관 동의
+[auth_terms_agree_terms],이용약관에 동의합니다
+[auth_terms_agree_privacy],개인정보 처리방침에 동의합니다
+[auth_terms_view],보기
+[auth_terms_confirm],확인
+[auth_age_title],태어난 연도와 월을 입력하세요
+[auth_age_year],연도
+[auth_age_month],월
+[auth_age_confirm],확인
+[auth_age_invalid],올바른 연도와 월을 입력하세요.
+[auth_privacy_title],개인정보 선택
+[auth_privacy_ad_personalization],맞춤 광고
+[auth_privacy_analytics],이용 분석
+[auth_privacy_confirm],확인
+[auth_tracking_usage],사용자에게 맞는 광고를 보이는 데 데이터를 사용합니다.
+[auth_push_title],알림
+[auth_push_ad],이벤트와 혜택 알림
+[auth_push_night],야간 알림
+[auth_push_confirm],확인
+[auth_push_ad_granted],{date:date}에 이벤트와 혜택 알림에 동의했습니다.
+[auth_push_ad_denied],{date:date}에 이벤트와 혜택 알림을 거부했습니다.
+[auth_push_night_granted],{date:date}에 야간 알림에 동의했습니다.
+[auth_push_night_denied],{date:date}에 야간 알림을 거부했습니다.
+[auth_recover_linked],연동한 계정으로 로그인
+[auth_recover_guest],게스트 계정을 찾을 수 없습니다.
+[auth_recover_login_apple],Apple로 로그인
+[auth_recover_login_google],Google로 로그인
+[auth_recover_new],새 계정으로 시작
+[auth_recover_new_confirm],새 계정은 이전 계정으로 돌아갈 수 없습니다. 새 계정으로 시작할까요?
+[auth_recover_new_ok],시작
+[auth_recover_back],뒤로
+[auth_session_replaced],다른 기기에서 이 계정으로 로그인했습니다.
+[auth_go_to_title],타이틀로
+[auth_web_link_body],진행 상황을 지키려면 계정을 연동하세요.
+[auth_web_link_google],Google 계정 연동
+[auth_web_link_later],나중에
+[auth_web_link_failed],계정을 연동하지 못했습니다.
+[auth_google_desktop_done],로그인이 끝났습니다. 게임으로 돌아가세요.
+[bootstrap_fatal_error],오류로 게임이 멈췄습니다.
+[bootstrap_login_failed],로그인하지 못했습니다.
+[bootstrap_banned],사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
+[bootstrap_banned_permanent],사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url}
+[bootstrap_banned_deletion],계정 삭제 요청
+[bootstrap_banned_deletion_code],사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
+[bootstrap_banned_deletion_failed],삭제 코드를 받지 못했습니다.
+[bootstrap_age_blocked],이 나이에는 이 게임을 이용할 수 없습니다.
+[bootstrap_restart],다시 시작
+[app_name],마나 클래시
+[game_update_app_update_required],새 버전의 앱이 필요합니다.
+[game_update_recommended],새 버전의 앱이 있습니다.
+[game_update_data_update_required],새 게임 데이터가 필요합니다. 게임을 다시 시작합니다.
+[game_update_download_failed],내려받지 못했습니다.
+[game_update_invalid_file],내려받은 파일이 손상되었습니다.
+[game_update_no_space],저장 공간이 부족합니다.
+[game_update_save_failed],내려받은 파일을 저장하지 못했습니다.
+[game_update_go_to_store],스토어로 이동
+[game_update_later],나중에
+[game_update_retry],다시 시도
+[game_update_restart],다시 시작
+[network_confirm],확인
+[network_retry],다시 시도
+[network_go_to_title],타이틀로
+[network_error_timeout],서버가 제때 응답하지 않았습니다.
+[network_error_connection],서버에 연결할 수 없습니다.
+[network_error_invalid_response],서버 응답을 읽을 수 없습니다.
+[network_error_session],세션이 끝났습니다. 다시 로그인하세요.
+[network_error_maintenance],서버 점검 중입니다.
+[network_error_banned],계정 이용이 제한되었습니다.
+[network_error_rate_limited],요청이 너무 많습니다. 잠시 뒤 다시 시도하세요.
+[network_error_feature_disabled],지금은 이 기능을 쓸 수 없습니다.
+[network_error_general],서버 오류가 발생했습니다.
+[scene_prepare_failed],화면을 불러오지 못했습니다.
+[scene_retry],다시 시도
+[scene_restart],다시 시작
+[ui_exit_confirm],게임을 종료할까요?
+[ui_exit_quit],종료
+[ui_exit_cancel],취소
+[ui_licenses_title],라이선스
+[ui_licenses_close],닫기
+[auth_deletion_title],계정 삭제
+[auth_deletion_body],게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.
+[auth_deletion_user_id],사용자 ID
+[auth_deletion_code],삭제 코드
+[auth_deletion_confirm],삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.
+[auth_deletion_submit],삭제
+[auth_deletion_google],Google 로그인으로 삭제
+[auth_deletion_done],계정 삭제를 요청했습니다.
+[auth_deletion_failed],계정을 삭제하지 못했습니다.
+[auth_deletion_retry],다시 시도
+[auth_deletion_rate_limited],시도가 너무 많습니다. 잠시 뒤 다시 시도하세요.
+[auth_deletion_back],뒤로
+[title_name],마나 클래시
+[title_tagline],"마지막 마나 한 점까지, 계산이 승리가 된다"
+[loading_text],불러오는 중
+[common_terms_agree_all],모두 동의합니다
+[common_terms_agree_both],두 항목에 모두 동의하면 시작할 수 있어요
+[lobby_record],전적 {wins}승 {losses}패
+[lobby_streak],{streak}연승 중
+[lobby_no_record],첫 대전을 시작해 보세요
+[lobby_ladder_title],도전 상대
+[lobby_opponent_health],영웅 체력 {health}
+[lobby_status_cleared],승리함
+[lobby_status_open],도전 가능
+[lobby_status_locked],앞 상대를 이기면 열려요
+[lobby_play],대전 시작
+[lobby_deck],내 덱
+[lobby_options],설정
+[lobby_selected],{name:와/과} 대전합니다
+[lobby_all_cleared],모든 상대를 이겼어요! 원하는 상대를 골라 다시 겨뤄 보세요
+[lobby_deck_count],덱 {count}장
+[deck_title],내 덱
+[deck_count],카드 {count}장
+[deck_close],닫기
+[deck_copies],×{count}
+[card_type_minion],하수인
+[card_type_spell],주문
+[battle_your_turn],내 차례
+[battle_enemy_turn],상대 차례
+[battle_end_turn],턴 종료
+[battle_enemy_thinking],상대 차례
+[battle_mana],{mana}/{max}
+[battle_deck_left],덱 {count}
+[battle_hand_count],손패 {count}
+[battle_starting],대전 준비 중
+[battle_you],나
+[battle_hint_play],빛나는 카드를 눌러 내세요. 카드 왼쪽 위 숫자가 필요한 마나예요
+[battle_hint_target],대상을 누르세요. 빈 곳을 누르면 취소돼요
+[battle_hint_attack],초록빛 하수인을 누른 뒤 공격할 대상을 누르세요
+[battle_hint_attack_target],공격할 대상을 누르세요. 수호 하수인이 있으면 먼저 공격해야 해요
+[battle_hint_end_turn],더 할 것이 없으면 턴 종료를 누르세요
+[battle_not_enough_mana],마나가 부족해요
+[battle_board_full],판이 가득 찼어요
+[battle_must_attack_guard],수호 하수인을 먼저 공격해야 해요
+[battle_cannot_attack],이 하수인은 이번 턴에 공격할 수 없어요
+[battle_no_target],이 카드를 쓸 대상이 없어요
+[battle_burned],손패가 가득 차 {name:이/가} 불탔어요
+[battle_fatigue],덱이 비어 피해 {amount:을/를} 입었어요
+[battle_pause_title],일시정지
+[battle_resume],계속하기
+[battle_concede],항복하기
+[battle_turn],{turn}번째 턴
+[battle_sleeping],대기
+[result_win],승리!
+[result_lose],패배
+[result_opponent],상대: {name}
+[result_turns],{turns}번째 턴에 끝났어요
+[result_record],전적 {wins}승 {losses}패
+[result_record_unsaved],이번 대전은 전적에 넣지 못했어요 (전적 {wins}승 {losses}패)
+[result_reward_title],새 카드가 덱에 들어왔어요!
+[result_stake_title],이기면 이 카드가 덱에 들어와요
+[result_streak],{streak}연승!
+[result_all_cleared],모든 상대를 이겼어요!
+[result_retry],다시 도전
+[result_next],다음 상대
+[result_lobby],로비로
+[option_title],설정
+[option_user_id],사용자 ID: {user_id}
+[option_copy_user_id],ID 복사
+[option_terms],이용약관
+[option_privacy],개인정보 처리방침
+[option_licenses],라이선스
+[option_privacy_choices],개인정보 선택
+[option_deletion_issue],계정 삭제 코드 받기
+[option_deletion_info],"코드 {code}, {expires_at:datetime}까지 유효합니다. {url} 에서 입력하세요"
+[option_copy_code],코드 복사
+[option_copy_url],주소 복사
+[option_withdraw],회원 탈퇴
+[option_withdraw_confirm],탈퇴할까요? 전적과 받은 카드가 지워지고 되돌릴 수 없습니다.
+[option_withdraw_ok],탈퇴
+[option_cancel],취소
+[option_copied],복사했습니다
+[option_failed],실패했습니다. 다시 시도해 주세요.
+[option_close],닫기
+[card_keyword_guard],수호
+[battle_damage],-{amount}
+[battle_heal],+{amount}
+[battle_buff_amount],+{attack}/+{health}
+[battle_wait_enemy],상대 차례예요. 잠시 기다려 주세요
+[battle_heal_full],체력 가득
+[battle_heal_capped],+{amount} 체력 가득
+[battle_end_victory],승리!
+[battle_end_defeat],패배!
+[battle_concede_confirm],항복하면 이 대전은 패배로 끝나요. 정말 항복할까요?
+[battle_concede_yes],"네, 항복할게요"
+[battle_cpu_summary_title],지난 상대 차례
+[battle_cpu_played],상대가 낸 카드: {cards}
+[battle_cpu_played_none],상대는 카드를 내지 않았어요
+[battle_cpu_hero_damage],내 영웅이 피해 {amount:을/를} 받았어요
+[battle_cpu_hero_heal],상대 영웅이 체력 {amount:을/를} 회복했어요
+[battle_cpu_minions_lost],내 하수인 {count}마리가 쓰러졌어요
+[battle_cpu_minion_damage],내 하수인들이 피해 {amount:을/를} 받았어요
+[battle_cpu_enemy_minions_lost],상대 하수인 {count}마리가 쓰러졌어요
+[result_swap_out],덱에서 빠지는 카드: {cards}
+[card_count],{name} {count}장
+[list_separator],", "
+[result_stage_title],새 카드를 얻었어요!
+[result_stage_continue],아무 곳이나 눌러 계속하기

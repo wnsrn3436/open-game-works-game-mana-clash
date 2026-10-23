@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TweenDefinition" format=3]
+
+[ext_resource type="Script" path="res://core/tween_core/tween_definition.gd" id="1_def"]
+[ext_resource type="Script" path="res://core/tween_core/tween_step.gd" id="2_step"]
+[ext_resource type="Script" path="res://core/tween_core/tween_change.gd" id="3_change"]
+
+[sub_resource type="Resource" id="change_0_0"]
+script = ExtResource("3_change")
+property = 0
+target_value = Vector4(0, 0, 0, 0)
+duration = 260
+delay = 0
+easing = 2
+
+[sub_resource type="Resource" id="step_0"]
+script = ExtResource("2_step")
+changes = Array[ExtResource("3_change")]([SubResource("change_0_0")])
+
+[resource]
+script = ExtResource("1_def")
+steps = Array[ExtResource("2_step")]([SubResource("step_0")])
+repeat_count = 1

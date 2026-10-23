@@ -1,0 +1,10 @@
+syntax = "proto3";
+package game;
+
+enum GameError {
+  GAME_ERROR_UNSPECIFIED = 0;
+  // `StartPlaySession`: the `level_id` is not an `opponent` row.
+  GAME_ERROR_OPPONENT_NOT_FOUND = 1001;
+  // `StartPlaySession`: the opponent before this one on the ladder is not beaten yet.
+  GAME_ERROR_OPPONENT_LOCKED = 1002;
+}

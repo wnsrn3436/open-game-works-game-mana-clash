@@ -1,0 +1,385 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/lobby/lobby_option_panel.gd" id="1_script"]
+[ext_resource type="Script" path="res://core/safe_area_core/safe_area_ignore.gd" id="2_script"]
+[ext_resource type="Script" path="res://core/ui_core/ui_button.gd" id="3_script"]
+[ext_resource type="Script" path="res://core/ui_core/ui_anchor.gd" id="4_script"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/button.png" id="tex_nine_slice_ui_button"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/glow_ring.png" id="tex_nine_slice_ui_glow_ring"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/panel_frame.png" id="tex_nine_slice_ui_panel_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/name_plate.png" id="tex_nine_slice_ui_name_plate"]
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+
+[sub_resource type="StyleBoxTexture" id="btn_hover"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.18, 1.12, 1.02, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 12.0
+content_margin_bottom = 12.0
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.78, 0.72, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_focus"]
+expand_margin_left = 6.0
+expand_margin_top = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 6.0
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+modulate_color = Color(1, 0.878, 0.4, 1)
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="frame"]
+texture = ExtResource("tex_nine_slice_ui_panel_frame")
+texture_margin_left = 56
+texture_margin_top = 56
+texture_margin_right = 56
+texture_margin_bottom = 56
+
+[sub_resource type="StyleBoxTexture" id="plate"]
+content_margin_left = 28.0
+content_margin_right = 28.0
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[node name="OptionPanel" type="Control" node_paths=PackedStringArray("initial_focus", "title_label", "user_id_label", "deletion_label", "copy_user_id_button", "copy_user_id_click", "licenses_button", "licenses_click", "terms_button", "terms_click", "privacy_button", "privacy_click", "privacy_choices_button", "privacy_choices_click", "withdraw_button", "withdraw_click", "deletion_button", "deletion_click", "close_button", "close_click", "copy_code_button", "copy_code_click", "copy_url_button", "copy_url_click")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+initial_focus = NodePath("Box/Grid/Close")
+title_label = NodePath("Box/Title")
+user_id_label = NodePath("Box/UserId")
+deletion_label = NodePath("Box/DeletionInfo")
+copy_user_id_button = NodePath("Box/Grid/CopyUserId")
+copy_user_id_click = NodePath("Box/Grid/CopyUserId/UIButton")
+licenses_button = NodePath("Box/Grid/Licenses")
+licenses_click = NodePath("Box/Grid/Licenses/UIButton")
+terms_button = NodePath("Box/Grid/Terms")
+terms_click = NodePath("Box/Grid/Terms/UIButton")
+privacy_button = NodePath("Box/Grid/Privacy")
+privacy_click = NodePath("Box/Grid/Privacy/UIButton")
+privacy_choices_button = NodePath("Box/Grid/PrivacyChoices")
+privacy_choices_click = NodePath("Box/Grid/PrivacyChoices/UIButton")
+withdraw_button = NodePath("Box/Grid/Withdraw")
+withdraw_click = NodePath("Box/Grid/Withdraw/UIButton")
+deletion_button = NodePath("Box/Grid/Deletion")
+deletion_click = NodePath("Box/Grid/Deletion/UIButton")
+close_button = NodePath("Box/Grid/Close")
+close_click = NodePath("Box/Grid/Close/UIButton")
+copy_code_button = NodePath("Box/Copy/CopyCode")
+copy_code_click = NodePath("Box/Copy/CopyCode/UIButton")
+copy_url_button = NodePath("Box/Copy/CopyUrl")
+copy_url_click = NodePath("Box/Copy/CopyUrl/UIButton")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.078, 0.067, 0.059, 0.98)
+
+[node name="SafeAreaIgnore" type="Node" parent="Background"]
+script = ExtResource("2_script")
+
+[node name="Box" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -620.0
+offset_top = -450.0
+offset_right = 620.0
+offset_bottom = 450.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Title" type="Label" parent="Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.722, 0.29, 1)
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UserId" type="Label" parent="Box"]
+layout_mode = 2
+autowrap_mode = 3
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Grid" type="GridContainer" parent="Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="CopyUserId" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/CopyUserId"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/CopyUserId"]
+script = ExtResource("4_script")
+anchor_name = "option_copy_user_id"
+
+[node name="Licenses" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Licenses"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Licenses"]
+script = ExtResource("4_script")
+anchor_name = "option_licenses"
+
+[node name="Terms" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Terms"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Terms"]
+script = ExtResource("4_script")
+anchor_name = "option_terms"
+
+[node name="Privacy" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Privacy"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Privacy"]
+script = ExtResource("4_script")
+anchor_name = "option_privacy"
+
+[node name="PrivacyChoices" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/PrivacyChoices"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/PrivacyChoices"]
+script = ExtResource("4_script")
+anchor_name = "option_privacy_choices"
+
+[node name="Withdraw" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Withdraw"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Withdraw"]
+script = ExtResource("4_script")
+anchor_name = "option_withdraw"
+
+[node name="Deletion" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Deletion"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Deletion"]
+script = ExtResource("4_script")
+anchor_name = "option_deletion_issue"
+
+[node name="Close" type="Button" parent="Box/Grid"]
+custom_minimum_size = Vector2(560, 76)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Grid/Close"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Grid/Close"]
+script = ExtResource("4_script")
+anchor_name = "option_close"
+
+[node name="DeletionInfo" type="Label" parent="Box"]
+custom_minimum_size = Vector2(1200, 0)
+layout_mode = 2
+autowrap_mode = 3
+theme_override_colors/font_color = Color(0.62, 0.66, 0.75, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Copy" type="HBoxContainer" parent="Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="CopyCode" type="Button" parent="Box/Copy"]
+custom_minimum_size = Vector2(420, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Copy/CopyCode"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Copy/CopyCode"]
+script = ExtResource("4_script")
+anchor_name = "option_copy_code"
+
+[node name="CopyUrl" type="Button" parent="Box/Copy"]
+custom_minimum_size = Vector2(420, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.827, 0.302, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Box/Copy/CopyUrl"]
+script = ExtResource("3_script")
+
+[node name="UIAnchor" type="Node" parent="Box/Copy/CopyUrl"]
+script = ExtResource("4_script")
+anchor_name = "option_copy_url"

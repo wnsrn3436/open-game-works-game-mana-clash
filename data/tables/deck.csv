@@ -1,0 +1,8 @@
+,Cards of the deck; one entry per copy
+All,All
+id(key),array<ref<card.id>>
+id,cards
+[deck_starter],"[card_ember_imp],[card_ember_imp],[card_moss_guard],[card_moss_guard],[card_mana_bolt],[card_mana_bolt],[card_gale_hound],[card_gale_hound],[card_crystal_turtle],[card_crystal_turtle],[card_apprentice_scholar],[card_apprentice_scholar],[card_blessing],[card_blessing],[card_iron_wolf],[card_iron_wolf],[card_herb_healer],[card_herb_healer],[card_storm_rider],[card_magma_golem]"
+[deck_apprentice],"[card_ember_imp],[card_ember_imp],[card_moss_guard],[card_moss_guard],[card_gale_hound],[card_gale_hound],[card_mana_bolt],[card_mana_bolt],[card_lightning_lance],[card_lightning_lance],[card_iron_wolf],[card_iron_wolf],[card_ash_wraith],[card_ash_wraith],[card_blessing],[card_blessing],[card_war_drummer],[card_war_drummer],[card_storm_rider],[card_storm_rider]"
+[deck_warden],"[card_moss_guard],[card_moss_guard],[card_crystal_turtle],[card_crystal_turtle],[card_apprentice_scholar],[card_apprentice_scholar],[card_iron_wolf],[card_iron_wolf],[card_herb_healer],[card_herb_healer],[card_blessing],[card_blessing],[card_magma_golem],[card_magma_golem],[card_war_drummer],[card_war_drummer],[card_gale_hound],[card_gale_hound],[card_elder_treant],[card_mana_bolt]"
+[deck_archmage],"[card_mana_bolt],[card_mana_bolt],[card_ember_imp],[card_ember_imp],[card_apprentice_scholar],[card_apprentice_scholar],[card_lightning_lance],[card_lightning_lance],[card_firestorm],[card_firestorm],[card_dawn_knight],[card_ash_wraith],[card_ash_wraith],[card_iron_wolf],[card_storm_rider],[card_flame_wyvern],[card_flame_wyvern],[card_sky_colossus],[card_elder_treant],[card_magma_golem]"

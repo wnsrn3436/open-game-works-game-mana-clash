@@ -1,0 +1,24 @@
+,Card name,Rule text; {amount} and {amount2} are the amount columns,,Mana cost,Attack of a minion,Health of a minion,Enemies must attack this minion first,Can attack the turn it is played,Ignores the first damage,,,First amount of the effect,Second amount of the effect,Card art,Order in the deck view
+All,Client,Client,All,All,All,All,All,All,All,All,All,All,All,Client,Client
+id(key),tstring<id>,tstring<id>,enum<CardKind>,int,int,int,bool,bool,bool,enum<CardEffect>?,enum<CardTrigger>?,int,int,reskey,int
+id,name,text,kind,cost,attack,health,guard,charge,ward,effect,trigger,amount,amount2,art,order
+[card_ember_imp],불씨 도깨비,,Minion,1,2,1,false,false,false,null,null,0,0,image/card_ember_imp,1
+[card_moss_guard],이끼 방패병,수호,Minion,1,1,2,true,false,false,null,null,0,0,image/card_moss_guard,2
+[card_mana_bolt],마나 화살,하나를 골라 피해 {amount},Spell,1,0,0,false,false,false,DamageTarget,Play,2,0,image/card_mana_bolt,3
+[card_gale_hound],질풍 사냥개,돌격,Minion,2,2,1,false,true,false,null,null,0,0,image/card_gale_hound,4
+[card_crystal_turtle],수정 거북,수호,Minion,2,1,4,true,false,false,null,null,0,0,image/card_crystal_turtle,5
+[card_apprentice_scholar],견습 학자,등장 시: 카드를 {amount}장 뽑습니다,Minion,2,1,2,false,false,false,DrawCards,Play,1,0,image/card_apprentice_scholar,6
+[card_blessing],수호의 축복,내 하수인 하나에 +{amount}/+{amount2},Spell,2,0,0,false,false,false,BuffFriendlyMinion,Play,2,2,image/card_blessing,7
+[card_iron_wolf],강철 늑대,,Minion,3,3,3,false,false,false,null,null,0,0,image/card_iron_wolf,8
+[card_dawn_knight],새벽 기사,결계,Minion,3,3,2,false,false,true,null,null,0,0,image/card_dawn_knight,9
+[card_herb_healer],약초 치유사,등장 시: 내 영웅의 체력을 {amount} 회복합니다,Minion,3,2,3,false,false,false,HealOwnHero,Play,4,0,image/card_herb_healer,10
+[card_ash_wraith],잿빛 망령,소멸 시: 적 영웅에게 피해 {amount},Minion,3,3,2,false,false,false,DamageEnemyHero,Death,2,0,image/card_ash_wraith,11
+[card_insight],통찰,카드를 {amount}장 뽑습니다,Spell,3,0,0,false,false,false,DrawCards,Play,2,0,image/card_insight,12
+[card_lightning_lance],번개 창,하나를 골라 피해 {amount},Spell,3,0,0,false,false,false,DamageTarget,Play,4,0,image/card_lightning_lance,13
+[card_storm_rider],폭풍 기수,돌격,Minion,4,4,2,false,true,false,null,null,0,0,image/card_storm_rider,14
+[card_magma_golem],용암 골렘,수호,Minion,4,3,5,true,false,false,null,null,0,0,image/card_magma_golem,15
+[card_war_drummer],전쟁 북잡이,등장 시: 다른 내 하수인 모두 공격력 +{amount},Minion,4,3,3,false,false,false,BuffOtherFriendlyAttack,Play,1,0,image/card_war_drummer,16
+[card_firestorm],화염 폭풍,모든 적 하수인에게 피해 {amount},Spell,4,0,0,false,false,false,DamageAllEnemyMinions,Play,2,0,image/card_firestorm,17
+[card_elder_treant],고목 수호자,수호,Minion,5,4,6,true,false,false,null,null,0,0,image/card_elder_treant,18
+[card_flame_wyvern],화염 비룡,등장 시: 모든 적 하수인에게 피해 {amount},Minion,6,5,5,false,false,false,DamageAllEnemyMinions,Play,1,0,image/card_flame_wyvern,19
+[card_sky_colossus],하늘 거신,결계,Minion,7,7,7,false,false,true,null,null,0,0,image/card_sky_colossus,20

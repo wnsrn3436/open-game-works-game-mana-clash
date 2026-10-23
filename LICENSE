@@ -1,0 +1,17 @@
+Copyright (c) 2026 wnsrn3436
+
+The content of this repository is licensed under the Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0).
+To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/
+Resources marked LicenseRef-game-owned in resource/resources.csv were made by the game's
+own procedural generation and are part of this content.
+
+The following parts are licensed differently:
+
+- client/core/ and server/core/ are copies of an open-game-works core release
+  (https://github.com/wnsrn3436/open-game-works-core-impl). They are licensed under the
+  Apache License 2.0; see LICENSES/Apache-2.0.txt.
+- resource/font/main.ttf is the Noto Sans KR font, licensed under the SIL Open Font
+  License 1.1; see LICENSES/OFL-1.1-NotoSansKR.txt.
+- Generated resources list their generation method and the license of the model or
+  source they come from in resource/resources.csv.

@@ -1,0 +1,4 @@
+kind,table,column,group,min,max,child_table,child_column
+order_column,language,order,,,,,
+order_column,card,order,,,,,
+order_column,opponent,order,,,,,

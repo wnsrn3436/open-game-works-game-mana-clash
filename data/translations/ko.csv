@@ -1,0 +1,247 @@
+key,source,source_hash,current_hash,text
+card.name.[card_apprentice_scholar],견습 학자,a420d6f9dba59409,a420d6f9dba59409,견습 학자
+card.name.[card_ash_wraith],잿빛 망령,4147383d2f0e03b3,4147383d2f0e03b3,잿빛 망령
+card.name.[card_blessing],수호의 축복,4b197344acb1a02c,4b197344acb1a02c,수호의 축복
+card.name.[card_crystal_turtle],수정 거북,2b95204ffa29099d,2b95204ffa29099d,수정 거북
+card.name.[card_dawn_knight],새벽 기사,bc0c34b9759883a9,bc0c34b9759883a9,새벽 기사
+card.name.[card_elder_treant],고목 수호자,48c0231dbe0828ee,48c0231dbe0828ee,고목 수호자
+card.name.[card_ember_imp],불씨 도깨비,661a3815796ddda3,661a3815796ddda3,불씨 도깨비
+card.name.[card_firestorm],화염 폭풍,d777c3e09a733246,d777c3e09a733246,화염 폭풍
+card.name.[card_flame_wyvern],화염 비룡,2e2a633653f66439,2e2a633653f66439,화염 비룡
+card.name.[card_gale_hound],질풍 사냥개,5b359b590740bc22,5b359b590740bc22,질풍 사냥개
+card.name.[card_herb_healer],약초 치유사,dd20ca1b0b05edd1,dd20ca1b0b05edd1,약초 치유사
+card.name.[card_insight],통찰,4bd8a87ce29c97aa,4bd8a87ce29c97aa,통찰
+card.name.[card_iron_wolf],강철 늑대,021e247b54e1e1af,021e247b54e1e1af,강철 늑대
+card.name.[card_lightning_lance],번개 창,daa398241b06b631,daa398241b06b631,번개 창
+card.name.[card_magma_golem],용암 골렘,6df2b548fe7902f9,6df2b548fe7902f9,용암 골렘
+card.name.[card_mana_bolt],마나 화살,deca7d8bd5219f59,deca7d8bd5219f59,마나 화살
+card.name.[card_moss_guard],이끼 방패병,f0b4061adf3d0d83,f0b4061adf3d0d83,이끼 방패병
+card.name.[card_sky_colossus],하늘 거신,8ba858dd347b1976,8ba858dd347b1976,하늘 거신
+card.name.[card_storm_rider],폭풍 기수,749a3e63511d425d,749a3e63511d425d,폭풍 기수
+card.name.[card_war_drummer],전쟁 북잡이,3e4dad8f1a057070,3e4dad8f1a057070,전쟁 북잡이
+card.text.[card_apprentice_scholar],등장 시: 카드를 {amount}장 뽑습니다,e9f4a32864a269b9,e9f4a32864a269b9,등장 시: 카드를 {amount}장 뽑습니다
+card.text.[card_ash_wraith],소멸 시: 적 영웅에게 피해 {amount},a03bd928541e32ba,a03bd928541e32ba,소멸 시: 적 영웅에게 피해 {amount}
+card.text.[card_blessing],내 하수인 하나에 +{amount}/+{amount2},e0bbbfe2b749b649,e0bbbfe2b749b649,내 하수인 하나에 +{amount}/+{amount2}
+card.text.[card_crystal_turtle],수호,d53dacf482f2d6b2,d53dacf482f2d6b2,수호
+card.text.[card_dawn_knight],결계,d2ee3d9cca477885,d2ee3d9cca477885,결계
+card.text.[card_elder_treant],수호,d53dacf482f2d6b2,d53dacf482f2d6b2,수호
+card.text.[card_firestorm],모든 적 하수인에게 피해 {amount},df4684a32526a363,df4684a32526a363,모든 적 하수인에게 피해 {amount}
+card.text.[card_flame_wyvern],등장 시: 모든 적 하수인에게 피해 {amount},73fa6e5dad2b5100,73fa6e5dad2b5100,등장 시: 모든 적 하수인에게 피해 {amount}
+card.text.[card_gale_hound],돌격,7bfcad71ec5cdb5d,7bfcad71ec5cdb5d,돌격
+card.text.[card_herb_healer],등장 시: 내 영웅의 체력을 {amount} 회복합니다,bbc9c9ae0cc0e61b,bbc9c9ae0cc0e61b,등장 시: 내 영웅의 체력을 {amount} 회복합니다
+card.text.[card_insight],카드를 {amount}장 뽑습니다,a70b7680e2ab8b97,a70b7680e2ab8b97,카드를 {amount}장 뽑습니다
+card.text.[card_lightning_lance],하나를 골라 피해 {amount},6a22e434d3d5a428,6a22e434d3d5a428,하나를 골라 피해 {amount}
+card.text.[card_magma_golem],수호,d53dacf482f2d6b2,d53dacf482f2d6b2,수호
+card.text.[card_mana_bolt],하나를 골라 피해 {amount},6a22e434d3d5a428,6a22e434d3d5a428,하나를 골라 피해 {amount}
+card.text.[card_moss_guard],수호,d53dacf482f2d6b2,d53dacf482f2d6b2,수호
+card.text.[card_sky_colossus],결계,d2ee3d9cca477885,d2ee3d9cca477885,결계
+card.text.[card_storm_rider],돌격,7bfcad71ec5cdb5d,7bfcad71ec5cdb5d,돌격
+card.text.[card_war_drummer],등장 시: 다른 내 하수인 모두 공격력 +{amount},4c47c82cc1838da2,4c47c82cc1838da2,등장 시: 다른 내 하수인 모두 공격력 +{amount}
+language.name.[lang_en],English,ba118bf7fc9c1aed,ba118bf7fc9c1aed,English
+language.name.[lang_ko],한국어,ea3252281bc3bcec,ea3252281bc3bcec,한국어
+opponent.desc.[opp_apprentice],교환은 몰라도 영웅만 노리는 수련생. 영웅 체력이 낮아요,2db15d30452243e2,2db15d30452243e2,교환은 몰라도 영웅만 노리는 수련생. 영웅 체력이 낮아요
+opponent.desc.[opp_archmage],주문으로 판을 쓸어내는 사다리의 끝,e37121c054082664,e37121c054082664,주문으로 판을 쓸어내는 사다리의 끝
+opponent.desc.[opp_warden],수호 하수인으로 버티다 큰 나무로 밀어붙여요,b3b7a9cf844f723d,b3b7a9cf844f723d,수호 하수인으로 버티다 큰 나무로 밀어붙여요
+opponent.name.[opp_apprentice],수련생 미로,2044de8801c5c970,2044de8801c5c970,수련생 미로
+opponent.name.[opp_archmage],대마법사 벨로크,1c9b5ea712f08920,1c9b5ea712f08920,대마법사 벨로크
+opponent.name.[opp_warden],숲의 파수꾼 타라,783421071a698e8f,783421071a698e8f,숲의 파수꾼 타라
+opponent.tip.[opp_apprentice],"수호 하수인으로 영웅을 지키고, 공격할 수 있는 하수인으로 영웅을 노려요",4b87606b98931f7f,4b87606b98931f7f,"수호 하수인으로 영웅을 지키고, 공격할 수 있는 하수인으로 영웅을 노려요"
+opponent.tip.[opp_archmage],화염 폭풍에 대비해 하수인을 한꺼번에 많이 내지 마세요,7e3856649cf364d2,7e3856649cf364d2,화염 폭풍에 대비해 하수인을 한꺼번에 많이 내지 마세요
+opponent.tip.[opp_warden],수호 하수인은 마나 화살이나 번개 창으로 먼저 치워요,37957d8ea3407ccb,37957d8ea3407ccb,수호 하수인은 마나 화살이나 번개 창으로 먼저 치워요
+reserved_string.text.[app_name],마나 클래시,ccf964f3baa6312e,ccf964f3baa6312e,마나 클래시
+reserved_string.text.[auth_age_confirm],확인,1aacb54c49924296,1aacb54c49924296,확인
+reserved_string.text.[auth_age_invalid],올바른 연도와 월을 입력하세요.,5b3a53405171535b,5b3a53405171535b,올바른 연도와 월을 입력하세요.
+reserved_string.text.[auth_age_month],월,ed8a406d02b187b8,ed8a406d02b187b8,월
+reserved_string.text.[auth_age_title],태어난 연도와 월을 입력하세요,55de38dd31149ce7,55de38dd31149ce7,태어난 연도와 월을 입력하세요
+reserved_string.text.[auth_age_year],연도,afd218a26904f527,afd218a26904f527,연도
+reserved_string.text.[auth_deletion_back],뒤로,2df06869205b07fe,2df06869205b07fe,뒤로
+reserved_string.text.[auth_deletion_body],게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.,55eb5264f9b60fa1,55eb5264f9b60fa1,게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.
+reserved_string.text.[auth_deletion_code],삭제 코드,f1fee09ca28dbb39,f1fee09ca28dbb39,삭제 코드
+reserved_string.text.[auth_deletion_confirm],삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.,611a6cb9cb15b714,611a6cb9cb15b714,삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.
+reserved_string.text.[auth_deletion_done],계정 삭제를 요청했습니다.,a83d15176d635fa1,a83d15176d635fa1,계정 삭제를 요청했습니다.
+reserved_string.text.[auth_deletion_failed],계정을 삭제하지 못했습니다.,f2132aeb0e296baf,f2132aeb0e296baf,계정을 삭제하지 못했습니다.
+reserved_string.text.[auth_deletion_google],Google 로그인으로 삭제,2a1cfc17fc383602,2a1cfc17fc383602,Google 로그인으로 삭제
+reserved_string.text.[auth_deletion_rate_limited],시도가 너무 많습니다. 잠시 뒤 다시 시도하세요.,bc192b22d39dbdfc,bc192b22d39dbdfc,시도가 너무 많습니다. 잠시 뒤 다시 시도하세요.
+reserved_string.text.[auth_deletion_retry],다시 시도,196856a662bd9084,196856a662bd9084,다시 시도
+reserved_string.text.[auth_deletion_submit],삭제,6139b6c3ed73cd4a,6139b6c3ed73cd4a,삭제
+reserved_string.text.[auth_deletion_title],계정 삭제,07051913f67d3a7e,07051913f67d3a7e,계정 삭제
+reserved_string.text.[auth_deletion_user_id],사용자 ID,85f6a450a02dcda1,85f6a450a02dcda1,사용자 ID
+reserved_string.text.[auth_go_to_title],타이틀로,ebf1eb5c33b7d645,ebf1eb5c33b7d645,타이틀로
+reserved_string.text.[auth_google_desktop_done],로그인이 끝났습니다. 게임으로 돌아가세요.,778b373ddaab6ecf,778b373ddaab6ecf,로그인이 끝났습니다. 게임으로 돌아가세요.
+reserved_string.text.[auth_privacy_ad_personalization],맞춤 광고,c2f59f8ae2b8a3b0,c2f59f8ae2b8a3b0,맞춤 광고
+reserved_string.text.[auth_privacy_analytics],이용 분석,5a15c8aaef16f97e,5a15c8aaef16f97e,이용 분석
+reserved_string.text.[auth_privacy_confirm],확인,1aacb54c49924296,1aacb54c49924296,확인
+reserved_string.text.[auth_privacy_title],개인정보 선택,84908379872ae75e,84908379872ae75e,개인정보 선택
+reserved_string.text.[auth_push_ad],이벤트와 혜택 알림,4568890021b8c58a,4568890021b8c58a,이벤트와 혜택 알림
+reserved_string.text.[auth_push_ad_denied],{date:date}에 이벤트와 혜택 알림을 거부했습니다.,0da5e6a9ec10c1cf,0da5e6a9ec10c1cf,{date:date}에 이벤트와 혜택 알림을 거부했습니다.
+reserved_string.text.[auth_push_ad_granted],{date:date}에 이벤트와 혜택 알림에 동의했습니다.,b7d1de542d1bc183,b7d1de542d1bc183,{date:date}에 이벤트와 혜택 알림에 동의했습니다.
+reserved_string.text.[auth_push_confirm],확인,1aacb54c49924296,1aacb54c49924296,확인
+reserved_string.text.[auth_push_night],야간 알림,d3d0a6b97d797326,d3d0a6b97d797326,야간 알림
+reserved_string.text.[auth_push_night_denied],{date:date}에 야간 알림을 거부했습니다.,7c492972f8d50e68,7c492972f8d50e68,{date:date}에 야간 알림을 거부했습니다.
+reserved_string.text.[auth_push_night_granted],{date:date}에 야간 알림에 동의했습니다.,8c758602e72fc4e9,8c758602e72fc4e9,{date:date}에 야간 알림에 동의했습니다.
+reserved_string.text.[auth_push_title],알림,12ddd6ca69068faa,12ddd6ca69068faa,알림
+reserved_string.text.[auth_recover_back],뒤로,2df06869205b07fe,2df06869205b07fe,뒤로
+reserved_string.text.[auth_recover_guest],게스트 계정을 찾을 수 없습니다.,f43c118ab28d466f,f43c118ab28d466f,게스트 계정을 찾을 수 없습니다.
+reserved_string.text.[auth_recover_linked],연동한 계정으로 로그인,6643e551a57c3b05,6643e551a57c3b05,연동한 계정으로 로그인
+reserved_string.text.[auth_recover_login_apple],Apple로 로그인,8a40ed8920ed2b84,8a40ed8920ed2b84,Apple로 로그인
+reserved_string.text.[auth_recover_login_google],Google로 로그인,9404977fe76e6108,9404977fe76e6108,Google로 로그인
+reserved_string.text.[auth_recover_new],새 계정으로 시작,391c1e0bebe1c8d9,391c1e0bebe1c8d9,새 계정으로 시작
+reserved_string.text.[auth_recover_new_confirm],새 계정은 이전 계정으로 돌아갈 수 없습니다. 새 계정으로 시작할까요?,d29f1ca7c446fd76,d29f1ca7c446fd76,새 계정은 이전 계정으로 돌아갈 수 없습니다. 새 계정으로 시작할까요?
+reserved_string.text.[auth_recover_new_ok],시작,b1f28cd21af730b2,b1f28cd21af730b2,시작
+reserved_string.text.[auth_session_replaced],다른 기기에서 이 계정으로 로그인했습니다.,c3bfd2dedf77252c,c3bfd2dedf77252c,다른 기기에서 이 계정으로 로그인했습니다.
+reserved_string.text.[auth_terms_agree_privacy],개인정보 처리방침에 동의합니다,87308a9cf9e514f1,87308a9cf9e514f1,개인정보 처리방침에 동의합니다
+reserved_string.text.[auth_terms_agree_terms],이용약관에 동의합니다,13d71aa6479818a6,13d71aa6479818a6,이용약관에 동의합니다
+reserved_string.text.[auth_terms_confirm],확인,1aacb54c49924296,1aacb54c49924296,확인
+reserved_string.text.[auth_terms_title],이용약관 동의,82a919ac73cb9367,82a919ac73cb9367,이용약관 동의
+reserved_string.text.[auth_terms_view],보기,ac5b575fff0fa065,ac5b575fff0fa065,보기
+reserved_string.text.[auth_tracking_usage],사용자에게 맞는 광고를 보이는 데 데이터를 사용합니다.,a1cbc994d5fc9fa2,a1cbc994d5fc9fa2,사용자에게 맞는 광고를 보이는 데 데이터를 사용합니다.
+reserved_string.text.[auth_web_link_body],진행 상황을 지키려면 계정을 연동하세요.,26228fbebb952ee9,26228fbebb952ee9,진행 상황을 지키려면 계정을 연동하세요.
+reserved_string.text.[auth_web_link_failed],계정을 연동하지 못했습니다.,86f5fbeb19b8ef2b,86f5fbeb19b8ef2b,계정을 연동하지 못했습니다.
+reserved_string.text.[auth_web_link_google],Google 계정 연동,9acaed794c215d3c,9acaed794c215d3c,Google 계정 연동
+reserved_string.text.[auth_web_link_later],나중에,a12252500035668f,a12252500035668f,나중에
+reserved_string.text.[battle_board_full],판이 가득 찼어요,46f15ca6ba9d0d6d,46f15ca6ba9d0d6d,판이 가득 찼어요
+reserved_string.text.[battle_buff_amount],+{attack}/+{health},9d80ac9e64122e82,9d80ac9e64122e82,+{attack}/+{health}
+reserved_string.text.[battle_burned],손패가 가득 차 {name:이/가} 불탔어요,33352ca463b2be0d,33352ca463b2be0d,손패가 가득 차 {name:이/가} 불탔어요
+reserved_string.text.[battle_cannot_attack],이 하수인은 이번 턴에 공격할 수 없어요,7bcd11dbfec9a053,7bcd11dbfec9a053,이 하수인은 이번 턴에 공격할 수 없어요
+reserved_string.text.[battle_concede],항복하기,ae587d827633ba92,ae587d827633ba92,항복하기
+reserved_string.text.[battle_concede_confirm],항복하면 이 대전은 패배로 끝나요. 정말 항복할까요?,2bec023f3c10c149,2bec023f3c10c149,항복하면 이 대전은 패배로 끝나요. 정말 항복할까요?
+reserved_string.text.[battle_concede_yes],"네, 항복할게요",724ff2c1f65c62e0,724ff2c1f65c62e0,"네, 항복할게요"
+reserved_string.text.[battle_cpu_enemy_minions_lost],상대 하수인 {count}마리가 쓰러졌어요,bd3008b808a9d01d,bd3008b808a9d01d,상대 하수인 {count}마리가 쓰러졌어요
+reserved_string.text.[battle_cpu_hero_damage],내 영웅이 피해 {amount:을/를} 받았어요,032119469bde4838,032119469bde4838,내 영웅이 피해 {amount:을/를} 받았어요
+reserved_string.text.[battle_cpu_hero_heal],상대 영웅이 체력 {amount:을/를} 회복했어요,447f7f4924420f9a,447f7f4924420f9a,상대 영웅이 체력 {amount:을/를} 회복했어요
+reserved_string.text.[battle_cpu_minion_damage],내 하수인들이 피해 {amount:을/를} 받았어요,35d541248e25821e,35d541248e25821e,내 하수인들이 피해 {amount:을/를} 받았어요
+reserved_string.text.[battle_cpu_minions_lost],내 하수인 {count}마리가 쓰러졌어요,d47f41e9f0b2eccb,d47f41e9f0b2eccb,내 하수인 {count}마리가 쓰러졌어요
+reserved_string.text.[battle_cpu_played],상대가 낸 카드: {cards},8cf255c7dc65c440,8cf255c7dc65c440,상대가 낸 카드: {cards}
+reserved_string.text.[battle_cpu_played_none],상대는 카드를 내지 않았어요,3a7a4d0c2e2fe09d,3a7a4d0c2e2fe09d,상대는 카드를 내지 않았어요
+reserved_string.text.[battle_cpu_summary_title],지난 상대 차례,b068e3cd1a9eba3c,b068e3cd1a9eba3c,지난 상대 차례
+reserved_string.text.[battle_damage],-{amount},cc5712bf9659d9b5,cc5712bf9659d9b5,-{amount}
+reserved_string.text.[battle_deck_left],덱 {count},2eda6c8cd776c177,2eda6c8cd776c177,덱 {count}
+reserved_string.text.[battle_end_defeat],패배!,79c4a010c134f874,79c4a010c134f874,패배!
+reserved_string.text.[battle_end_turn],턴 종료,7f38f9dec825b155,7f38f9dec825b155,턴 종료
+reserved_string.text.[battle_end_victory],승리!,65cf381a257d1875,65cf381a257d1875,승리!
+reserved_string.text.[battle_enemy_thinking],상대 차례,7bbea47033492b68,7bbea47033492b68,상대 차례
+reserved_string.text.[battle_enemy_turn],상대 차례,7bbea47033492b68,7bbea47033492b68,상대 차례
+reserved_string.text.[battle_fatigue],덱이 비어 피해 {amount:을/를} 입었어요,876563c47d64c0a8,876563c47d64c0a8,덱이 비어 피해 {amount:을/를} 입었어요
+reserved_string.text.[battle_hand_count],손패 {count},571471628de1fcbb,571471628de1fcbb,손패 {count}
+reserved_string.text.[battle_heal],+{amount},7c1eff1bc854562c,7c1eff1bc854562c,+{amount}
+reserved_string.text.[battle_heal_capped],+{amount} 체력 가득,36bbf3ed33e833a8,36bbf3ed33e833a8,+{amount} 체력 가득
+reserved_string.text.[battle_heal_full],체력 가득,127e4aadec6b06c8,127e4aadec6b06c8,체력 가득
+reserved_string.text.[battle_hint_attack],초록빛 하수인을 누른 뒤 공격할 대상을 누르세요,5eb98419ca191f8b,5eb98419ca191f8b,초록빛 하수인을 누른 뒤 공격할 대상을 누르세요
+reserved_string.text.[battle_hint_attack_target],공격할 대상을 누르세요. 수호 하수인이 있으면 먼저 공격해야 해요,5060d0d3c709669f,5060d0d3c709669f,공격할 대상을 누르세요. 수호 하수인이 있으면 먼저 공격해야 해요
+reserved_string.text.[battle_hint_end_turn],더 할 것이 없으면 턴 종료를 누르세요,42ced807ed95f353,42ced807ed95f353,더 할 것이 없으면 턴 종료를 누르세요
+reserved_string.text.[battle_hint_play],빛나는 카드를 눌러 내세요. 카드 왼쪽 위 숫자가 필요한 마나예요,b97a665992c00ae2,b97a665992c00ae2,빛나는 카드를 눌러 내세요. 카드 왼쪽 위 숫자가 필요한 마나예요
+reserved_string.text.[battle_hint_target],대상을 누르세요. 빈 곳을 누르면 취소돼요,5cd5c4a9d7fc6952,5cd5c4a9d7fc6952,대상을 누르세요. 빈 곳을 누르면 취소돼요
+reserved_string.text.[battle_mana],{mana}/{max},0db441d6b9dc6217,0db441d6b9dc6217,{mana}/{max}
+reserved_string.text.[battle_must_attack_guard],수호 하수인을 먼저 공격해야 해요,6fd6528a100d0513,6fd6528a100d0513,수호 하수인을 먼저 공격해야 해요
+reserved_string.text.[battle_no_target],이 카드를 쓸 대상이 없어요,c728e13019d9fd84,c728e13019d9fd84,이 카드를 쓸 대상이 없어요
+reserved_string.text.[battle_not_enough_mana],마나가 부족해요,9d2b274b0a5e1b49,9d2b274b0a5e1b49,마나가 부족해요
+reserved_string.text.[battle_pause_title],일시정지,4f51c0c8ada89f28,4f51c0c8ada89f28,일시정지
+reserved_string.text.[battle_resume],계속하기,5dfd3b2bc49d9944,5dfd3b2bc49d9944,계속하기
+reserved_string.text.[battle_sleeping],대기,2a73ed53178ab6fe,2a73ed53178ab6fe,대기
+reserved_string.text.[battle_starting],대전 준비 중,9592b95c5b141d91,9592b95c5b141d91,대전 준비 중
+reserved_string.text.[battle_turn],{turn}번째 턴,7963921c34e0827c,7963921c34e0827c,{turn}번째 턴
+reserved_string.text.[battle_wait_enemy],상대 차례예요. 잠시 기다려 주세요,0bbcd40fc479991a,0bbcd40fc479991a,상대 차례예요. 잠시 기다려 주세요
+reserved_string.text.[battle_you],나,1098bbe54520ab2a,1098bbe54520ab2a,나
+reserved_string.text.[battle_your_turn],내 차례,aaefbb8fe1762463,aaefbb8fe1762463,내 차례
+reserved_string.text.[bootstrap_age_blocked],이 나이에는 이 게임을 이용할 수 없습니다.,c2a04b5c97e36f72,c2a04b5c97e36f72,이 나이에는 이 게임을 이용할 수 없습니다.
+reserved_string.text.[bootstrap_banned],사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url},d6a3d0efe4190174,d6a3d0efe4190174,사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
+reserved_string.text.[bootstrap_banned_deletion],계정 삭제 요청,de7f6a00aed6d1f3,de7f6a00aed6d1f3,계정 삭제 요청
+reserved_string.text.[bootstrap_banned_deletion_code],사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.,4db23020009349b0,4db23020009349b0,사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
+reserved_string.text.[bootstrap_banned_deletion_failed],삭제 코드를 받지 못했습니다.,3bb73ea5715cd650,3bb73ea5715cd650,삭제 코드를 받지 못했습니다.
+reserved_string.text.[bootstrap_banned_permanent],사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url},a3db2da77b390862,a3db2da77b390862,사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url}
+reserved_string.text.[bootstrap_fatal_error],오류로 게임이 멈췄습니다.,a3bdb0beee2103ce,a3bdb0beee2103ce,오류로 게임이 멈췄습니다.
+reserved_string.text.[bootstrap_login_failed],로그인하지 못했습니다.,b42ac90bab1504c0,b42ac90bab1504c0,로그인하지 못했습니다.
+reserved_string.text.[bootstrap_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,다시 시작
+reserved_string.text.[card_count],{name} {count}장,aab9cbcc90c9668d,aab9cbcc90c9668d,{name} {count}장
+reserved_string.text.[card_keyword_guard],수호,d53dacf482f2d6b2,d53dacf482f2d6b2,수호
+reserved_string.text.[card_type_minion],하수인,50f274e08b9fd40e,50f274e08b9fd40e,하수인
+reserved_string.text.[card_type_spell],주문,d64a64f06a81e548,d64a64f06a81e548,주문
+reserved_string.text.[common_terms_agree_all],모두 동의합니다,78ed5c87b18e680f,78ed5c87b18e680f,모두 동의합니다
+reserved_string.text.[common_terms_agree_both],두 항목에 모두 동의하면 시작할 수 있어요,770ce18e008caf38,770ce18e008caf38,두 항목에 모두 동의하면 시작할 수 있어요
+reserved_string.text.[deck_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,닫기
+reserved_string.text.[deck_copies],×{count},816c0b505ef0ed3a,816c0b505ef0ed3a,×{count}
+reserved_string.text.[deck_count],카드 {count}장,ca4f6e21051fd85d,ca4f6e21051fd85d,카드 {count}장
+reserved_string.text.[deck_title],내 덱,0ee48df4226c3203,0ee48df4226c3203,내 덱
+reserved_string.text.[game_update_app_update_required],새 버전의 앱이 필요합니다.,3f06e6b9758a2b0d,3f06e6b9758a2b0d,새 버전의 앱이 필요합니다.
+reserved_string.text.[game_update_data_update_required],새 게임 데이터가 필요합니다. 게임을 다시 시작합니다.,052928483452b213,052928483452b213,새 게임 데이터가 필요합니다. 게임을 다시 시작합니다.
+reserved_string.text.[game_update_download_failed],내려받지 못했습니다.,9be8cf113c49f275,9be8cf113c49f275,내려받지 못했습니다.
+reserved_string.text.[game_update_go_to_store],스토어로 이동,88c289b95c8d3173,88c289b95c8d3173,스토어로 이동
+reserved_string.text.[game_update_invalid_file],내려받은 파일이 손상되었습니다.,63be79a76e3b52a2,63be79a76e3b52a2,내려받은 파일이 손상되었습니다.
+reserved_string.text.[game_update_later],나중에,a12252500035668f,a12252500035668f,나중에
+reserved_string.text.[game_update_no_space],저장 공간이 부족합니다.,67e613722c809957,67e613722c809957,저장 공간이 부족합니다.
+reserved_string.text.[game_update_recommended],새 버전의 앱이 있습니다.,a7fca7bdb4d895d6,a7fca7bdb4d895d6,새 버전의 앱이 있습니다.
+reserved_string.text.[game_update_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,다시 시작
+reserved_string.text.[game_update_retry],다시 시도,196856a662bd9084,196856a662bd9084,다시 시도
+reserved_string.text.[game_update_save_failed],내려받은 파일을 저장하지 못했습니다.,222b3d6311f8ff66,222b3d6311f8ff66,내려받은 파일을 저장하지 못했습니다.
+reserved_string.text.[list_separator],", ",0a07f659461970d8,0a07f659461970d8,", "
+reserved_string.text.[loading_text],불러오는 중,5b7e88929ec0ed88,5b7e88929ec0ed88,불러오는 중
+reserved_string.text.[lobby_all_cleared],모든 상대를 이겼어요! 원하는 상대를 골라 다시 겨뤄 보세요,40be6467dca89da8,40be6467dca89da8,모든 상대를 이겼어요! 원하는 상대를 골라 다시 겨뤄 보세요
+reserved_string.text.[lobby_deck],내 덱,0ee48df4226c3203,0ee48df4226c3203,내 덱
+reserved_string.text.[lobby_deck_count],덱 {count}장,d3b4227137ce68d3,d3b4227137ce68d3,덱 {count}장
+reserved_string.text.[lobby_ladder_title],도전 상대,5ff7c65dcd3109df,5ff7c65dcd3109df,도전 상대
+reserved_string.text.[lobby_no_record],첫 대전을 시작해 보세요,5440028d46065ff2,5440028d46065ff2,첫 대전을 시작해 보세요
+reserved_string.text.[lobby_opponent_health],영웅 체력 {health},9a9e05e09dadeb11,9a9e05e09dadeb11,영웅 체력 {health}
+reserved_string.text.[lobby_options],설정,115bced49291a6a0,115bced49291a6a0,설정
+reserved_string.text.[lobby_play],대전 시작,88094f4aa2a5d788,88094f4aa2a5d788,대전 시작
+reserved_string.text.[lobby_record],전적 {wins}승 {losses}패,bce19b420106004a,bce19b420106004a,전적 {wins}승 {losses}패
+reserved_string.text.[lobby_selected],{name:와/과} 대전합니다,06e2d53b93a6b9f2,06e2d53b93a6b9f2,{name:와/과} 대전합니다
+reserved_string.text.[lobby_status_cleared],승리함,3c1b97266142ae51,3c1b97266142ae51,승리함
+reserved_string.text.[lobby_status_locked],앞 상대를 이기면 열려요,d7b25add3d87ce7b,d7b25add3d87ce7b,앞 상대를 이기면 열려요
+reserved_string.text.[lobby_status_open],도전 가능,d1776f41eaf38f4a,d1776f41eaf38f4a,도전 가능
+reserved_string.text.[lobby_streak],{streak}연승 중,8279e65ff7d00213,8279e65ff7d00213,{streak}연승 중
+reserved_string.text.[network_confirm],확인,1aacb54c49924296,1aacb54c49924296,확인
+reserved_string.text.[network_error_banned],계정 이용이 제한되었습니다.,f8bd4d9d2cb9e96c,f8bd4d9d2cb9e96c,계정 이용이 제한되었습니다.
+reserved_string.text.[network_error_connection],서버에 연결할 수 없습니다.,67e5ccaadfed98b7,67e5ccaadfed98b7,서버에 연결할 수 없습니다.
+reserved_string.text.[network_error_feature_disabled],지금은 이 기능을 쓸 수 없습니다.,2a374ad445db3909,2a374ad445db3909,지금은 이 기능을 쓸 수 없습니다.
+reserved_string.text.[network_error_general],서버 오류가 발생했습니다.,1bc72fefc72067ef,1bc72fefc72067ef,서버 오류가 발생했습니다.
+reserved_string.text.[network_error_invalid_response],서버 응답을 읽을 수 없습니다.,91a38e2da91fbc63,91a38e2da91fbc63,서버 응답을 읽을 수 없습니다.
+reserved_string.text.[network_error_maintenance],서버 점검 중입니다.,f68e0b3df6151276,f68e0b3df6151276,서버 점검 중입니다.
+reserved_string.text.[network_error_rate_limited],요청이 너무 많습니다. 잠시 뒤 다시 시도하세요.,2d32593943316aac,2d32593943316aac,요청이 너무 많습니다. 잠시 뒤 다시 시도하세요.
+reserved_string.text.[network_error_session],세션이 끝났습니다. 다시 로그인하세요.,6b0e13f750738811,6b0e13f750738811,세션이 끝났습니다. 다시 로그인하세요.
+reserved_string.text.[network_error_timeout],서버가 제때 응답하지 않았습니다.,cde7d6353c46da15,cde7d6353c46da15,서버가 제때 응답하지 않았습니다.
+reserved_string.text.[network_go_to_title],타이틀로,ebf1eb5c33b7d645,ebf1eb5c33b7d645,타이틀로
+reserved_string.text.[network_retry],다시 시도,196856a662bd9084,196856a662bd9084,다시 시도
+reserved_string.text.[option_cancel],취소,be876433993ab7ba,be876433993ab7ba,취소
+reserved_string.text.[option_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,닫기
+reserved_string.text.[option_copied],복사했습니다,5e80b233136bd398,5e80b233136bd398,복사했습니다
+reserved_string.text.[option_copy_code],코드 복사,2fd5fe4b1f06d612,2fd5fe4b1f06d612,코드 복사
+reserved_string.text.[option_copy_url],주소 복사,046ea9c5e33a7e67,046ea9c5e33a7e67,주소 복사
+reserved_string.text.[option_copy_user_id],ID 복사,dbb263d9a65540ea,dbb263d9a65540ea,ID 복사
+reserved_string.text.[option_deletion_info],"코드 {code}, {expires_at:datetime}까지 유효합니다. {url} 에서 입력하세요",b13ec8559b9ece4b,b13ec8559b9ece4b,"코드 {code}, {expires_at:datetime}까지 유효합니다. {url} 에서 입력하세요"
+reserved_string.text.[option_deletion_issue],계정 삭제 코드 받기,530d7d872783e86d,530d7d872783e86d,계정 삭제 코드 받기
+reserved_string.text.[option_failed],실패했습니다. 다시 시도해 주세요.,de76c668b153027d,de76c668b153027d,실패했습니다. 다시 시도해 주세요.
+reserved_string.text.[option_licenses],라이선스,8a59fa8b83fe3e97,8a59fa8b83fe3e97,라이선스
+reserved_string.text.[option_privacy],개인정보 처리방침,b4f463f37666c59e,b4f463f37666c59e,개인정보 처리방침
+reserved_string.text.[option_privacy_choices],개인정보 선택,84908379872ae75e,84908379872ae75e,개인정보 선택
+reserved_string.text.[option_terms],이용약관,c7e724d5c4951b72,c7e724d5c4951b72,이용약관
+reserved_string.text.[option_title],설정,115bced49291a6a0,115bced49291a6a0,설정
+reserved_string.text.[option_user_id],사용자 ID: {user_id},399101ecf1feabdf,399101ecf1feabdf,사용자 ID: {user_id}
+reserved_string.text.[option_withdraw],회원 탈퇴,4406c379c287135f,4406c379c287135f,회원 탈퇴
+reserved_string.text.[option_withdraw_confirm],탈퇴할까요? 전적과 받은 카드가 지워지고 되돌릴 수 없습니다.,9b33ae4e5fc295c1,9b33ae4e5fc295c1,탈퇴할까요? 전적과 받은 카드가 지워지고 되돌릴 수 없습니다.
+reserved_string.text.[option_withdraw_ok],탈퇴,871d207609515b86,871d207609515b86,탈퇴
+reserved_string.text.[result_all_cleared],모든 상대를 이겼어요!,7c434d24835a3a34,7c434d24835a3a34,모든 상대를 이겼어요!
+reserved_string.text.[result_lobby],로비로,50e406fc9066bc99,50e406fc9066bc99,로비로
+reserved_string.text.[result_lose],패배,b06527e3faf48bfe,b06527e3faf48bfe,패배
+reserved_string.text.[result_next],다음 상대,0b25b7d6ace87622,0b25b7d6ace87622,다음 상대
+reserved_string.text.[result_opponent],상대: {name},a15f5c7ad27ea1e8,a15f5c7ad27ea1e8,상대: {name}
+reserved_string.text.[result_record],전적 {wins}승 {losses}패,bce19b420106004a,bce19b420106004a,전적 {wins}승 {losses}패
+reserved_string.text.[result_record_unsaved],이번 대전은 전적에 넣지 못했어요 (전적 {wins}승 {losses}패),a68de5a6ed2a0624,a68de5a6ed2a0624,이번 대전은 전적에 넣지 못했어요 (전적 {wins}승 {losses}패)
+reserved_string.text.[result_retry],다시 도전,e84f627ba8ba9ec0,e84f627ba8ba9ec0,다시 도전
+reserved_string.text.[result_reward_title],새 카드가 덱에 들어왔어요!,0509133fb581945f,0509133fb581945f,새 카드가 덱에 들어왔어요!
+reserved_string.text.[result_stage_continue],아무 곳이나 눌러 계속하기,08a670e1040fe013,08a670e1040fe013,아무 곳이나 눌러 계속하기
+reserved_string.text.[result_stage_title],새 카드를 얻었어요!,879db8bd90e951b1,879db8bd90e951b1,새 카드를 얻었어요!
+reserved_string.text.[result_stake_title],이기면 이 카드가 덱에 들어와요,a86a163c0aa28bcc,a86a163c0aa28bcc,이기면 이 카드가 덱에 들어와요
+reserved_string.text.[result_streak],{streak}연승!,3f3a07d3194f339c,3f3a07d3194f339c,{streak}연승!
+reserved_string.text.[result_swap_out],덱에서 빠지는 카드: {cards},9b11913428fb2cbb,9b11913428fb2cbb,덱에서 빠지는 카드: {cards}
+reserved_string.text.[result_turns],{turns}번째 턴에 끝났어요,c784cc5cd9fdc8e6,c784cc5cd9fdc8e6,{turns}번째 턴에 끝났어요
+reserved_string.text.[result_win],승리!,65cf381a257d1875,65cf381a257d1875,승리!
+reserved_string.text.[scene_prepare_failed],화면을 불러오지 못했습니다.,5c84f7e098772f6e,5c84f7e098772f6e,화면을 불러오지 못했습니다.
+reserved_string.text.[scene_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,다시 시작
+reserved_string.text.[scene_retry],다시 시도,196856a662bd9084,196856a662bd9084,다시 시도
+reserved_string.text.[title_name],마나 클래시,ccf964f3baa6312e,ccf964f3baa6312e,마나 클래시
+reserved_string.text.[title_tagline],"마지막 마나 한 점까지, 계산이 승리가 된다",fd90597da073df29,fd90597da073df29,"마지막 마나 한 점까지, 계산이 승리가 된다"
+reserved_string.text.[ui_exit_cancel],취소,be876433993ab7ba,be876433993ab7ba,취소
+reserved_string.text.[ui_exit_confirm],게임을 종료할까요?,451062c7656b99f3,451062c7656b99f3,게임을 종료할까요?
+reserved_string.text.[ui_exit_quit],종료,086bb5335d174a9a,086bb5335d174a9a,종료
+reserved_string.text.[ui_licenses_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,닫기
+reserved_string.text.[ui_licenses_title],라이선스,8a59fa8b83fe3e97,8a59fa8b83fe3e97,라이선스

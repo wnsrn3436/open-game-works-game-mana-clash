@@ -1,0 +1,1577 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/battle/battle_result_panel.gd" id="1_s"]
+[ext_resource type="Script" path="res://common/common_card_view.gd" id="2_s"]
+[ext_resource type="Script" path="res://core/ui_core/ui_button.gd" id="3_s"]
+[ext_resource type="Script" path="res://core/ui_core/ui_anchor.gd" id="4_s"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/button.png" id="tex_nine_slice_ui_button"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/glow_ring.png" id="tex_nine_slice_ui_glow_ring"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/panel_frame.png" id="tex_nine_slice_ui_panel_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/battle/card_frame.png" id="tex_nine_slice_battle_card_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/inset.png" id="tex_nine_slice_ui_inset"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/name_plate.png" id="tex_nine_slice_ui_name_plate"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_mana.png" id="tex_icon_battle_gem_mana"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_attack.png" id="tex_icon_battle_gem_attack"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_health.png" id="tex_icon_battle_gem_health"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/minion_glow.png" id="tex_image_battle_minion_glow"]
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+
+[sub_resource type="StyleBoxTexture" id="btn_hover"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.18, 1.12, 1.02, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.78, 0.72, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_disabled"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.5, 0.5, 0.52, 0.9)
+
+[sub_resource type="StyleBoxTexture" id="btn_focus"]
+expand_margin_left = 6
+expand_margin_top = 6
+expand_margin_right = 6
+expand_margin_bottom = 6
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+modulate_color = Color(1, 0.878, 0.4, 1)
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="frame"]
+texture = ExtResource("tex_nine_slice_ui_panel_frame")
+texture_margin_left = 56
+texture_margin_top = 56
+texture_margin_right = 56
+texture_margin_bottom = 56
+
+[sub_resource type="StyleBoxTexture" id="card_frame"]
+texture = ExtResource("tex_nine_slice_battle_card_frame")
+texture_margin_left = 40
+texture_margin_top = 40
+texture_margin_right = 40
+texture_margin_bottom = 40
+
+[sub_resource type="StyleBoxTexture" id="card_art"]
+texture = ExtResource("tex_nine_slice_ui_inset")
+texture_margin_left = 20
+texture_margin_top = 20
+texture_margin_right = 20
+texture_margin_bottom = 20
+
+[sub_resource type="StyleBoxTexture" id="card_name"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="StyleBoxTexture" id="card_glow"]
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="gem_mana"]
+texture = ExtResource("tex_icon_battle_gem_mana")
+
+[sub_resource type="StyleBoxTexture" id="gem_attack"]
+texture = ExtResource("tex_icon_battle_gem_attack")
+
+[sub_resource type="StyleBoxTexture" id="gem_health"]
+texture = ExtResource("tex_icon_battle_gem_health")
+
+[sub_resource type="StyleBoxEmpty" id="stage_empty"]
+
+[sub_resource type="StyleBoxTexture" id="stage_rays"]
+texture = ExtResource("tex_image_battle_minion_glow")
+modulate_color = Color(1, 0.84, 0.42, 0.8)
+
+[sub_resource type="StyleBoxTexture" id="stage_burst"]
+texture = ExtResource("tex_image_battle_minion_glow")
+modulate_color = Color(1, 0.9, 0.55, 1)
+
+[node name="ResultPanel" type="Control" node_paths=PackedStringArray("initial_focus", "title_label", "opponent_label", "turns_label", "record_label", "streak_label", "reward_root", "reward_title_label", "reward_row", "swap_label", "retry_button", "next_button", "lobby_button", "retry_click", "next_click", "lobby_click", "frame", "stage", "stage_click", "stage_title_label", "stage_rays", "stage_row", "stage_hint_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s")
+back_policy = 2
+dim = true
+initial_focus = NodePath("Frame/Buttons/Retry")
+title_label = NodePath("Frame/Title")
+opponent_label = NodePath("Frame/Opponent")
+turns_label = NodePath("Frame/Turns")
+record_label = NodePath("Frame/Record")
+streak_label = NodePath("Frame/Streak")
+reward_root = NodePath("Frame/Reward")
+reward_title_label = NodePath("Frame/Reward/Title")
+reward_row = NodePath("Frame/Reward/Row")
+swap_label = NodePath("Frame/SwapOut")
+retry_button = NodePath("Frame/Buttons/Retry")
+next_button = NodePath("Frame/Buttons/Next")
+lobby_button = NodePath("Frame/Buttons/Lobby")
+retry_click = NodePath("Frame/Buttons/Retry/UIButton")
+next_click = NodePath("Frame/Buttons/Next/UIButton")
+lobby_click = NodePath("Frame/Buttons/Lobby/UIButton")
+frame = NodePath("Frame")
+stage = NodePath("Stage")
+stage_click = NodePath("Stage/UIButton")
+stage_title_label = NodePath("Stage/Center/Title")
+stage_rays = NodePath("Stage/Center/Rays")
+stage_row = NodePath("Stage/Center/Row")
+stage_hint_label = NodePath("Stage/Center/Hint")
+
+[node name="Frame" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -550
+offset_top = -480
+offset_right = 550
+offset_bottom = 480
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("frame")
+
+[node name="Title" type="Label" parent="Frame"]
+layout_mode = 1
+offset_left = 0
+offset_top = 16
+offset_right = 1100
+offset_bottom = 164
+theme_override_colors/font_color = Color(0.910, 0.722, 0.290, 1)
+theme_override_font_sizes/font_size = 100
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 12
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Opponent" type="Label" parent="Frame"]
+layout_mode = 1
+offset_left = 40
+offset_top = 166
+offset_right = 1060
+offset_bottom = 218
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Turns" type="Label" parent="Frame"]
+layout_mode = 1
+offset_left = 40
+offset_top = 220
+offset_right = 1060
+offset_bottom = 264
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Record" type="Label" parent="Frame"]
+layout_mode = 1
+offset_left = 40
+offset_top = 266
+offset_right = 1060
+offset_bottom = 312
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+
+[node name="Streak" type="Label" parent="Frame"]
+layout_mode = 1
+offset_left = 40
+offset_top = 314
+offset_right = 1060
+offset_bottom = 366
+theme_override_colors/font_color = Color(0.910, 0.722, 0.290, 1)
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Reward" type="Control" parent="Frame"]
+layout_mode = 1
+offset_left = 0
+offset_top = 370
+offset_right = 1100
+offset_bottom = 790
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Frame/Reward"]
+layout_mode = 1
+offset_left = 40
+offset_top = 0
+offset_right = 1060
+offset_bottom = 58
+theme_override_colors/font_color = Color(1.000, 0.890, 0.541, 1)
+theme_override_font_sizes/font_size = 38
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 8
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Row" type="Control" parent="Frame/Reward"]
+layout_mode = 1
+offset_left = 0
+offset_top = 64
+offset_right = 1100
+offset_bottom = 384
+mouse_filter = 2
+
+[node name="Card1" type="Control" parent="Frame/Reward/Row" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 205
+offset_top = 30
+offset_right = 381
+offset_bottom = 280
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Frame/Reward/Row/Card1/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card1/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card1/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Frame/Reward/Row/Card1"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card1/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Card2" type="Control" parent="Frame/Reward/Row" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 465
+offset_top = 30
+offset_right = 641
+offset_bottom = 280
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Frame/Reward/Row/Card2/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card2/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card2/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Frame/Reward/Row/Card2"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card2/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Card3" type="Control" parent="Frame/Reward/Row" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 725
+offset_top = 30
+offset_right = 901
+offset_bottom = 280
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Frame/Reward/Row/Card3/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card3/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card3/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Frame/Reward/Row/Card3"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Frame/Reward/Row/Card3/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="SwapOut" type="Label" parent="Frame"]
+visible = false
+layout_mode = 1
+offset_left = 40
+offset_top = 724
+offset_right = 1060
+offset_bottom = 784
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Buttons" type="HBoxContainer" parent="Frame"]
+layout_mode = 1
+offset_left = 40
+offset_top = 800
+offset_right = 1060
+offset_bottom = 910
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Retry" type="Button" parent="Frame/Buttons"]
+custom_minimum_size = Vector2(300, 104)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(1.000, 0.957, 0.863, 1)
+theme_override_colors/font_pressed_color = Color(1.000, 0.878, 0.400, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/disabled = SubResource("btn_disabled")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Frame/Buttons/Retry"]
+script = ExtResource("3_s")
+
+[node name="UIAnchor" type="Node" parent="Frame/Buttons/Retry"]
+script = ExtResource("4_s")
+anchor_name = "result_retry"
+
+[node name="Next" type="Button" parent="Frame/Buttons"]
+custom_minimum_size = Vector2(300, 104)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(1.000, 0.957, 0.863, 1)
+theme_override_colors/font_pressed_color = Color(1.000, 0.878, 0.400, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/disabled = SubResource("btn_disabled")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Frame/Buttons/Next"]
+script = ExtResource("3_s")
+
+[node name="UIAnchor" type="Node" parent="Frame/Buttons/Next"]
+script = ExtResource("4_s")
+anchor_name = "result_next"
+
+[node name="Lobby" type="Button" parent="Frame/Buttons"]
+custom_minimum_size = Vector2(300, 104)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(1.000, 0.957, 0.863, 1)
+theme_override_colors/font_pressed_color = Color(1.000, 0.878, 0.400, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/disabled = SubResource("btn_disabled")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Frame/Buttons/Lobby"]
+script = ExtResource("3_s")
+
+[node name="UIAnchor" type="Node" parent="Frame/Buttons/Lobby"]
+script = ExtResource("4_s")
+anchor_name = "result_lobby"
+
+[node name="Stage" type="Button" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("stage_empty")
+theme_override_styles/hover = SubResource("stage_empty")
+theme_override_styles/pressed = SubResource("stage_empty")
+theme_override_styles/disabled = SubResource("stage_empty")
+theme_override_styles/focus = SubResource("stage_empty")
+
+[node name="UIButton" type="Node" parent="Stage"]
+script = ExtResource("3_s")
+
+[node name="UIAnchor" type="Node" parent="Stage"]
+script = ExtResource("4_s")
+anchor_name = "reward_continue"
+
+[node name="Dim" type="ColorRect" parent="Stage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.02, 0.06, 0.9)
+
+[node name="Center" type="Control" parent="Stage"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960
+offset_top = -540
+offset_right = 960
+offset_bottom = 540
+mouse_filter = 2
+
+[node name="Rays" type="Panel" parent="Stage/Center"]
+layout_mode = 1
+offset_left = 210
+offset_top = 210
+offset_right = 1710
+offset_bottom = 810
+mouse_filter = 2
+pivot_offset = Vector2(750, 300)
+theme_override_styles/panel = SubResource("stage_rays")
+
+[node name="Title" type="Label" parent="Stage/Center"]
+layout_mode = 1
+offset_left = 160
+offset_top = 96
+offset_right = 1760
+offset_bottom = 216
+pivot_offset = Vector2(800, 60)
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 76
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 12
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+
+[node name="Row" type="Control" parent="Stage/Center"]
+layout_mode = 1
+offset_right = 1920
+offset_bottom = 1080
+mouse_filter = 2
+
+[node name="Holder1" type="Control" parent="Stage/Center/Row"]
+layout_mode = 1
+offset_left = 512
+offset_top = 385
+offset_right = 688
+offset_bottom = 635
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(88, 125)
+mouse_filter = 2
+
+[node name="Burst" type="Panel" parent="Stage/Center/Row/Holder1"]
+visible = false
+layout_mode = 1
+offset_left = -62
+offset_top = -62
+offset_right = 238
+offset_bottom = 312
+mouse_filter = 2
+pivot_offset = Vector2(150, 187)
+theme_override_styles/panel = SubResource("stage_burst")
+
+[node name="Card" type="Control" parent="Stage/Center/Row/Holder1" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Stage/Center/Row/Holder1/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder1/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder1/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Stage/Center/Row/Holder1/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder1/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Holder2" type="Control" parent="Stage/Center/Row"]
+layout_mode = 1
+offset_left = 872
+offset_top = 385
+offset_right = 1048
+offset_bottom = 635
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(88, 125)
+mouse_filter = 2
+
+[node name="Burst" type="Panel" parent="Stage/Center/Row/Holder2"]
+visible = false
+layout_mode = 1
+offset_left = -62
+offset_top = -62
+offset_right = 238
+offset_bottom = 312
+mouse_filter = 2
+pivot_offset = Vector2(150, 187)
+theme_override_styles/panel = SubResource("stage_burst")
+
+[node name="Card" type="Control" parent="Stage/Center/Row/Holder2" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Stage/Center/Row/Holder2/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder2/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder2/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Stage/Center/Row/Holder2/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder2/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Holder3" type="Control" parent="Stage/Center/Row"]
+layout_mode = 1
+offset_left = 1232
+offset_top = 385
+offset_right = 1408
+offset_bottom = 635
+scale = Vector2(1.5, 1.5)
+pivot_offset = Vector2(88, 125)
+mouse_filter = 2
+
+[node name="Burst" type="Panel" parent="Stage/Center/Row/Holder3"]
+visible = false
+layout_mode = 1
+offset_left = -62
+offset_top = -62
+offset_right = 238
+offset_bottom = 312
+mouse_filter = 2
+pivot_offset = Vector2(150, 187)
+theme_override_styles/panel = SubResource("stage_burst")
+
+[node name="Card" type="Control" parent="Stage/Center/Row/Holder3" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("2_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Stage/Center/Row/Holder3/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder3/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder3/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Stage/Center/Row/Holder3/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Stage/Center/Row/Holder3/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Hint" type="Label" parent="Stage/Center"]
+visible = false
+layout_mode = 1
+offset_left = 460
+offset_top = 860
+offset_right = 1460
+offset_bottom = 930
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)

@@ -1,0 +1,5 @@
+,,,
+All,Server,All,All
+id(key),duration,duration,int
+id,min_duration,max_duration,max_continue_count
+[mode_battle],10s,2h,0

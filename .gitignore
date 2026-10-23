@@ -1,0 +1,7 @@
+/builds/
+/client/build/
+/server/build/
+/captures/
+/records/loops/*/evidence/
+/records/setup/reference/*
+!/records/setup/reference/reference.md

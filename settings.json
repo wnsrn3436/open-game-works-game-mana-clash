@@ -1,0 +1,162 @@
+{
+  "$schema": "../../open-game-works-core/schemas/game-settings.schema.json",
+  "coreVersion": "0.1.0",
+  "postgresqlMajor": 18,
+  "environments": {
+    "DEV": {
+      "corsAllowedOrigins": [],
+      "adminOperators": [
+        {
+          "name": "ogw",
+          "roles": [
+            "read",
+            "ops",
+            "release"
+          ],
+          "secret": "admin-ogw-dev"
+        }
+      ]
+    },
+    "STG": {
+      "corsAllowedOrigins": [],
+      "adminOperators": [
+        {
+          "name": "ogw",
+          "roles": [
+            "read",
+            "ops",
+            "release"
+          ],
+          "secret": "admin-ogw-stg"
+        }
+      ]
+    },
+    "PROD": {
+      "corsAllowedOrigins": [],
+      "adminOperators": [
+        {
+          "name": "ogw",
+          "roles": [
+            "read"
+          ],
+          "secret": "admin-ogw-prod"
+        }
+      ],
+      "adapters": {
+        "cdn": "cdn-r2"
+      }
+    }
+  },
+  "engine": "godot",
+  "titleScene": "scene/title/title",
+  "firstScene": "scene/lobby/lobby",
+  "loadingScreen": "prefab/common/loading_screen",
+  "termsPopup": "prefab/common/terms_popup",
+  "coreModules": {
+    "client": [
+      "NativeUiCore",
+      "TweenCore",
+      "ScreenEffectCore"
+    ],
+    "server": [
+      "play-session"
+    ]
+  },
+  "supportedLanguages": [
+    "ko",
+    "en"
+  ],
+  "buildPlatforms": [
+    "macos"
+  ],
+  "baseResolution": [
+    1920,
+    1080
+  ],
+  "maxResolution": [
+    2560,
+    1200
+  ],
+  "uiCheckScreens": [
+    {
+      "name": "macbook_air_13",
+      "window": [
+        1440,
+        900
+      ],
+      "fillMode": "Letterbox",
+      "notch": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "keyboard": 0
+    },
+    {
+      "name": "macbook_pro_14_notch",
+      "window": [
+        3024,
+        1964
+      ],
+      "fillMode": "Letterbox",
+      "notch": [
+        0,
+        74,
+        0,
+        0
+      ],
+      "keyboard": 0
+    },
+    {
+      "name": "display_16_9",
+      "window": [
+        1920,
+        1080
+      ],
+      "fillMode": "Letterbox",
+      "notch": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "keyboard": 0
+    },
+    {
+      "name": "ultrawide_21_9",
+      "window": [
+        3440,
+        1440
+      ],
+      "fillMode": "Crop",
+      "notch": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "keyboard": 0
+    }
+  ],
+  "termsDocuments": {
+    "TERMS": {
+      "version": 1,
+      "url": "https://mana-clash.invalid/terms"
+    },
+    "PRIVACY": {
+      "version": 1,
+      "url": "https://mana-clash.invalid/privacy"
+    }
+  },
+  "nicknameUnique": false,
+  "consent": {
+    "ageConfirmation": false,
+    "privacyChoices": false,
+    "trackingRequest": false,
+    "version": 1
+  },
+  "privacy": {
+    "contentData": []
+  }
+}

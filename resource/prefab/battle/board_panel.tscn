@@ -1,0 +1,5113 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/battle/battle_board_panel.gd" id="1_s"]
+[ext_resource type="Script" path="res://core/ui_core/ui_button.gd" id="2_s"]
+[ext_resource type="Script" path="res://core/ui_core/ui_anchor.gd" id="3_s"]
+[ext_resource type="Script" path="res://features/battle/battle_minion_slot.gd" id="4_s"]
+[ext_resource type="Script" path="res://features/battle/battle_hero_slot.gd" id="5_s"]
+[ext_resource type="Script" path="res://features/battle/battle_hand_slot.gd" id="6_s"]
+[ext_resource type="Script" path="res://common/common_card_view.gd" id="7_s"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/button.png" id="tex_nine_slice_ui_button"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/glow_ring.png" id="tex_nine_slice_ui_glow_ring"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/name_plate.png" id="tex_nine_slice_ui_name_plate"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/panel_frame.png" id="tex_nine_slice_ui_panel_frame"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/mana_crystal.png" id="tex_icon_battle_mana_crystal"]
+[ext_resource type="Texture2D" path="res://resource/image/card_back.png" id="tex_image_card_back"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/minion_frame.png" id="tex_image_battle_minion_frame"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/minion_glow.png" id="tex_image_battle_minion_glow"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/minion_guard_frame.png" id="tex_image_battle_minion_guard_frame"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/ward_bubble.png" id="tex_image_battle_ward_bubble"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_attack.png" id="tex_icon_battle_gem_attack"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_health.png" id="tex_icon_battle_gem_health"]
+[ext_resource type="Texture2D" path="res://resource/image/battle/hero_frame.png" id="tex_image_battle_hero_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/battle/card_frame.png" id="tex_nine_slice_battle_card_frame"]
+[ext_resource type="Texture2D" path="res://resource/nine_slice/ui/inset.png" id="tex_nine_slice_ui_inset"]
+[ext_resource type="Texture2D" path="res://resource/icon/battle/gem_mana.png" id="tex_icon_battle_gem_mana"]
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+
+[sub_resource type="StyleBoxTexture" id="btn_hover"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.18, 1.12, 1.02, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.78, 0.72, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_disabled"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.5, 0.5, 0.52, 0.9)
+
+[sub_resource type="StyleBoxTexture" id="btn_focus"]
+expand_margin_left = 6
+expand_margin_top = 6
+expand_margin_right = 6
+expand_margin_bottom = 6
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+modulate_color = Color(1, 0.878, 0.4, 1)
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="mana_plate"]
+content_margin_left = 2
+content_margin_right = 2
+content_margin_top = 2
+content_margin_bottom = 2
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="StyleBoxTexture" id="hint_box"]
+content_margin_left = 20
+content_margin_right = 20
+content_margin_top = 20
+content_margin_bottom = 20
+texture = ExtResource("tex_nine_slice_ui_panel_frame")
+texture_margin_left = 56
+texture_margin_top = 56
+texture_margin_right = 56
+texture_margin_bottom = 56
+
+[sub_resource type="StyleBoxTexture" id="banner"]
+texture = ExtResource("tex_nine_slice_ui_panel_frame")
+texture_margin_left = 56
+texture_margin_top = 56
+texture_margin_right = 56
+texture_margin_bottom = 56
+
+[sub_resource type="StyleBoxTexture" id="dust_ring"]
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+draw_center = false
+modulate_color = Color(0.86, 0.76, 0.56, 1)
+
+[sub_resource type="StyleBoxTexture" id="refusal"]
+content_margin_left = 24.0
+content_margin_right = 24.0
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="StyleBoxTexture" id="end_glow"]
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="crystal"]
+texture = ExtResource("tex_icon_battle_mana_crystal")
+
+[sub_resource type="StyleBoxTexture" id="back"]
+texture = ExtResource("tex_image_card_back")
+
+[sub_resource type="StyleBoxEmpty" id="empty"]
+
+[sub_resource type="StyleBoxTexture" id="minion_frame"]
+texture = ExtResource("tex_image_battle_minion_frame")
+
+[sub_resource type="StyleBoxTexture" id="minion_glow"]
+texture = ExtResource("tex_image_battle_minion_glow")
+texture_margin_left = 30
+texture_margin_top = 30
+texture_margin_right = 30
+texture_margin_bottom = 30
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="guard_frame"]
+texture = ExtResource("tex_image_battle_minion_guard_frame")
+texture_margin_left = 30
+texture_margin_top = 30
+texture_margin_right = 30
+texture_margin_bottom = 30
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="guard_tag"]
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+modulate_color = Color(0.86, 0.9, 0.95, 1)
+
+[sub_resource type="StyleBoxTexture" id="ward"]
+texture = ExtResource("tex_image_battle_ward_bubble")
+modulate_color = Color(1, 1, 1, 0.6)
+
+[sub_resource type="StyleBoxTexture" id="plate"]
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="StyleBoxTexture" id="gem_attack_s"]
+texture = ExtResource("tex_icon_battle_gem_attack")
+
+[sub_resource type="StyleBoxTexture" id="gem_health_s"]
+texture = ExtResource("tex_icon_battle_gem_health")
+
+[sub_resource type="StyleBoxTexture" id="hero_frame"]
+texture = ExtResource("tex_image_battle_hero_frame")
+
+[sub_resource type="StyleBoxTexture" id="hero_glow"]
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="gem_hero_health"]
+texture = ExtResource("tex_icon_battle_gem_health")
+
+[sub_resource type="StyleBoxTexture" id="card_frame"]
+texture = ExtResource("tex_nine_slice_battle_card_frame")
+texture_margin_left = 40
+texture_margin_top = 40
+texture_margin_right = 40
+texture_margin_bottom = 40
+
+[sub_resource type="StyleBoxTexture" id="card_art"]
+texture = ExtResource("tex_nine_slice_ui_inset")
+texture_margin_left = 20
+texture_margin_top = 20
+texture_margin_right = 20
+texture_margin_bottom = 20
+
+[sub_resource type="StyleBoxTexture" id="card_name"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("tex_nine_slice_ui_name_plate")
+texture_margin_left = 14
+texture_margin_top = 14
+texture_margin_right = 14
+texture_margin_bottom = 14
+
+[sub_resource type="StyleBoxTexture" id="card_glow"]
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+draw_center = false
+
+[sub_resource type="StyleBoxTexture" id="gem_mana"]
+texture = ExtResource("tex_icon_battle_gem_mana")
+
+[sub_resource type="StyleBoxTexture" id="gem_attack"]
+texture = ExtResource("tex_icon_battle_gem_attack")
+
+[sub_resource type="StyleBoxTexture" id="gem_health"]
+texture = ExtResource("tex_icon_battle_gem_health")
+
+[sub_resource type="StyleBoxTexture" id="small_normal"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+
+[sub_resource type="StyleBoxTexture" id="small_hover"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(1.18, 1.12, 1.02, 1)
+
+[sub_resource type="StyleBoxTexture" id="small_pressed"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.78, 0.72, 0.66, 1)
+
+[sub_resource type="StyleBoxTexture" id="small_disabled"]
+content_margin_left = 18
+content_margin_right = 18
+content_margin_top = 18
+content_margin_bottom = 18
+texture = ExtResource("tex_nine_slice_ui_button")
+texture_margin_left = 24
+texture_margin_top = 24
+texture_margin_right = 24
+texture_margin_bottom = 24
+modulate_color = Color(0.5, 0.5, 0.52, 0.9)
+
+[sub_resource type="StyleBoxTexture" id="small_focus"]
+expand_margin_left = 6
+expand_margin_top = 6
+expand_margin_right = 6
+expand_margin_bottom = 6
+texture = ExtResource("tex_nine_slice_ui_glow_ring")
+texture_margin_left = 32
+texture_margin_top = 32
+texture_margin_right = 32
+texture_margin_bottom = 32
+modulate_color = Color(1, 0.878, 0.4, 1)
+draw_center = false
+
+[node name="BoardPanel" type="Control" node_paths=PackedStringArray("shake_root", "hand_root", "own_row", "enemy_row", "own_hero", "enemy_hero", "own_mana_label", "own_crystals", "enemy_mana_label", "own_deck_label", "enemy_deck_label", "enemy_hand_label", "enemy_backs", "end_turn_button", "end_turn_click", "end_turn_glow", "pause_button", "pause_click", "backdrop_click", "hint_root", "hint_label", "banner", "banner_label", "turn_label", "status_label", "reveal", "summary_root", "summary_title_label", "summary_lines", "end_banner", "end_banner_label", "end_banner_portrait", "dust_ring", "refusal", "refusal_label", "impact_ring")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_s")
+back_policy = 2
+shake_root = NodePath("Shake")
+hand_root = NodePath("Shake/Hand")
+own_row = NodePath("Shake/OwnRow")
+enemy_row = NodePath("Shake/EnemyRow")
+own_hero = NodePath("Shake/OwnHero")
+enemy_hero = NodePath("Shake/EnemyHero")
+own_mana_label = NodePath("Hud/OwnMana")
+own_crystals = NodePath("Hud/Crystals")
+enemy_mana_label = NodePath("Hud/EnemyMana")
+own_deck_label = NodePath("Hud/OwnDeck")
+enemy_deck_label = NodePath("Hud/EnemyDeck")
+enemy_hand_label = NodePath("Hud/EnemyHandCount")
+enemy_backs = NodePath("Hud/EnemyBacks")
+end_turn_button = NodePath("Hud/EndTurn")
+end_turn_click = NodePath("Hud/EndTurn/UIButton")
+end_turn_glow = NodePath("Hud/EndTurnGlow")
+pause_button = NodePath("Hud/Pause")
+pause_click = NodePath("Hud/Pause/UIButton")
+backdrop_click = NodePath("Backdrop/UIButton")
+hint_root = NodePath("Hud/Hint")
+hint_label = NodePath("Hud/Hint/Label")
+banner = NodePath("Hud/Banner")
+banner_label = NodePath("Hud/Banner/Label")
+turn_label = NodePath("Hud/Turn")
+status_label = NodePath("Hud/Status")
+reveal = NodePath("Shake/Reveal")
+summary_root = NodePath("Hud/Summary")
+summary_title_label = NodePath("Hud/Summary/Title")
+summary_lines = NodePath("Hud/Summary/Lines")
+end_banner = NodePath("Hud/EndBanner")
+end_banner_label = NodePath("Hud/EndBanner/Label")
+end_banner_portrait = NodePath("Hud/EndBanner/Portrait")
+dust_ring = NodePath("Shake/DustRing")
+refusal = NodePath("Hud/Refusal")
+refusal_label = NodePath("Hud/Refusal/Label")
+impact_ring = NodePath("Shake/ImpactRing")
+
+[node name="Backdrop" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+
+[node name="UIButton" type="Node" parent="Backdrop"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Backdrop"]
+script = ExtResource("3_s")
+anchor_name = "board_backdrop"
+
+[node name="Shake" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960
+offset_top = -540
+offset_right = 960
+offset_bottom = 540
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EnemyRow" type="Control" parent="Shake"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Slot1" type="Button" parent="Shake/EnemyRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 352
+offset_right = 1026
+offset_bottom = 524
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyRow/Slot1"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyRow/Slot1"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/EnemyRow/Slot1/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/EnemyRow/Slot1/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot1/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot1/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/EnemyRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot1/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyRow/Slot1"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyRow/Slot1"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyRow/Slot1"]
+script = ExtResource("3_s")
+anchor_name = "enemy_minion_1"
+
+[node name="Slot2" type="Button" parent="Shake/EnemyRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 352
+offset_right = 1026
+offset_bottom = 524
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyRow/Slot2"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyRow/Slot2"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/EnemyRow/Slot2/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/EnemyRow/Slot2/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot2/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot2/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/EnemyRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot2/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyRow/Slot2"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyRow/Slot2"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyRow/Slot2"]
+script = ExtResource("3_s")
+anchor_name = "enemy_minion_2"
+
+[node name="Slot3" type="Button" parent="Shake/EnemyRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 352
+offset_right = 1026
+offset_bottom = 524
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyRow/Slot3"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyRow/Slot3"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/EnemyRow/Slot3/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/EnemyRow/Slot3/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot3/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot3/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/EnemyRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot3/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyRow/Slot3"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyRow/Slot3"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyRow/Slot3"]
+script = ExtResource("3_s")
+anchor_name = "enemy_minion_3"
+
+[node name="Slot4" type="Button" parent="Shake/EnemyRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 352
+offset_right = 1026
+offset_bottom = 524
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyRow/Slot4"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyRow/Slot4"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/EnemyRow/Slot4/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/EnemyRow/Slot4/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot4/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot4/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/EnemyRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot4/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyRow/Slot4"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyRow/Slot4"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyRow/Slot4"]
+script = ExtResource("3_s")
+anchor_name = "enemy_minion_4"
+
+[node name="Slot5" type="Button" parent="Shake/EnemyRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 352
+offset_right = 1026
+offset_bottom = 524
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyRow/Slot5"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyRow/Slot5"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/EnemyRow/Slot5/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/EnemyRow/Slot5/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot5/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot5/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/EnemyRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/EnemyRow/Slot5/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyRow/Slot5"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyRow/Slot5"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyRow/Slot5"]
+script = ExtResource("3_s")
+anchor_name = "enemy_minion_5"
+
+[node name="DustRing" type="Panel" parent="Shake"]
+visible = false
+layout_mode = 1
+offset_left = 840
+offset_top = 560
+offset_right = 1080
+offset_bottom = 650
+mouse_filter = 2
+pivot_offset = Vector2(120, 45)
+theme_override_styles/panel = SubResource("dust_ring")
+
+[node name="OwnRow" type="Control" parent="Shake"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Slot1" type="Button" parent="Shake/OwnRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 584
+offset_right = 1026
+offset_bottom = 756
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnRow/Slot1"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnRow/Slot1"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/OwnRow/Slot1/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/OwnRow/Slot1/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot1/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot1/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/OwnRow/Slot1/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot1/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnRow/Slot1"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/OwnRow/Slot1"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnRow/Slot1"]
+script = ExtResource("3_s")
+anchor_name = "own_minion_1"
+
+[node name="Slot2" type="Button" parent="Shake/OwnRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 584
+offset_right = 1026
+offset_bottom = 756
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnRow/Slot2"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnRow/Slot2"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/OwnRow/Slot2/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/OwnRow/Slot2/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot2/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot2/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/OwnRow/Slot2/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot2/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnRow/Slot2"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/OwnRow/Slot2"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnRow/Slot2"]
+script = ExtResource("3_s")
+anchor_name = "own_minion_2"
+
+[node name="Slot3" type="Button" parent="Shake/OwnRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 584
+offset_right = 1026
+offset_bottom = 756
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnRow/Slot3"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnRow/Slot3"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/OwnRow/Slot3/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/OwnRow/Slot3/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot3/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot3/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/OwnRow/Slot3/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot3/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnRow/Slot3"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/OwnRow/Slot3"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnRow/Slot3"]
+script = ExtResource("3_s")
+anchor_name = "own_minion_3"
+
+[node name="Slot4" type="Button" parent="Shake/OwnRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 584
+offset_right = 1026
+offset_bottom = 756
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnRow/Slot4"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnRow/Slot4"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/OwnRow/Slot4/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/OwnRow/Slot4/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot4/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot4/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/OwnRow/Slot4/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot4/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnRow/Slot4"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/OwnRow/Slot4"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnRow/Slot4"]
+script = ExtResource("3_s")
+anchor_name = "own_minion_4"
+
+[node name="Slot5" type="Button" parent="Shake/OwnRow" node_paths=PackedStringArray("body", "art", "name_label", "attack_label", "health_label", "guard_frame", "guard_label", "ward", "sleep_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 894
+offset_top = 584
+offset_right = 1026
+offset_bottom = 756
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("4_s")
+body = NodePath("Body")
+art = NodePath("Body/Frame/Art")
+name_label = NodePath("Body/Name")
+attack_label = NodePath("Body/Attack/Label")
+health_label = NodePath("Body/Health/Label")
+guard_frame = NodePath("Body/Guard")
+guard_label = NodePath("Body/Guard/Tag/Label")
+ward = NodePath("Body/Ward")
+sleep_label = NodePath("Body/Sleep")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnRow/Slot5"]
+layout_mode = 1
+offset_left = -18
+offset_top = -18
+offset_right = 150
+offset_bottom = 178
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("minion_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnRow/Slot5"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 172
+mouse_filter = 2
+pivot_offset = Vector2(66, 86)
+
+[node name="Frame" type="Panel" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 132
+offset_bottom = 156
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("minion_frame")
+
+[node name="Art" type="TextureRect" parent="Shake/OwnRow/Slot5/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7
+offset_top = 7
+offset_right = -7
+offset_bottom = -7
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Guard" type="Panel" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -6
+offset_top = -6
+offset_right = 138
+offset_bottom = 162
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_frame")
+
+[node name="Tag" type="Panel" parent="Shake/OwnRow/Slot5/Body/Guard"]
+layout_mode = 1
+offset_left = 40
+offset_top = -10
+offset_right = 104
+offset_bottom = 18
+mouse_filter = 2
+theme_override_styles/panel = SubResource("guard_tag")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot5/Body/Guard/Tag"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.93, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Ward" type="Panel" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -4
+offset_top = -4
+offset_right = 136
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(70, 82)
+theme_override_styles/panel = SubResource("ward")
+
+[node name="Name" type="Label" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 4
+offset_top = 104
+offset_right = 128
+offset_bottom = 128
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("plate")
+clip_text = true
+
+[node name="Sleep" type="Label" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 84
+offset_top = 20
+offset_right = 128
+offset_bottom = 46
+theme_override_colors/font_color = Color(0.624, 0.827, 1.000, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("plate")
+
+[node name="Attack" type="Panel" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = -8
+offset_top = 128
+offset_right = 40
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot5/Body/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/OwnRow/Slot5/Body"]
+layout_mode = 1
+offset_left = 92
+offset_top = 128
+offset_right = 140
+offset_bottom = 176
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health_s")
+
+[node name="Label" type="Label" parent="Shake/OwnRow/Slot5/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnRow/Slot5"]
+layout_mode = 1
+offset_left = 6
+offset_top = 34
+offset_right = 126
+offset_bottom = 104
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 50
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 35)
+
+[node name="UIButton" type="Node" parent="Shake/OwnRow/Slot5"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnRow/Slot5"]
+script = ExtResource("3_s")
+anchor_name = "own_minion_5"
+
+[node name="EnemyHero" type="Button" parent="Shake" node_paths=PackedStringArray("body", "portrait", "name_label", "health_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 875
+offset_top = 30
+offset_right = 1045
+offset_bottom = 216
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("5_s")
+body = NodePath("Body")
+portrait = NodePath("Body/Frame/Portrait")
+name_label = NodePath("Body/Name")
+health_label = NodePath("Body/Health/Label")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/EnemyHero"]
+layout_mode = 1
+offset_left = 0
+offset_top = -10
+offset_right = 170
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hero_glow")
+
+[node name="Body" type="Control" parent="Shake/EnemyHero"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 170
+offset_bottom = 186
+mouse_filter = 2
+pivot_offset = Vector2(85, 75)
+
+[node name="Frame" type="Panel" parent="Shake/EnemyHero/Body"]
+layout_mode = 1
+offset_left = 10
+offset_top = 0
+offset_right = 160
+offset_bottom = 150
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("hero_frame")
+
+[node name="Portrait" type="TextureRect" parent="Shake/EnemyHero/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9
+offset_top = 9
+offset_right = -9
+offset_bottom = -9
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Plate" type="Panel" parent="Shake/EnemyHero/Body"]
+layout_mode = 1
+offset_left = -250
+offset_top = 49
+offset_right = 350
+offset_bottom = 179
+scale = Vector2(0.4, 0.4)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("banner")
+
+[node name="Name" type="Label" parent="Shake/EnemyHero/Body"]
+layout_mode = 1
+offset_left = -250
+offset_top = 54
+offset_right = -10
+offset_bottom = 96
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 23
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("empty")
+
+[node name="Health" type="Panel" parent="Shake/EnemyHero/Body"]
+layout_mode = 1
+offset_left = 118
+offset_top = 100
+offset_right = 178
+offset_bottom = 160
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_hero_health")
+
+[node name="Label" type="Label" parent="Shake/EnemyHero/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/EnemyHero"]
+layout_mode = 1
+offset_left = 25
+offset_top = 34
+offset_right = 145
+offset_bottom = 114
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 60
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 12
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 40)
+
+[node name="UIButton" type="Node" parent="Shake/EnemyHero"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/EnemyHero"]
+script = ExtResource("3_s")
+anchor_name = "enemy_hero"
+
+[node name="OwnHero" type="Button" parent="Shake" node_paths=PackedStringArray("body", "portrait", "name_label", "health_label", "glow", "number_label", "click")]
+layout_mode = 1
+offset_left = 380
+offset_top = 620
+offset_right = 550
+offset_bottom = 806
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("5_s")
+body = NodePath("Body")
+portrait = NodePath("Body/Frame/Portrait")
+name_label = NodePath("Body/Name")
+health_label = NodePath("Body/Health/Label")
+glow = NodePath("Glow")
+number_label = NodePath("Number")
+click = NodePath("UIButton")
+
+[node name="Glow" type="Panel" parent="Shake/OwnHero"]
+layout_mode = 1
+offset_left = 0
+offset_top = -10
+offset_right = 170
+offset_bottom = 160
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hero_glow")
+
+[node name="Body" type="Control" parent="Shake/OwnHero"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 170
+offset_bottom = 186
+mouse_filter = 2
+pivot_offset = Vector2(85, 75)
+
+[node name="Frame" type="Panel" parent="Shake/OwnHero/Body"]
+layout_mode = 1
+offset_left = 10
+offset_top = 0
+offset_right = 160
+offset_bottom = 150
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("hero_frame")
+
+[node name="Portrait" type="TextureRect" parent="Shake/OwnHero/Body/Frame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9
+offset_top = 9
+offset_right = -9
+offset_bottom = -9
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Plate" type="Panel" parent="Shake/OwnHero/Body"]
+layout_mode = 1
+offset_left = 10
+offset_top = -49
+offset_right = 385
+offset_bottom = 71
+scale = Vector2(0.4, 0.4)
+mouse_filter = 2
+theme_override_styles/panel = SubResource("banner")
+
+[node name="Name" type="Label" parent="Shake/OwnHero/Body"]
+layout_mode = 1
+offset_left = 10
+offset_top = -44
+offset_right = 160
+offset_bottom = -6
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 23
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_styles/normal = SubResource("empty")
+
+[node name="Health" type="Panel" parent="Shake/OwnHero/Body"]
+layout_mode = 1
+offset_left = 118
+offset_top = 100
+offset_right = 178
+offset_bottom = 160
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_hero_health")
+
+[node name="Label" type="Label" parent="Shake/OwnHero/Body/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Number" type="Label" parent="Shake/OwnHero"]
+layout_mode = 1
+offset_left = 25
+offset_top = 34
+offset_right = 145
+offset_bottom = 114
+theme_override_colors/font_color = Color(0.839, 0.271, 0.271, 1)
+theme_override_font_sizes/font_size = 60
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 12
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+pivot_offset = Vector2(60, 40)
+
+[node name="UIButton" type="Node" parent="Shake/OwnHero"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/OwnHero"]
+script = ExtResource("3_s")
+anchor_name = "own_hero"
+
+[node name="Hand" type="Control" parent="Shake"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Slot1" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot1" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot1/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot1/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot1/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot1/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot1/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot1"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot1"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_1"
+
+[node name="Slot2" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot2" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot2/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot2/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot2/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot2/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot2/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot2"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot2"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_2"
+
+[node name="Slot3" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot3" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot3/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot3/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot3/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot3/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot3/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot3"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot3"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_3"
+
+[node name="Slot4" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot4" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot4/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot4/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot4/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot4/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot4/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot4"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot4"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_4"
+
+[node name="Slot5" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot5" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot5/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot5/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot5/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot5/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot5/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot5"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot5"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_5"
+
+[node name="Slot6" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot6" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot6/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot6/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot6/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot6/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot6/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot6"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot6"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_6"
+
+[node name="Slot7" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot7" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot7/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot7/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot7/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot7/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot7/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot7"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot7"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_7"
+
+[node name="Slot8" type="Button" parent="Shake/Hand" node_paths=PackedStringArray("card", "click")]
+layout_mode = 1
+offset_left = 872
+offset_top = 816
+offset_right = 1048
+offset_bottom = 1066
+focus_mode = 0
+theme_override_styles/normal = SubResource("empty")
+theme_override_styles/hover = SubResource("empty")
+theme_override_styles/pressed = SubResource("empty")
+theme_override_styles/disabled = SubResource("empty")
+theme_override_styles/focus = SubResource("empty")
+script = ExtResource("6_s")
+card = NodePath("Card")
+click = NodePath("UIButton")
+
+[node name="Card" type="Control" parent="Shake/Hand/Slot8" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = -16
+offset_top = -16
+offset_right = 192
+offset_bottom = 266
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Hand/Slot8/Card/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot8/Card/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot8/Card/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Hand/Slot8/Card"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Hand/Slot8/Card/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="UIButton" type="Node" parent="Shake/Hand/Slot8"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Shake/Hand/Slot8"]
+script = ExtResource("3_s")
+anchor_name = "hand_card_8"
+
+[node name="ImpactRing" type="TextureRect" parent="Shake"]
+visible = false
+layout_mode = 1
+offset_left = 840
+offset_top = 420
+offset_right = 1080
+offset_bottom = 660
+mouse_filter = 2
+pivot_offset = Vector2(120, 120)
+texture = ExtResource("tex_image_battle_minion_glow")
+expand_mode = 1
+self_modulate = Color(1, 0.78, 0.42, 1)
+
+[node name="Reveal" type="Control" parent="Shake" node_paths=PackedStringArray("art", "cost_label", "name_label", "type_label", "text_label", "attack_badge", "attack_label", "health_badge", "health_label", "glow")]
+layout_mode = 1
+offset_left = 1392
+offset_top = 196
+offset_right = 1568
+offset_bottom = 446
+mouse_filter = 2
+pivot_offset = Vector2(88, 125)
+script = ExtResource("7_s")
+art = NodePath("ArtFrame/Art")
+cost_label = NodePath("Cost/Label")
+name_label = NodePath("Name")
+type_label = NodePath("Type")
+text_label = NodePath("Text")
+attack_badge = NodePath("Attack")
+attack_label = NodePath("Attack/Label")
+health_badge = NodePath("Health")
+health_label = NodePath("Health/Label")
+glow = NodePath("Glow")
+
+[node name="Glow" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = -7
+offset_top = -7
+offset_right = 183
+offset_bottom = 257
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_glow")
+
+[node name="Frame" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 0
+offset_top = 0
+offset_right = 176
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("card_frame")
+
+[node name="ArtFrame" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 9
+offset_top = 26
+offset_right = 167
+offset_bottom = 120
+mouse_filter = 2
+clip_children = 2
+theme_override_styles/panel = SubResource("card_art")
+
+[node name="Art" type="TextureRect" parent="Shake/Reveal/ArtFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3
+offset_top = 3
+offset_right = -3
+offset_bottom = -3
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Name" type="Label" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 6
+offset_top = 118
+offset_right = 170
+offset_bottom = 154
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("card_name")
+clip_text = true
+
+[node name="Type" type="Label" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 46
+offset_top = 214
+offset_right = 130
+offset_bottom = 246
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 10
+offset_top = 154
+offset_right = 166
+offset_bottom = 210
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+theme_override_constants/line_spacing = -3
+
+[node name="Cost" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = -10
+offset_top = -10
+offset_right = 38
+offset_bottom = 38
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_mana")
+
+[node name="Label" type="Label" parent="Shake/Reveal/Cost"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Attack" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 2
+offset_top = 210
+offset_right = 42
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_attack")
+
+[node name="Label" type="Label" parent="Shake/Reveal/Attack"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.165, 0.102, 0.039, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Health" type="Panel" parent="Shake/Reveal"]
+layout_mode = 1
+offset_left = 134
+offset_top = 210
+offset_right = 174
+offset_bottom = 250
+mouse_filter = 2
+theme_override_styles/panel = SubResource("gem_health")
+
+[node name="Label" type="Label" parent="Shake/Reveal/Health"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Hud" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -960
+offset_top = -540
+offset_right = 960
+offset_bottom = 540
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EndTurnGlow" type="Panel" parent="Hud"]
+layout_mode = 1
+offset_left = 1636
+offset_top = 422
+offset_right = 1904
+offset_bottom = 554
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("end_glow")
+
+[node name="EndTurn" type="Button" parent="Hud"]
+layout_mode = 1
+offset_left = 1660
+offset_top = 446
+offset_right = 1880
+offset_bottom = 530
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(1.000, 0.957, 0.863, 1)
+theme_override_colors/font_pressed_color = Color(1.000, 0.878, 0.400, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("btn_normal")
+theme_override_styles/hover = SubResource("btn_hover")
+theme_override_styles/pressed = SubResource("btn_pressed")
+theme_override_styles/disabled = SubResource("btn_disabled")
+theme_override_styles/focus = SubResource("btn_focus")
+
+[node name="UIButton" type="Node" parent="Hud/EndTurn"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Hud/EndTurn"]
+script = ExtResource("3_s")
+anchor_name = "end_turn"
+
+[node name="Pause" type="Button" parent="Hud"]
+layout_mode = 1
+offset_left = 24
+offset_top = 20
+offset_right = 224
+offset_bottom = 84
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_hover_color = Color(1.000, 0.957, 0.863, 1)
+theme_override_colors/font_pressed_color = Color(1.000, 0.878, 0.400, 1)
+theme_override_colors/font_focus_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_colors/font_disabled_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("small_normal")
+theme_override_styles/hover = SubResource("small_hover")
+theme_override_styles/pressed = SubResource("small_pressed")
+theme_override_styles/disabled = SubResource("small_disabled")
+theme_override_styles/focus = SubResource("small_focus")
+
+[node name="UIButton" type="Node" parent="Hud/Pause"]
+script = ExtResource("2_s")
+
+[node name="UIAnchor" type="Node" parent="Hud/Pause"]
+script = ExtResource("3_s")
+anchor_name = "battle_pause"
+
+[node name="Turn" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 24
+offset_top = 106
+offset_right = 344
+offset_bottom = 146
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 0
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="EnemyMana" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 1580
+offset_top = 28
+offset_right = 1880
+offset_bottom = 88
+theme_override_colors/font_color = Color(0.247, 0.663, 0.961, 1)
+theme_override_font_sizes/font_size = 36
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("mana_plate")
+
+[node name="EnemyDeck" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 1580
+offset_top = 100
+offset_right = 1880
+offset_bottom = 140
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="EnemyBacks" type="Control" parent="Hud"]
+layout_mode = 1
+offset_left = 1100
+offset_top = 0
+offset_right = 1560
+offset_bottom = 156
+mouse_filter = 2
+
+[node name="Back1" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back2" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back3" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back4" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back5" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back6" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back7" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="Back8" type="Panel" parent="Hud/EnemyBacks"]
+layout_mode = 1
+offset_right = 96
+offset_bottom = 136
+mouse_filter = 2
+theme_override_styles/panel = SubResource("back")
+
+[node name="EnemyHandCount" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 1150
+offset_top = 156
+offset_right = 1550
+offset_bottom = 190
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="OwnMana" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 1580
+offset_top = 840
+offset_right = 1880
+offset_bottom = 904
+theme_override_colors/font_color = Color(0.247, 0.663, 0.961, 1)
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_styles/normal = SubResource("mana_plate")
+
+[node name="Crystals" type="HBoxContainer" parent="Hud"]
+layout_mode = 1
+offset_left = 1560
+offset_top = 914
+offset_right = 1900
+offset_bottom = 946
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="Crystal1" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal2" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal3" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal4" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal5" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal6" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal7" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal8" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal9" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="Crystal10" type="Panel" parent="Hud/Crystals"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("crystal")
+
+[node name="OwnDeck" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 1580
+offset_top = 960
+offset_right = 1880
+offset_bottom = 1000
+theme_override_colors/font_color = Color(0.722, 0.675, 0.604, 1)
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Hint" type="Panel" parent="Hud"]
+layout_mode = 1
+offset_left = 24
+offset_top = 390
+offset_right = 368
+offset_bottom = 610
+visible = false
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hint_box")
+
+[node name="Label" type="Label" parent="Hud/Hint"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 30.0
+offset_top = 24.0
+offset_right = -30.0
+offset_bottom = -24.0
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+autowrap_mode = 3
+
+[node name="Status" type="Label" parent="Hud"]
+layout_mode = 1
+offset_left = 560
+offset_top = 400
+offset_right = 1360
+offset_bottom = 520
+theme_override_colors/font_color = Color(0.910, 0.722, 0.290, 1)
+theme_override_font_sizes/font_size = 54
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+visible = false
+
+[node name="Banner" type="Panel" parent="Hud"]
+layout_mode = 1
+offset_left = 30
+offset_top = 400
+offset_right = 560
+offset_bottom = 540
+visible = false
+mouse_filter = 2
+pivot_offset = Vector2(265, 70)
+theme_override_styles/panel = SubResource("banner")
+
+[node name="Label" type="Label" parent="Hud/Banner"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 62
+autowrap_mode = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 10
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Summary" type="Panel" parent="Hud"]
+visible = false
+layout_mode = 1
+offset_left = 24
+offset_top = 152
+offset_right = 440
+offset_bottom = 380
+clip_contents = true
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hint_box")
+
+[node name="Title" type="Label" parent="Hud/Summary"]
+layout_mode = 1
+offset_left = 26
+offset_top = 16
+offset_right = 390
+offset_bottom = 50
+theme_override_colors/font_color = Color(0.910, 0.722, 0.290, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+
+[node name="Lines" type="VBoxContainer" parent="Hud/Summary"]
+layout_mode = 1
+offset_left = 26
+offset_top = 52
+offset_right = 390
+offset_bottom = 214
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Line1" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Line2" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0.36, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Line3" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.42, 0.36, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Line4" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.95, 0.5, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Line5" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="Line6" type="Label" parent="Hud/Summary/Lines"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.957, 0.922, 0.867, 1)
+theme_override_font_sizes/font_size = 19
+autowrap_mode = 3
+mouse_filter = 2
+
+[node name="EndBanner" type="Panel" parent="Hud"]
+visible = false
+layout_mode = 1
+offset_left = 500
+offset_top = 380
+offset_right = 1420
+offset_bottom = 640
+mouse_filter = 2
+pivot_offset = Vector2(460, 130)
+theme_override_styles/panel = SubResource("banner")
+
+[node name="Portrait" type="TextureRect" parent="Hud/EndBanner"]
+layout_mode = 1
+offset_left = 44
+offset_top = 40
+offset_right = 224
+offset_bottom = 220
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="Hud/EndBanner"]
+layout_mode = 1
+offset_left = 240
+offset_top = 30
+offset_right = 880
+offset_bottom = 230
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 120
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 14
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+
+[node name="Refusal" type="Panel" parent="Hud"]
+visible = false
+layout_mode = 1
+offset_left = 700
+offset_top = 748
+offset_right = 1220
+offset_bottom = 804
+mouse_filter = 2
+pivot_offset = Vector2(260, 28)
+theme_override_styles/panel = SubResource("refusal")
+
+[node name="Label" type="Label" parent="Hud/Refusal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_right = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.5, 1)
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+theme_override_constants/outline_size = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+text_overrun_behavior = 3

@@ -1,0 +1,247 @@
+key,source,source_hash,current_hash,text
+card.name.[card_apprentice_scholar],견습 학자,cc1d8d18f5fc7990,cc1d8d18f5fc7990,Apprentice Scholar
+card.name.[card_ash_wraith],잿빛 망령,1f65696bb09008a0,1f65696bb09008a0,Ash Wraith
+card.name.[card_blessing],수호의 축복,c0b8113401c1dbb7,c0b8113401c1dbb7,Guardian's Blessing
+card.name.[card_crystal_turtle],수정 거북,6e86eee1610a6114,6e86eee1610a6114,Crystal Turtle
+card.name.[card_dawn_knight],새벽 기사,1fea69ee6452a191,1fea69ee6452a191,Dawn Knight
+card.name.[card_elder_treant],고목 수호자,b362710294faf61b,b362710294faf61b,Elder Treant
+card.name.[card_ember_imp],불씨 도깨비,5fc8f6b993a7fe5d,5fc8f6b993a7fe5d,Ember Imp
+card.name.[card_firestorm],화염 폭풍,75b809bae084fefd,75b809bae084fefd,Firestorm
+card.name.[card_flame_wyvern],화염 비룡,2d268e30dd1606f4,2d268e30dd1606f4,Flame Wyvern
+card.name.[card_gale_hound],질풍 사냥개,f7832bba65835665,f7832bba65835665,Gale Hound
+card.name.[card_herb_healer],약초 치유사,312d0101eb59a89e,312d0101eb59a89e,Herb Healer
+card.name.[card_insight],통찰,58796950ad8b5136,58796950ad8b5136,Insight
+card.name.[card_iron_wolf],강철 늑대,ca28584f91ac31cb,ca28584f91ac31cb,Iron Wolf
+card.name.[card_lightning_lance],번개 창,fae7e7b8906104ad,fae7e7b8906104ad,Lightning Lance
+card.name.[card_magma_golem],용암 골렘,6e3459cf8f6b87bd,6e3459cf8f6b87bd,Magma Golem
+card.name.[card_mana_bolt],마나 화살,2aa3a02bc9b2244a,2aa3a02bc9b2244a,Mana Bolt
+card.name.[card_moss_guard],이끼 방패병,629b7c4966fc48bb,629b7c4966fc48bb,Moss Guard
+card.name.[card_sky_colossus],하늘 거신,d00649a9445263cc,d00649a9445263cc,Sky Colossus
+card.name.[card_storm_rider],폭풍 기수,7d183728164f8bdd,7d183728164f8bdd,Storm Rider
+card.name.[card_war_drummer],전쟁 북잡이,b3e4811c1099d6db,b3e4811c1099d6db,War Drummer
+card.text.[card_apprentice_scholar],등장 시: 카드를 {amount}장 뽑습니다,b48bff7b4e915f27,b48bff7b4e915f27,On Play: Draw {amount} {amount:plural:card/cards}
+card.text.[card_ash_wraith],소멸 시: 적 영웅에게 피해 {amount},f3d9968f7c6596e9,f3d9968f7c6596e9,On Death: Deal {amount} damage to the enemy Hero
+card.text.[card_blessing],내 하수인 하나에 +{amount}/+{amount2},30cf5b1cdc87ae59,30cf5b1cdc87ae59,Give a friendly Minion +{amount}/+{amount2}
+card.text.[card_crystal_turtle],수호,46f4155cee3d3125,46f4155cee3d3125,Guard
+card.text.[card_dawn_knight],결계,0d2025e9375b3781,0d2025e9375b3781,Ward
+card.text.[card_elder_treant],수호,46f4155cee3d3125,46f4155cee3d3125,Guard
+card.text.[card_firestorm],모든 적 하수인에게 피해 {amount},e244f71d1740be98,e244f71d1740be98,Deal {amount} damage to all enemy Minions
+card.text.[card_flame_wyvern],등장 시: 모든 적 하수인에게 피해 {amount},2bc6461735ae32f6,2bc6461735ae32f6,On Play: Deal {amount} damage to all enemy Minions
+card.text.[card_gale_hound],돌격,804cff1eac63e003,804cff1eac63e003,Charge
+card.text.[card_herb_healer],등장 시: 내 영웅의 체력을 {amount} 회복합니다,f886caca27f5d80f,f886caca27f5d80f,On Play: Restore {amount} health to your Hero
+card.text.[card_insight],카드를 {amount}장 뽑습니다,a70b7680e2ab8b97,a70b7680e2ab8b97,Draw {amount} {amount:plural:card/cards}
+card.text.[card_lightning_lance],하나를 골라 피해 {amount},6a22e434d3d5a428,6a22e434d3d5a428,Choose a target and deal {amount} damage
+card.text.[card_magma_golem],수호,46f4155cee3d3125,46f4155cee3d3125,Guard
+card.text.[card_mana_bolt],하나를 골라 피해 {amount},6a22e434d3d5a428,6a22e434d3d5a428,Choose a target and deal {amount} damage
+card.text.[card_moss_guard],수호,46f4155cee3d3125,46f4155cee3d3125,Guard
+card.text.[card_sky_colossus],결계,0d2025e9375b3781,0d2025e9375b3781,Ward
+card.text.[card_storm_rider],돌격,804cff1eac63e003,804cff1eac63e003,Charge
+card.text.[card_war_drummer],등장 시: 다른 내 하수인 모두 공격력 +{amount},cd622b71a5a1a2c1,cd622b71a5a1a2c1,On Play: Give your other Minions +{amount} attack
+language.name.[lang_en],English,4579c7dbadbc4790,4579c7dbadbc4790,English
+language.name.[lang_ko],한국어,543d811aac05e8e1,543d811aac05e8e1,한국어
+opponent.desc.[opp_apprentice],교환은 몰라도 영웅만 노리는 수련생. 영웅 체력이 낮아요,4e00393b988887a8,4e00393b988887a8,A trainee who knows nothing about trading and only goes for your Hero. Their Hero has low health.
+opponent.desc.[opp_archmage],주문으로 판을 쓸어내는 사다리의 끝,b8f5552b3a1f7e6c,b8f5552b3a1f7e6c,"The top of the ladder, sweeping the board with Spells."
+opponent.desc.[opp_warden],수호 하수인으로 버티다 큰 나무로 밀어붙여요,8dc23899c0d1d9b0,8dc23899c0d1d9b0,"Holds out with Guard Minions, then pushes forward with a big tree."
+opponent.name.[opp_apprentice],수련생 미로,804761a4dd3cc358,804761a4dd3cc358,Miro the Trainee
+opponent.name.[opp_archmage],대마법사 벨로크,8d2f086302cf259a,8d2f086302cf259a,Velloch the Archmage
+opponent.name.[opp_warden],숲의 파수꾼 타라,59e7803bcfe91f21,59e7803bcfe91f21,Tara the Forest Warden
+opponent.tip.[opp_apprentice],"수호 하수인으로 영웅을 지키고, 공격할 수 있는 하수인으로 영웅을 노려요",92fba1f36312421a,92fba1f36312421a,"Protect your Hero with Guard Minions, and go after theirs with Minions that can attack"
+opponent.tip.[opp_archmage],화염 폭풍에 대비해 하수인을 한꺼번에 많이 내지 마세요,129a525e131b0133,129a525e131b0133,Don't play too many Minions at once — watch out for Firestorm
+opponent.tip.[opp_warden],수호 하수인은 마나 화살이나 번개 창으로 먼저 치워요,0c3a3da0f36281d6,0c3a3da0f36281d6,Clear Guard Minions first with Mana Bolt or Lightning Lance
+reserved_string.text.[app_name],마나 클래시,902ceb55c8728989,902ceb55c8728989,Mana Clash
+reserved_string.text.[auth_age_confirm],확인,1aacb54c49924296,1aacb54c49924296,OK
+reserved_string.text.[auth_age_invalid],올바른 연도와 월을 입력하세요.,5b3a53405171535b,5b3a53405171535b,Enter a valid year and month.
+reserved_string.text.[auth_age_month],월,ed8a406d02b187b8,ed8a406d02b187b8,Month
+reserved_string.text.[auth_age_title],태어난 연도와 월을 입력하세요,55de38dd31149ce7,55de38dd31149ce7,Enter your birth year and month
+reserved_string.text.[auth_age_year],연도,afd218a26904f527,afd218a26904f527,Year
+reserved_string.text.[auth_deletion_back],뒤로,2df06869205b07fe,2df06869205b07fe,Back
+reserved_string.text.[auth_deletion_body],게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.,55eb5264f9b60fa1,55eb5264f9b60fa1,Enter the user ID and deletion code you got in the game.
+reserved_string.text.[auth_deletion_code],삭제 코드,f1fee09ca28dbb39,f1fee09ca28dbb39,Deletion code
+reserved_string.text.[auth_deletion_confirm],삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.,611a6cb9cb15b714,611a6cb9cb15b714,I understand that deleted data cannot be restored.
+reserved_string.text.[auth_deletion_done],계정 삭제를 요청했습니다.,a83d15176d635fa1,a83d15176d635fa1,Account deletion has been requested.
+reserved_string.text.[auth_deletion_failed],계정을 삭제하지 못했습니다.,f2132aeb0e296baf,f2132aeb0e296baf,Could not delete the account.
+reserved_string.text.[auth_deletion_google],Google 로그인으로 삭제,2a1cfc17fc383602,2a1cfc17fc383602,Delete with Google sign-in
+reserved_string.text.[auth_deletion_rate_limited],시도가 너무 많습니다. 잠시 뒤 다시 시도하세요.,bc192b22d39dbdfc,bc192b22d39dbdfc,Too many attempts. Please try again later.
+reserved_string.text.[auth_deletion_retry],다시 시도,196856a662bd9084,196856a662bd9084,Try again
+reserved_string.text.[auth_deletion_submit],삭제,6139b6c3ed73cd4a,6139b6c3ed73cd4a,Delete
+reserved_string.text.[auth_deletion_title],계정 삭제,07051913f67d3a7e,07051913f67d3a7e,Delete account
+reserved_string.text.[auth_deletion_user_id],사용자 ID,85f6a450a02dcda1,85f6a450a02dcda1,User ID
+reserved_string.text.[auth_go_to_title],타이틀로,ebf1eb5c33b7d645,ebf1eb5c33b7d645,Go to title
+reserved_string.text.[auth_google_desktop_done],로그인이 끝났습니다. 게임으로 돌아가세요.,778b373ddaab6ecf,778b373ddaab6ecf,Sign-in complete. Return to the game.
+reserved_string.text.[auth_privacy_ad_personalization],맞춤 광고,c2f59f8ae2b8a3b0,c2f59f8ae2b8a3b0,Personalized ads
+reserved_string.text.[auth_privacy_analytics],이용 분석,5a15c8aaef16f97e,5a15c8aaef16f97e,Usage analytics
+reserved_string.text.[auth_privacy_confirm],확인,1aacb54c49924296,1aacb54c49924296,OK
+reserved_string.text.[auth_privacy_title],개인정보 선택,84908379872ae75e,84908379872ae75e,Privacy choices
+reserved_string.text.[auth_push_ad],이벤트와 혜택 알림,4568890021b8c58a,4568890021b8c58a,Event and offer notifications
+reserved_string.text.[auth_push_ad_denied],{date:date}에 이벤트와 혜택 알림을 거부했습니다.,0da5e6a9ec10c1cf,0da5e6a9ec10c1cf,You declined event and offer notifications on {date:date}.
+reserved_string.text.[auth_push_ad_granted],{date:date}에 이벤트와 혜택 알림에 동의했습니다.,b7d1de542d1bc183,b7d1de542d1bc183,You agreed to event and offer notifications on {date:date}.
+reserved_string.text.[auth_push_confirm],확인,1aacb54c49924296,1aacb54c49924296,OK
+reserved_string.text.[auth_push_night],야간 알림,d3d0a6b97d797326,d3d0a6b97d797326,Night notifications
+reserved_string.text.[auth_push_night_denied],{date:date}에 야간 알림을 거부했습니다.,7c492972f8d50e68,7c492972f8d50e68,You declined night notifications on {date:date}.
+reserved_string.text.[auth_push_night_granted],{date:date}에 야간 알림에 동의했습니다.,8c758602e72fc4e9,8c758602e72fc4e9,You agreed to night notifications on {date:date}.
+reserved_string.text.[auth_push_title],알림,12ddd6ca69068faa,12ddd6ca69068faa,Notifications
+reserved_string.text.[auth_recover_back],뒤로,2df06869205b07fe,2df06869205b07fe,Back
+reserved_string.text.[auth_recover_guest],게스트 계정을 찾을 수 없습니다.,f43c118ab28d466f,f43c118ab28d466f,Guest account not found.
+reserved_string.text.[auth_recover_linked],연동한 계정으로 로그인,6643e551a57c3b05,6643e551a57c3b05,Sign in with a linked account
+reserved_string.text.[auth_recover_login_apple],Apple로 로그인,8a40ed8920ed2b84,8a40ed8920ed2b84,Sign in with Apple
+reserved_string.text.[auth_recover_login_google],Google로 로그인,9404977fe76e6108,9404977fe76e6108,Sign in with Google
+reserved_string.text.[auth_recover_new],새 계정으로 시작,391c1e0bebe1c8d9,391c1e0bebe1c8d9,Start with a new account
+reserved_string.text.[auth_recover_new_confirm],새 계정은 이전 계정으로 돌아갈 수 없습니다. 새 계정으로 시작할까요?,d29f1ca7c446fd76,d29f1ca7c446fd76,You cannot go back to the previous account from a new account. Start with a new account?
+reserved_string.text.[auth_recover_new_ok],시작,b1f28cd21af730b2,b1f28cd21af730b2,Start
+reserved_string.text.[auth_session_replaced],다른 기기에서 이 계정으로 로그인했습니다.,c3bfd2dedf77252c,c3bfd2dedf77252c,This account was signed in on another device.
+reserved_string.text.[auth_terms_agree_privacy],개인정보 처리방침에 동의합니다,87308a9cf9e514f1,87308a9cf9e514f1,I agree to the Privacy Policy
+reserved_string.text.[auth_terms_agree_terms],이용약관에 동의합니다,13d71aa6479818a6,13d71aa6479818a6,I agree to the Terms of Service
+reserved_string.text.[auth_terms_confirm],확인,1aacb54c49924296,1aacb54c49924296,OK
+reserved_string.text.[auth_terms_title],이용약관 동의,82a919ac73cb9367,82a919ac73cb9367,Agree to Terms
+reserved_string.text.[auth_terms_view],보기,ac5b575fff0fa065,ac5b575fff0fa065,View
+reserved_string.text.[auth_tracking_usage],사용자에게 맞는 광고를 보이는 데 데이터를 사용합니다.,a1cbc994d5fc9fa2,a1cbc994d5fc9fa2,Your data is used to show ads that suit you.
+reserved_string.text.[auth_web_link_body],진행 상황을 지키려면 계정을 연동하세요.,26228fbebb952ee9,26228fbebb952ee9,Link an account to keep your progress.
+reserved_string.text.[auth_web_link_failed],계정을 연동하지 못했습니다.,86f5fbeb19b8ef2b,86f5fbeb19b8ef2b,Could not link the account.
+reserved_string.text.[auth_web_link_google],Google 계정 연동,9acaed794c215d3c,9acaed794c215d3c,Link Google account
+reserved_string.text.[auth_web_link_later],나중에,a12252500035668f,a12252500035668f,Later
+reserved_string.text.[battle_board_full],판이 가득 찼어요,46f15ca6ba9d0d6d,46f15ca6ba9d0d6d,The board is full
+reserved_string.text.[battle_buff_amount],+{attack}/+{health},9d80ac9e64122e82,9d80ac9e64122e82,+{attack}/+{health}
+reserved_string.text.[battle_burned],손패가 가득 차 {name:이/가} 불탔어요,da18756aad8f11d8,da18756aad8f11d8,"Your Hand is full, so {name} burned"
+reserved_string.text.[battle_cannot_attack],이 하수인은 이번 턴에 공격할 수 없어요,4e888db3021ba0d0,4e888db3021ba0d0,This Minion can't attack this turn
+reserved_string.text.[battle_concede],항복하기,ae587d827633ba92,ae587d827633ba92,Concede
+reserved_string.text.[battle_concede_confirm],항복하면 이 대전은 패배로 끝나요. 정말 항복할까요?,2bec023f3c10c149,2bec023f3c10c149,Conceding ends this match in a defeat. Concede anyway?
+reserved_string.text.[battle_concede_yes],"네, 항복할게요",724ff2c1f65c62e0,724ff2c1f65c62e0,"Yes, concede"
+reserved_string.text.[battle_cpu_enemy_minions_lost],상대 하수인 {count}마리가 쓰러졌어요,1e68e6bdca40f333,1e68e6bdca40f333,{count} enemy {count:plural:Minion/Minions} fell
+reserved_string.text.[battle_cpu_hero_damage],내 영웅이 피해 {amount:을/를} 받았어요,10bd83e83dd366a1,10bd83e83dd366a1,Your Hero took {amount} damage
+reserved_string.text.[battle_cpu_hero_heal],상대 영웅이 체력 {amount:을/를} 회복했어요,a6ddeca001d18a34,a6ddeca001d18a34,The enemy Hero healed {amount} health
+reserved_string.text.[battle_cpu_minion_damage],내 하수인들이 피해 {amount:을/를} 받았어요,b0d5c106a069752a,b0d5c106a069752a,Your Minions took {amount} damage
+reserved_string.text.[battle_cpu_minions_lost],내 하수인 {count}마리가 쓰러졌어요,3e64980fbf49f973,3e64980fbf49f973,{count} of your {count:plural:Minion/Minions} fell
+reserved_string.text.[battle_cpu_played],상대가 낸 카드: {cards},8cf255c7dc65c440,8cf255c7dc65c440,Cards the opponent played: {cards}
+reserved_string.text.[battle_cpu_played_none],상대는 카드를 내지 않았어요,3a7a4d0c2e2fe09d,3a7a4d0c2e2fe09d,The opponent played no cards
+reserved_string.text.[battle_cpu_summary_title],지난 상대 차례,b068e3cd1a9eba3c,b068e3cd1a9eba3c,Last opponent turn
+reserved_string.text.[battle_damage],-{amount},cc5712bf9659d9b5,cc5712bf9659d9b5,-{amount}
+reserved_string.text.[battle_deck_left],덱 {count},e2dca3b5640ec95e,e2dca3b5640ec95e,Deck {count}
+reserved_string.text.[battle_end_defeat],패배!,79c4a010c134f874,79c4a010c134f874,Defeat!
+reserved_string.text.[battle_end_turn],턴 종료,b9783d08f2f5a5a0,b9783d08f2f5a5a0,End Turn
+reserved_string.text.[battle_end_victory],승리!,65cf381a257d1875,65cf381a257d1875,Victory!
+reserved_string.text.[battle_enemy_thinking],상대 차례,7bbea47033492b68,7bbea47033492b68,Opponent's turn
+reserved_string.text.[battle_enemy_turn],상대 차례,7bbea47033492b68,7bbea47033492b68,Opponent's turn
+reserved_string.text.[battle_fatigue],덱이 비어 피해 {amount:을/를} 입었어요,20b2c0580f0d3925,20b2c0580f0d3925,"Your Deck is empty, so you took {amount} damage"
+reserved_string.text.[battle_hand_count],손패 {count},e9075f3fbaa61bc5,e9075f3fbaa61bc5,Hand {count}
+reserved_string.text.[battle_heal],+{amount},7c1eff1bc854562c,7c1eff1bc854562c,+{amount}
+reserved_string.text.[battle_heal_capped],+{amount} 체력 가득,36bbf3ed33e833a8,36bbf3ed33e833a8,+{amount} Health (full)
+reserved_string.text.[battle_heal_full],체력 가득,127e4aadec6b06c8,127e4aadec6b06c8,Full health
+reserved_string.text.[battle_hint_attack],초록빛 하수인을 누른 뒤 공격할 대상을 누르세요,3aadc06eed2052b0,3aadc06eed2052b0,"Tap a green-glowing Minion, then tap a target to attack"
+reserved_string.text.[battle_hint_attack_target],공격할 대상을 누르세요. 수호 하수인이 있으면 먼저 공격해야 해요,241452eb86589a1b,241452eb86589a1b,"Tap a target to attack. If there is a Guard Minion, you must attack it first"
+reserved_string.text.[battle_hint_end_turn],더 할 것이 없으면 턴 종료를 누르세요,5ec6609ceb33be6e,5ec6609ceb33be6e,"When you have nothing more to do, tap End Turn"
+reserved_string.text.[battle_hint_play],빛나는 카드를 눌러 내세요. 카드 왼쪽 위 숫자가 필요한 마나예요,0682df97b1ef4729,0682df97b1ef4729,Tap a glowing card to play it. The number at its top left is the Mana it costs
+reserved_string.text.[battle_hint_target],대상을 누르세요. 빈 곳을 누르면 취소돼요,5cd5c4a9d7fc6952,5cd5c4a9d7fc6952,Tap a target. Tap an empty spot to cancel
+reserved_string.text.[battle_mana],{mana}/{max},0db441d6b9dc6217,0db441d6b9dc6217,{mana}/{max}
+reserved_string.text.[battle_must_attack_guard],수호 하수인을 먼저 공격해야 해요,4c88594ca9fab72c,4c88594ca9fab72c,You must attack the Guard Minion first
+reserved_string.text.[battle_no_target],이 카드를 쓸 대상이 없어요,c728e13019d9fd84,c728e13019d9fd84,There is no target for this card
+reserved_string.text.[battle_not_enough_mana],마나가 부족해요,9917f072d17b8d4c,9917f072d17b8d4c,Not enough Mana
+reserved_string.text.[battle_pause_title],일시정지,4f51c0c8ada89f28,4f51c0c8ada89f28,Paused
+reserved_string.text.[battle_resume],계속하기,5dfd3b2bc49d9944,5dfd3b2bc49d9944,Resume
+reserved_string.text.[battle_sleeping],대기,2a73ed53178ab6fe,2a73ed53178ab6fe,Waiting
+reserved_string.text.[battle_starting],대전 준비 중,9592b95c5b141d91,9592b95c5b141d91,Getting the match ready
+reserved_string.text.[battle_turn],{turn}번째 턴,7963921c34e0827c,7963921c34e0827c,Turn {turn}
+reserved_string.text.[battle_wait_enemy],상대 차례예요. 잠시 기다려 주세요,0bbcd40fc479991a,0bbcd40fc479991a,It's the opponent's turn. Please wait
+reserved_string.text.[battle_you],나,1098bbe54520ab2a,1098bbe54520ab2a,You
+reserved_string.text.[battle_your_turn],내 차례,aaefbb8fe1762463,aaefbb8fe1762463,Your turn
+reserved_string.text.[bootstrap_age_blocked],이 나이에는 이 게임을 이용할 수 없습니다.,c2a04b5c97e36f72,c2a04b5c97e36f72,This game is not available for your age.
+reserved_string.text.[bootstrap_banned],사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url},d6a3d0efe4190174,d6a3d0efe4190174,User {user_id} is restricted until {until_at:datetime}. Details: {url}
+reserved_string.text.[bootstrap_banned_deletion],계정 삭제 요청,de7f6a00aed6d1f3,de7f6a00aed6d1f3,Request account deletion
+reserved_string.text.[bootstrap_banned_deletion_code],사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.,4db23020009349b0,4db23020009349b0,User {user_id}: enter code {code} at {url} before {expires_at:datetime}.
+reserved_string.text.[bootstrap_banned_deletion_failed],삭제 코드를 받지 못했습니다.,3bb73ea5715cd650,3bb73ea5715cd650,Could not get a deletion code.
+reserved_string.text.[bootstrap_banned_permanent],사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url},a3db2da77b390862,a3db2da77b390862,User {user_id} is restricted. Details: {url}
+reserved_string.text.[bootstrap_fatal_error],오류로 게임이 멈췄습니다.,a3bdb0beee2103ce,a3bdb0beee2103ce,The game stopped because of an error.
+reserved_string.text.[bootstrap_login_failed],로그인하지 못했습니다.,b42ac90bab1504c0,b42ac90bab1504c0,Could not sign in.
+reserved_string.text.[bootstrap_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,Restart
+reserved_string.text.[card_count],{name} {count}장,aab9cbcc90c9668d,aab9cbcc90c9668d,{name} x{count}
+reserved_string.text.[card_keyword_guard],수호,46f4155cee3d3125,46f4155cee3d3125,Guard
+reserved_string.text.[card_type_minion],하수인,0156aa06036c7af7,0156aa06036c7af7,Minion
+reserved_string.text.[card_type_spell],주문,3001c15867812da6,3001c15867812da6,Spell
+reserved_string.text.[common_terms_agree_all],모두 동의합니다,78ed5c87b18e680f,78ed5c87b18e680f,Agree to all
+reserved_string.text.[common_terms_agree_both],두 항목에 모두 동의하면 시작할 수 있어요,770ce18e008caf38,770ce18e008caf38,You can start once you agree to both
+reserved_string.text.[deck_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,Close
+reserved_string.text.[deck_copies],×{count},816c0b505ef0ed3a,816c0b505ef0ed3a,×{count}
+reserved_string.text.[deck_count],카드 {count}장,ca4f6e21051fd85d,ca4f6e21051fd85d,{count} {count:plural:card/cards}
+reserved_string.text.[deck_title],내 덱,435372707f22068e,435372707f22068e,My Deck
+reserved_string.text.[game_update_app_update_required],새 버전의 앱이 필요합니다.,3f06e6b9758a2b0d,3f06e6b9758a2b0d,A new version of the app is required.
+reserved_string.text.[game_update_data_update_required],새 게임 데이터가 필요합니다. 게임을 다시 시작합니다.,052928483452b213,052928483452b213,New game data is required. The game will restart.
+reserved_string.text.[game_update_download_failed],내려받지 못했습니다.,9be8cf113c49f275,9be8cf113c49f275,Download failed.
+reserved_string.text.[game_update_go_to_store],스토어로 이동,88c289b95c8d3173,88c289b95c8d3173,Go to store
+reserved_string.text.[game_update_invalid_file],내려받은 파일이 손상되었습니다.,63be79a76e3b52a2,63be79a76e3b52a2,The downloaded file is corrupted.
+reserved_string.text.[game_update_later],나중에,a12252500035668f,a12252500035668f,Later
+reserved_string.text.[game_update_no_space],저장 공간이 부족합니다.,67e613722c809957,67e613722c809957,Not enough storage space.
+reserved_string.text.[game_update_recommended],새 버전의 앱이 있습니다.,a7fca7bdb4d895d6,a7fca7bdb4d895d6,A new version of the app is available.
+reserved_string.text.[game_update_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,Restart
+reserved_string.text.[game_update_retry],다시 시도,196856a662bd9084,196856a662bd9084,Try again
+reserved_string.text.[game_update_save_failed],내려받은 파일을 저장하지 못했습니다.,222b3d6311f8ff66,222b3d6311f8ff66,Could not save the downloaded file.
+reserved_string.text.[list_separator],", ",0a07f659461970d8,0a07f659461970d8,", "
+reserved_string.text.[loading_text],불러오는 중,5b7e88929ec0ed88,5b7e88929ec0ed88,Loading
+reserved_string.text.[lobby_all_cleared],모든 상대를 이겼어요! 원하는 상대를 골라 다시 겨뤄 보세요,40be6467dca89da8,40be6467dca89da8,You beat every opponent! Pick any opponent to play again
+reserved_string.text.[lobby_deck],내 덱,435372707f22068e,435372707f22068e,My Deck
+reserved_string.text.[lobby_deck_count],덱 {count}장,79e1d568fb745d09,79e1d568fb745d09,Deck: {count} {count:plural:card/cards}
+reserved_string.text.[lobby_ladder_title],도전 상대,5ff7c65dcd3109df,5ff7c65dcd3109df,Opponents
+reserved_string.text.[lobby_no_record],첫 대전을 시작해 보세요,5440028d46065ff2,5440028d46065ff2,Start your first match
+reserved_string.text.[lobby_opponent_health],영웅 체력 {health},094dee2efa81dbb4,094dee2efa81dbb4,Hero health {health}
+reserved_string.text.[lobby_options],설정,115bced49291a6a0,115bced49291a6a0,Settings
+reserved_string.text.[lobby_play],대전 시작,88094f4aa2a5d788,88094f4aa2a5d788,Start match
+reserved_string.text.[lobby_record],전적 {wins}승 {losses}패,bce19b420106004a,bce19b420106004a,Record {wins}W {losses}L
+reserved_string.text.[lobby_selected],{name:와/과} 대전합니다,06e2d53b93a6b9f2,06e2d53b93a6b9f2,Match against {name}
+reserved_string.text.[lobby_status_cleared],승리함,3c1b97266142ae51,3c1b97266142ae51,Won
+reserved_string.text.[lobby_status_locked],앞 상대를 이기면 열려요,d7b25add3d87ce7b,d7b25add3d87ce7b,Opens when you beat the previous opponent
+reserved_string.text.[lobby_status_open],도전 가능,d1776f41eaf38f4a,d1776f41eaf38f4a,Ready to challenge
+reserved_string.text.[lobby_streak],{streak}연승 중,8279e65ff7d00213,8279e65ff7d00213,{streak} win streak
+reserved_string.text.[network_confirm],확인,1aacb54c49924296,1aacb54c49924296,OK
+reserved_string.text.[network_error_banned],계정 이용이 제한되었습니다.,f8bd4d9d2cb9e96c,f8bd4d9d2cb9e96c,This account is restricted.
+reserved_string.text.[network_error_connection],서버에 연결할 수 없습니다.,67e5ccaadfed98b7,67e5ccaadfed98b7,Can't connect to the server.
+reserved_string.text.[network_error_feature_disabled],지금은 이 기능을 쓸 수 없습니다.,2a374ad445db3909,2a374ad445db3909,This feature is unavailable right now.
+reserved_string.text.[network_error_general],서버 오류가 발생했습니다.,1bc72fefc72067ef,1bc72fefc72067ef,A server error occurred.
+reserved_string.text.[network_error_invalid_response],서버 응답을 읽을 수 없습니다.,91a38e2da91fbc63,91a38e2da91fbc63,Can't read the server response.
+reserved_string.text.[network_error_maintenance],서버 점검 중입니다.,f68e0b3df6151276,f68e0b3df6151276,The server is under maintenance.
+reserved_string.text.[network_error_rate_limited],요청이 너무 많습니다. 잠시 뒤 다시 시도하세요.,2d32593943316aac,2d32593943316aac,Too many requests. Please try again later.
+reserved_string.text.[network_error_session],세션이 끝났습니다. 다시 로그인하세요.,6b0e13f750738811,6b0e13f750738811,Your session has ended. Please sign in again.
+reserved_string.text.[network_error_timeout],서버가 제때 응답하지 않았습니다.,cde7d6353c46da15,cde7d6353c46da15,The server didn't respond in time.
+reserved_string.text.[network_go_to_title],타이틀로,ebf1eb5c33b7d645,ebf1eb5c33b7d645,Go to title
+reserved_string.text.[network_retry],다시 시도,196856a662bd9084,196856a662bd9084,Try again
+reserved_string.text.[option_cancel],취소,be876433993ab7ba,be876433993ab7ba,Cancel
+reserved_string.text.[option_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,Close
+reserved_string.text.[option_copied],복사했습니다,5e80b233136bd398,5e80b233136bd398,Copied
+reserved_string.text.[option_copy_code],코드 복사,2fd5fe4b1f06d612,2fd5fe4b1f06d612,Copy code
+reserved_string.text.[option_copy_url],주소 복사,046ea9c5e33a7e67,046ea9c5e33a7e67,Copy URL
+reserved_string.text.[option_copy_user_id],ID 복사,dbb263d9a65540ea,dbb263d9a65540ea,Copy ID
+reserved_string.text.[option_deletion_info],"코드 {code}, {expires_at:datetime}까지 유효합니다. {url} 에서 입력하세요",b13ec8559b9ece4b,b13ec8559b9ece4b,"Code {code}, valid until {expires_at:datetime}. Enter it at {url}"
+reserved_string.text.[option_deletion_issue],계정 삭제 코드 받기,530d7d872783e86d,530d7d872783e86d,Get account deletion code
+reserved_string.text.[option_failed],실패했습니다. 다시 시도해 주세요.,de76c668b153027d,de76c668b153027d,Failed. Please try again.
+reserved_string.text.[option_licenses],라이선스,8a59fa8b83fe3e97,8a59fa8b83fe3e97,Licenses
+reserved_string.text.[option_privacy],개인정보 처리방침,b4f463f37666c59e,b4f463f37666c59e,Privacy Policy
+reserved_string.text.[option_privacy_choices],개인정보 선택,84908379872ae75e,84908379872ae75e,Privacy choices
+reserved_string.text.[option_terms],이용약관,c7e724d5c4951b72,c7e724d5c4951b72,Terms of Service
+reserved_string.text.[option_title],설정,115bced49291a6a0,115bced49291a6a0,Settings
+reserved_string.text.[option_user_id],사용자 ID: {user_id},399101ecf1feabdf,399101ecf1feabdf,User ID: {user_id}
+reserved_string.text.[option_withdraw],회원 탈퇴,4406c379c287135f,4406c379c287135f,Withdraw account
+reserved_string.text.[option_withdraw_confirm],탈퇴할까요? 전적과 받은 카드가 지워지고 되돌릴 수 없습니다.,9b33ae4e5fc295c1,9b33ae4e5fc295c1,Withdraw? Your record and cards will be erased and cannot be restored.
+reserved_string.text.[option_withdraw_ok],탈퇴,871d207609515b86,871d207609515b86,Withdraw
+reserved_string.text.[result_all_cleared],모든 상대를 이겼어요!,7c434d24835a3a34,7c434d24835a3a34,You beat every opponent!
+reserved_string.text.[result_lobby],로비로,50e406fc9066bc99,50e406fc9066bc99,To lobby
+reserved_string.text.[result_lose],패배,b06527e3faf48bfe,b06527e3faf48bfe,Defeat
+reserved_string.text.[result_next],다음 상대,0b25b7d6ace87622,0b25b7d6ace87622,Next opponent
+reserved_string.text.[result_opponent],상대: {name},a15f5c7ad27ea1e8,a15f5c7ad27ea1e8,Opponent: {name}
+reserved_string.text.[result_record],전적 {wins}승 {losses}패,bce19b420106004a,bce19b420106004a,Record {wins}W {losses}L
+reserved_string.text.[result_record_unsaved],이번 대전은 전적에 넣지 못했어요 (전적 {wins}승 {losses}패),a68de5a6ed2a0624,a68de5a6ed2a0624,This match couldn't be added to your record (Record {wins}W {losses}L)
+reserved_string.text.[result_retry],다시 도전,e84f627ba8ba9ec0,e84f627ba8ba9ec0,Challenge again
+reserved_string.text.[result_reward_title],새 카드가 덱에 들어왔어요!,ea50f655a4efd4e7,ea50f655a4efd4e7,A new card was added to your Deck!
+reserved_string.text.[result_stage_continue],아무 곳이나 눌러 계속하기,08a670e1040fe013,08a670e1040fe013,Tap anywhere to continue
+reserved_string.text.[result_stage_title],새 카드를 얻었어요!,879db8bd90e951b1,879db8bd90e951b1,You got a new card!
+reserved_string.text.[result_stake_title],이기면 이 카드가 덱에 들어와요,0de65bcc674da135,0de65bcc674da135,Win to add this card to your Deck
+reserved_string.text.[result_streak],{streak}연승!,3f3a07d3194f339c,3f3a07d3194f339c,{streak} wins in a row!
+reserved_string.text.[result_swap_out],덱에서 빠지는 카드: {cards},79dd289e813eb0f4,79dd289e813eb0f4,Cards leaving the Deck: {cards}
+reserved_string.text.[result_turns],{turns}번째 턴에 끝났어요,c784cc5cd9fdc8e6,c784cc5cd9fdc8e6,Ended on turn {turns}
+reserved_string.text.[result_win],승리!,65cf381a257d1875,65cf381a257d1875,Victory!
+reserved_string.text.[scene_prepare_failed],화면을 불러오지 못했습니다.,5c84f7e098772f6e,5c84f7e098772f6e,Could not load the screen.
+reserved_string.text.[scene_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,Restart
+reserved_string.text.[scene_retry],다시 시도,196856a662bd9084,196856a662bd9084,Try again
+reserved_string.text.[title_name],마나 클래시,902ceb55c8728989,902ceb55c8728989,Mana Clash
+reserved_string.text.[title_tagline],"마지막 마나 한 점까지, 계산이 승리가 된다",46d98e4ba3d917e9,46d98e4ba3d917e9,"Down to the last point of Mana, calculation becomes victory"
+reserved_string.text.[ui_exit_cancel],취소,be876433993ab7ba,be876433993ab7ba,Cancel
+reserved_string.text.[ui_exit_confirm],게임을 종료할까요?,451062c7656b99f3,451062c7656b99f3,Quit the game?
+reserved_string.text.[ui_exit_quit],종료,086bb5335d174a9a,086bb5335d174a9a,Quit
+reserved_string.text.[ui_licenses_close],닫기,1e8c10206f5b35bd,1e8c10206f5b35bd,Close
+reserved_string.text.[ui_licenses_title],라이선스,8a59fa8b83fe3e97,8a59fa8b83fe3e97,Licenses

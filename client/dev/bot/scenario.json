@@ -1,0 +1,60 @@
+{
+  "steps": [
+    {
+      "kind": "auto",
+      "command": "battle.bot_next_input",
+      "args": [],
+      "until": {
+        "path": "telemetry.goal_intervals",
+        "op": "count_gte",
+        "value": 1
+      },
+      "timeoutMs": 900000
+    },
+    {
+      "kind": "save",
+      "timeoutMs": 120000
+    },
+    {
+      "kind": "setup",
+      "command": "force_network_failure",
+      "args": [
+        "connection_failed"
+      ],
+      "timeoutMs": 10000
+    },
+    {
+      "kind": "setup",
+      "command": "force_network_failure",
+      "args": [
+        "none"
+      ],
+      "timeoutMs": 10000
+    },
+    {
+      "kind": "auto",
+      "command": "battle.bot_next_input",
+      "args": [],
+      "until": {
+        "all": [
+          {
+            "path": "telemetry.goal_intervals",
+            "op": "count_gte",
+            "value": 1
+          },
+          {
+            "path": "state.content.wins",
+            "op": "gte",
+            "value": 2
+          }
+        ]
+      },
+      "timeoutMs": 1800000
+    }
+  ],
+  "goal": {
+    "path": "telemetry.goal_intervals",
+    "op": "count_gte",
+    "value": 1
+  }
+}

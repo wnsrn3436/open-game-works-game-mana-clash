@@ -1,0 +1,39 @@
+source,id_name,note,source_hash,en
+한국어,[lang_ko],Name of the Korean language in its own language,ea3252281bc3bcec,한국어
+English,[lang_en],Name of the English language,ba118bf7fc9c1aed,English
+마나 클래시,,Game title,ccf964f3baa6312e,Mana Clash
+불씨 도깨비,[card_ember_imp],Card name: a small fire goblin minion,661a3815796ddda3,Ember Imp
+이끼 방패병,[card_moss_guard],Card name: a mossy shield soldier minion,f0b4061adf3d0d83,Moss Guard
+마나 화살,[card_mana_bolt],Card name: a spell that shoots a bolt of mana,deca7d8bd5219f59,Mana Bolt
+질풍 사냥개,[card_gale_hound],Card name: a fast wind hound minion,5b359b590740bc22,Gale Hound
+수정 거북,[card_crystal_turtle],Card name: a turtle with a crystal shell,2b95204ffa29099d,Crystal Turtle
+견습 학자,[card_apprentice_scholar],Card name: a young scholar minion who draws a card,a420d6f9dba59409,Apprentice Scholar
+수호의 축복,[card_blessing],Card name: a spell that strengthens one friendly minion,4b197344acb1a02c,Guardian's Blessing
+강철 늑대,[card_iron_wolf],Card name: a wolf of iron,021e247b54e1e1af,Iron Wolf
+새벽 기사,[card_dawn_knight],Card name: a knight of dawn light with a ward,bc0c34b9759883a9,Dawn Knight
+약초 치유사,[card_herb_healer],Card name: a herbalist who heals the own hero,dd20ca1b0b05edd1,Herb Healer
+잿빛 망령,[card_ash_wraith],Card name: an ash ghost that hurts the enemy hero when it dies,4147383d2f0e03b3,Ash Wraith
+통찰,[card_insight],Card name: a spell that draws cards,4bd8a87ce29c97aa,Insight
+번개 창,[card_lightning_lance],Card name: a spear of lightning spell,daa398241b06b631,Lightning Lance
+폭풍 기수,[card_storm_rider],Card name: a rider of the storm that attacks at once,749a3e63511d425d,Storm Rider
+용암 골렘,[card_magma_golem],Card name: a golem of lava,6df2b548fe7902f9,Magma Golem
+전쟁 북잡이,[card_war_drummer],Card name: a war drummer who raises the attack of allies,3e4dad8f1a057070,War Drummer
+화염 폭풍,[card_firestorm],Card name: a spell of fire over every enemy minion,d777c3e09a733246,Firestorm
+고목 수호자,[card_elder_treant],Card name: an old tree guardian,48c0231dbe0828ee,Elder Treant
+화염 비룡,[card_flame_wyvern],Card name: a fire wyvern,2e2a633653f66439,Flame Wyvern
+하늘 거신,[card_sky_colossus],Card name: a giant of the sky,8ba858dd347b1976,Sky Colossus
+수련생 미로,[opp_apprentice],Opponent name: Miro the trainee,2044de8801c5c970,Miro the Trainee
+숲의 파수꾼 타라,[opp_warden],Opponent name: Tara the forest warden,783421071a698e8f,Tara the Forest Warden
+대마법사 벨로크,[opp_archmage],Opponent name: Velloch the archmage,1c9b5ea712f08920,Velloch the Archmage
+마나,,The resource paid to play a card; one more crystal each turn,ff62a61de9077667,Mana
+하수인,,A creature card that stays on the board,50f274e08b9fd40e,Minion
+주문,,A card with a one time effect,d64a64f06a81e548,Spell
+영웅,,The player character; it loses at 0 health,e2030473cc90345b,Hero
+수호,,Keyword: enemies must attack this minion first,d53dacf482f2d6b2,Guard
+돌격,,Keyword: can attack the turn it is played,7bfcad71ec5cdb5d,Charge
+결계,,Keyword: ignores the first damage it takes,d2ee3d9cca477885,Ward
+등장 시,,Keyword: an effect when the minion is played,cf44a2699ddec8bb,On Play
+소멸 시,,Keyword: an effect when the minion dies,1350f0295b430870,On Death
+턴 종료,,The button that ends the own turn,7f38f9dec825b155,End Turn
+손패,,The cards in the own hand,50ecc07d2fbdd5aa,Hand
+덱,,The cards left to draw,b0ff41958b15bdda,Deck

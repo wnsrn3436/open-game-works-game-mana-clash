@@ -1,0 +1,18 @@
+[
+  "admin-api",
+  "auth",
+  "cheat",
+  "game-update",
+  "idempotency",
+  "item-ledger",
+  "logging",
+  "mailbox",
+  "migration",
+  "play-session",
+  "routing",
+  "server-time",
+  "session",
+  "storage",
+  "user-snapshot-clone",
+  "validation"
+]

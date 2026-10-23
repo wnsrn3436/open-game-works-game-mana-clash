@@ -1,0 +1,17 @@
+syntax = "proto3";
+package game;
+
+// The ladder progress and record of the user. No row before the first finished battle.
+message ProgressUserState {
+  // Battles the player won.
+  int32 wins = 1;
+  // Battles the player lost or gave up.
+  int32 losses = 2;
+  // Wins in a row up to the last finished battle. A loss sets it to 0.
+  int32 win_streak = 3;
+  // `opponent` ID values the player has beaten at least once, in the order of the first wins.
+  repeated int32 cleared_opponent_ids = 4;
+  // `card` ID values of the player deck, one entry per copy. Empty until the first reward: the deck is then the
+  // `[starter_deck]` row.
+  repeated int32 deck_card_ids = 5;
+}
