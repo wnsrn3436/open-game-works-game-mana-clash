@@ -9,23 +9,23 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 
 ## 현재 상태
 
-마나 클래시는 open-game-works로 만든 게임이고, 개발하는 동안 macOS에서 플레이하며 확인했다. 아직 `build` 명령을
+마나 클래시는 open-game-works로 만든 게임이고 개발하는 동안 macOS에서 플레이하며 확인했다. 아직 `build` 명령을
 실행하지 않아서 출시용 빌드는 없다.
 
 ## 소개
 
 마나 클래시(Mana Clash)는 macOS용 싱글 플레이 턴제 카드 배틀 게임이다. 플레이어는 결투 마법사가 되어 매 턴 마나로
-하수인과 주문을 내고, 보드 위의 하수인으로 공격하면서, 남은 마나와 보드의 공격력으로 상대 영웅의 체력을 정확히 0으로
+하수인과 주문을 내고 보드 위의 하수인으로 공격하면서 남은 마나와 보드의 공격력으로 상대 영웅의 체력을 정확히 0으로
 만드는 한 턴을 찾는다.
 
 - 카드 20장(하수인 15장, 주문 5장)과 다섯 가지 키워드: 수호, 결계, 돌격, 등장 시, 소멸 시
 - CPU 상대 세 명으로 이루어진 사다리. 상대를 이기면 다음 상대가 열린다. 각 상대를 처음 이기면 정해진 새 카드 세 장이
   덱에 들어오고 같은 수의 카드가 빠지므로, 덱은 늘 20장이다
-- 첫 실행에서는 약관 팝업 다음에 로비를 거치지 않고 연습 상대와의 첫 대전이 바로 시작되고, 힌트 줄이 카드 내기, 대상
+- 첫 실행에서는 약관 팝업 다음에 로비를 거치지 않고 연습 상대와의 첫 대전이 바로 시작되고 힌트 줄이 카드 내기, 대상
   고르기, 공격, 턴 종료를 차례로 알려 준다
 - 패배는 전적에 1패를 더하고 연승을 끊을 뿐이다. 이긴 상대, 받은 카드, 덱은 그대로 남는다. `다시 도전`을 누르면 같은
   상대와 새 대전이 바로 시작된다
-- 조작은 마우스 클릭뿐이고(드래그 없음), `Esc`로 일시정지 팝업을 연다. 화면은 가로 방향, 기준 해상도는 1920x1080이다
+- 조작은 드래그 없이 마우스 클릭뿐이고 `Esc`로 일시정지 팝업을 연다. 화면은 가로 방향, 기준 해상도는 1920x1080이다
 
 ## 규칙
 
@@ -38,14 +38,14 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 | 보드 | 한쪽당 5칸 |
 | 손패 | 최대 8장. 손패가 가득 찬 상태에서 뽑은 카드는 불타 사라짐 |
 | 마나 | 마나 수정이 매 턴 하나씩 늘어 최대 10개, 매 턴 가득 다시 채워짐 |
-| 시작 손패 | 플레이어 3장(항상 선공), CPU 4장. 교체 화면은 없고, 시작 손패에는 마나 2 이하 카드가 반드시 들어감 |
+| 시작 손패 | 플레이어 3장(항상 선공), CPU 4장. 교체 화면은 없고 시작 손패에는 마나 2 이하 카드가 반드시 들어감 |
 | 빈 덱 | 빈 덱에서 카드를 뽑을 때마다 1, 2, 3, ... 피해 |
 | 턴 제한 | 60턴을 넘긴 대전은 패배로 끝남 |
 
 일부러 넣지 않은 것(`brief.md` 기준):
 
 - 영웅 능력이 없다. 마나를 쓰는 방법은 카드뿐이다
-- 대상이 무작위인 효과가 없다. 모든 효과는 고른 대상이나 정해진 대상에게 가고, 무작위는 덱 섞기와 카드 뽑기뿐이다
+- 대상이 무작위인 효과가 없다. 모든 효과는 고른 대상이나 정해진 대상에게 가고 무작위는 덱 섞기와 카드 뽑기뿐이다
 - 결제, 광고, 카드 팩, 가챠가 없다. 새 카드는 사다리에서 처음 이길 때만 얻는다
 - CPU는 보드와 자기 손패만 보고 판단한다. 플레이어의 손패나 덱 순서는 보지 않는다
 - 턴 시간 제한이 없다
@@ -74,7 +74,7 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 
 1. [하네스 README](https://github.com/wnsrn3436/open-game-works-core/blob/main/README.ko.md#빠른-시작)의 빠른 시작대로 워크스페이스와
    하네스를 준비한다
-2. 이 저장소를 `games/`에 클론하고, 데이터 도구가 읽는 로컬 `id-registry` 브랜치를 만든다
+2. 이 저장소를 `games/`에 클론하고 데이터 도구가 읽는 로컬 `id-registry` 브랜치를 만든다
 
    ```
    cd <workspace>/games
@@ -85,7 +85,7 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 
 3. 클론한 뒤 `open-game-works-core/`의 Claude Code 세션에서 `update env`를 실행한다. 전에 실행했더라도 다시 한다.
    `update env`는 `games/`에 있는 각 게임의 코어 릴리스가 정한 엔진 버전도 설치한다
-4. 게임을 직접 플레이하려면 터미널에서 인스턴스를 띄우고, 다 하면 멈춘다
+4. 게임을 직접 플레이하려면 터미널에서 인스턴스를 띄우고 다 하면 멈춘다
 
    ```
    cd <workspace>/open-game-works-core
@@ -102,10 +102,10 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 
 ## 만든 과정
 
-이 게임은 AI 에이전트가 open-game-works 하네스로 만들었다. 사람은 `setup game`에서 요청과 참고 게임, 그 게임의 플레이
-영상을 주고 `create game`을 시작했다. 그 뒤로는 리드 에이전트(lead agent)가 사람을 기다리지 않고 루프를 끝까지
-돌렸다. 콘텐츠 에이전트(content agent)가 고치고, 자동 검사가 돌고, 플레이 에이전트(play agent)가 실제 입력으로
-인스턴스를 플레이하고, 판정 에이전트(judge agent)가 결과를 기준 게임(baseline) 및 참고 게임 플레이 영상과 비교하면,
+이 게임은 AI 에이전트가 open-game-works 하네스로 만들었다. 사람은 `setup game`에서 요청과 참고 게임, 참고 게임
+플레이 영상을 주고 `create game`을 시작했다. 그 뒤로는 리드 에이전트(lead agent)가 사람을 기다리지 않고 루프를 끝까지
+돌렸다. 콘텐츠 에이전트(content agent)가 고치고 자동 검사가 돈 다음, 플레이 에이전트(play agent)가 실제 입력으로
+인스턴스를 플레이한다. 판정 에이전트(judge agent)가 결과를 기준 게임(baseline) 및 참고 게임 플레이 영상과 비교하면
 하네스 도구가 심사 결과와 자동 검사 결과로 성공을 판정한다.
 
 | 부분 | 만든 주체 |
@@ -115,7 +115,7 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 | 영어 번역 | 번역 서브 에이전트(translation sub-agent) |
 | `client/core/`, `server/core/` | 코어 릴리스(콘텐츠 에이전트는 코어를 고치지 않음) |
 
-`brief.md`, `design.md`, `play-guide.md`는 콘텐츠 에이전트가 한국어로 썼고, `create game` 루프가 끝난 뒤 영어로
+`brief.md`, `design.md`, `play-guide.md`는 콘텐츠 에이전트가 한국어로 썼고 `create game` 루프가 끝난 뒤 영어로
 옮겼다.
 
 `resource/resources.csv`의 모든 리소스는 상태가 `final`이다. 사용한 생성 방법은 다음과 같다.
@@ -131,11 +131,11 @@ CPU 결투자와 일대일로 겨루는 카드 배틀 게임. AI 에이전트가
 
 루프에서 이 게임은 `client/tests/`와 `server/tests/`의 회귀 테스트, 봇 플레이테스트 시나리오
 `client/dev/bot/scenario.json`, 행 시뮬레이션(row simulation)으로 검사한다. 행 시뮬레이션에서는 봇이 각 상대와
-대전하고, 그 승률, 턴 수, 피해를 `data/tables/opponent.csv`의 `sim_` 열과 비교한다.
+대전하고 승률, 턴 수, 피해를 `data/tables/opponent.csv`의 `sim_` 열과 비교한다.
 
 ## 동작 방식
 
-대전 한 판은 코어 모듈 `play-session`의 실행 한 번이다. 게임 자체의 RPC는 없고, 서버 콘텐츠 코드
+대전 한 판은 코어 모듈 `play-session`의 실행 한 번이다. 게임 자체의 RPC는 없고 서버 콘텐츠 코드
 (`server/main.ts`, `server/hooks/play_session.ts`)가 이 모듈의 훅 세 개를 등록한다.
 
 ```
@@ -165,9 +165,9 @@ FinishPlaySession (PlaySessionResult) --------> verify_play_session
 [open-game-works-core-impl의 GitHub Release](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0)다.
 
 - `client/core/`와 `server/core/`는 그 릴리스의 복사본이다
-- 워크스페이스의 `open-game-works-core-releases/`에 그 릴리스가 없으면 하네스 도구가 GitHub에서 받아 오고, 파일을
+- 릴리스가 워크스페이스의 `open-game-works-core-releases/`에 없으면 하네스 도구가 GitHub에서 받아 와 파일을
   해시로 확인한다
-- 그 릴리스는 Godot 4.7.2를 쓴다(릴리스의 `engine.json`)
+- 이 버전은 Godot 4.7.2를 쓴다(릴리스의 `engine.json`)
 - 게임이 고른 코어 모듈(`coreModules`): 클라이언트 `NativeUiCore`, `TweenCore`, `ScreenEffectCore`, 서버
   `play-session`
 - `update game`은 먼저 `coreVersion`을 올릴 수 있는 가장 높은 코어 릴리스로 올린다
@@ -188,16 +188,16 @@ FinishPlaySession (PlaySessionResult) --------> verify_play_session
 | `records/` | 에이전트와 하네스 도구가 쓰는 작업 기록. 지금은 `records/setup/reference/reference.md`만 있음 |
 | `LICENSE`, `LICENSES/` | 이 저장소의 라이선스 조건과, Apache-2.0 및 OFL-1.1을 따르는 부분의 라이선스 전문 |
 
-ID 레지스트리는 별도 브랜치 `id-registry`(`id_registry.json`)에 있다. 이 브랜치에는 데이터 도구만 쓰고, 다른
+ID 레지스트리는 별도 브랜치 `id-registry`(`id_registry.json`)에 있다. 이 브랜치에는 데이터 도구만 쓰고 다른
 브랜치와 병합하지 않는다.
 
 ## 언어
 
 - 원문은 한국어다. `settings.json`에 `sourceLanguage`가 없으므로 스키마 기본값 `ko`가 적용된다
-- `supportedLanguages`는 `ko`와 `en`이다. `data/`의 텍스트 열에는 한국어 원문이 있고, `data/translations/ko.csv`와
+- `supportedLanguages`는 `ko`와 `en`이다. `data/`의 텍스트 열에는 한국어 원문이 있고 `data/translations/ko.csv`와
   `data/translations/en.csv`에 번역 키별 텍스트가 있다. 영어 텍스트는 번역 서브 에이전트가 쓴다
 - `data/glossary.csv`는 카드와 상대 이름, 게임 이름, 게임 용어(예: 수호, 결계, 돌격)의 번역을 고정한다
-- `brief.md`, `design.md`, `play-guide.md`는 영어로 되어 있고, 게임 속 한국어 텍스트는 코드 스팬으로 적고 옆에 영어
+- `brief.md`, `design.md`, `play-guide.md`는 영어로 되어 있고 게임 속 한국어 텍스트는 코드 스팬으로 적고 옆에 영어
   뜻을 붙였다
 
 ## 게임 작업하기
@@ -206,9 +206,9 @@ ID 레지스트리는 별도 브랜치 `id-registry`(`id_registry.json`)에 있�
 
 | 명령 | 하는 일 |
 |---|---|
-| `update game: open-game-works-game-mana-clash <request>` | `coreVersion`을 올리고, 작업 브랜치 `loop/<run>`에서 루프가 멈출 때까지 돌린 뒤, 고른 커밋을 `main`에 병합하고 보고한다. 플레이해 본 뒤의 피드백, 새 기능, 수정에 쓴다 |
-| `build: open-game-works-game-mana-clash DEV [<platform>...] [--version <version>]` | 서버와 클라이언트의 콘텐츠 코드를 계약에 맞춰 하드닝하고, PostgreSQL로 검사와 심사를 한 번 더 돌린 뒤, 플랫폼별로 빌드하고(생략하면 `buildPlatforms` 전체), 커밋에 `dev-<version>` 태그를 붙이고 DEV 서버를 배포한다. 빌드 결과물은 커밋하지 않는 `builds/`에 생긴다 |
-| `build: open-game-works-game-mana-clash STG` / `PROD` | STG와 PROD 빌드는 서명된 결과물까지 만든다. STG는 서버도 배포하고, PROD 배포는 사람이 한다 |
+| `update game: open-game-works-game-mana-clash <request>` | `coreVersion`을 올리고 작업 브랜치 `loop/<run>`에서 루프가 멈출 때까지 돌린 뒤, 고른 커밋을 `main`에 병합하고 보고한다. 플레이해 본 뒤의 피드백, 새 기능, 수정에 쓴다 |
+| `build: open-game-works-game-mana-clash DEV [<platform>...] [--version <version>]` | 서버와 클라이언트의 콘텐츠 코드를 계약에 맞춰 하드닝하고 PostgreSQL로 검사와 심사를 한 번 더 돌린 뒤, 플랫폼별로 빌드하고(생략하면 `buildPlatforms` 전체) 커밋에 `dev-<version>` 태그를 붙이고 DEV 서버를 배포한다. 빌드 결과물은 커밋하지 않는 `builds/`에 생긴다 |
+| `build: open-game-works-game-mana-clash STG` / `PROD` | STG와 PROD 빌드는 서명된 결과물까지 만든다. STG는 서버도 배포하고 PROD 배포는 사람이 한다 |
 
 - `build`는 먼저 `settings.json`에 필요한 빌드 값(그 환경의 값과 어느 환경에도 속하지 않는 값)이 있는지 확인한다. 이
   저장소에는 아직 DEV 빌드 값(예: `appId`, `serverImage`, `environments.DEV.serverUrl`, `environments.DEV.deploy`)이
@@ -218,8 +218,8 @@ ID 레지스트리는 별도 브랜치 `id-registry`(`id_registry.json`)에 있�
 
 ### 인스턴스 실행
 
-인스턴스는 LOCAL 환경에서 게임을 dev run으로 띄운 것이다. 인스턴스마다 SQLite를 쓰는 서버 프로세스가 따로 있고,
-외부 서비스는 가짜 어댑터가 대신하며, DEV 코드가 들어가고, Godot 클라이언트는 빌드 없이 프로젝트에서 바로 시작된다.
+인스턴스는 LOCAL 환경에서 게임을 dev run으로 띄운 것이다. 인스턴스마다 SQLite를 쓰는 서버 프로세스가 따로 있고
+외부 서비스는 가짜 어댑터가 대신한다. DEV 코드가 들어가고 Godot 클라이언트는 빌드 없이 프로젝트에서 바로 시작된다.
 [시작하기](#시작하기)에서처럼 하네스 폴더에서 `tools/bin/ogw instance start`로 띄우고 `tools/bin/ogw instance stop`으로
 멈춘다.
 
@@ -241,14 +241,14 @@ ID 레지스트리는 별도 브랜치 `id-registry`(`id_registry.json`)에 있�
 
 ### 참고 영상
 
-`brief.md`에는 참고 게임이 적혀 있고, 루프에서 판정 에이전트는 이 게임을 그 게임의 플레이 영상과 비교한다.
+`brief.md`에는 참고 게임이 적혀 있고 루프에서 판정 에이전트는 이 게임을 참고 게임의 플레이 영상과 비교한다.
 `records/setup/reference/reference.md`에는 영상 파일과 비교할 순간(처음 30초, 핵심 행동, 첫 실패, 첫 보상, 재시작)이
 적혀 있다.
 
-영상 파일은 저장소에 없다. `.gitignore`가 `records/setup/reference/`에서 `reference.md`를 뺀 모든 파일을 git에서 뺀다. 판정 에이전트가 이 파일을
+영상 파일은 저장소에 없다. `.gitignore`가 `records/setup/reference/`에서 `reference.md` 말고는 모든 파일을 git에서 뺀다. 판정 에이전트가 이 파일을
 받으므로, `update game`이나 `build`를 실행하기 전에 `reference.md`의 `## video`에 적힌 파일을
 `records/setup/reference/`에 넣는다. 각 파일 이름은 YouTube 영상 ID에 `.mp4`를 붙인 것이다. 파일마다 다음 명령을 한
-번씩 실행하면 그 영상을 그 폴더에 `<video id>.mp4`로 받아 온다(호스트에 `yt-dlp`가 있어야 한다).
+번씩 실행하면 영상을 같은 폴더에 `<video id>.mp4`로 받아 온다. 호스트에 `yt-dlp`가 있어야 한다.
 
 ```
 cd <workspace>/open-game-works-core
