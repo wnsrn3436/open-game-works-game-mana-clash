@@ -9,9 +9,10 @@ A one-on-one card battle game against CPU duelists for macOS, made by AI agents 
 
 ## Play it
 
-Set up an open-game-works workspace with the
+Set up an open-game-works workspace following the
 [Quick start of the harness README](https://github.com/wnsrn3436/open-game-works-core#quick-start). Then clone this
-repository into `games/` (with the local `id-registry` branch the data tool reads) and start an instance to play:
+repository into `games/`, create the local `id-registry` branch that the data tool reads as well, and start an instance
+to play.
 
 ```
 cd <workspace>/games
@@ -24,38 +25,41 @@ tools/bin/ogw instance start open-game-works-game-mana-clash   # prints the inst
 tools/bin/ogw instance stop <instance id>
 ```
 
-Before the first `instance start`, run `update env` in the harness session (even if you ran it before): it installs
-this game's engine.
+Before the first `instance start`, run `update env` again in the harness session, even if you have run it before. That
+step installs this game's engine.
 
 ## The game
 
 You play a dueling mage in a single-player, turn-based card battle. Each turn you spend mana on minions and spells and
-attack with your minions. You win when the enemy hero's health reaches 0; the aim is the turn where your remaining
-mana and your board's attack bring it to exactly 0.
+attack with your minions. You win when the enemy hero's health reaches 0. The aim is to find the one turn where your
+remaining mana and your board's attack bring that health to exactly 0.
 
-- **Cards:** 20 (15 minions, 5 spells) with five keywords: Guard, Ward, Charge, On Play and On Death
-- **Opponents:** a ladder of three CPU duelists: Miro the Trainee (practice, hero health 14), Tara the Forest Warden
-  (18) and Velloch the Archmage (25). Beating one opens the next
-- **Controls:** mouse clicks only (no dragging); `Esc` opens the pause popup
-- **Rules:** hero health 20, 20-card deck, 5 board slots per side, up to 8 cards in hand. One more mana crystal each
-  turn, up to 10, refilled every turn. You always go first. An empty deck deals 1, 2, 3, ... damage per draw, and a
-  match past 60 turns is a loss. No hero power, random-target effects, turn timer, payment, ads, card packs or gacha
-- **Progress:** the first win against each opponent swaps three fixed new cards into your 20-card deck. A loss only
-  adds to the record and ends the win streak; `Challenge again` starts a new match at once
+- **Cards:** 20 cards (15 minions, 5 spells) and five keywords: Guard, Ward, Charge, On Play and On Death
+- **Opponents:** a ladder of three CPU duelists: Miro the Trainee (practice opponent, hero health 14), Tara the Forest
+  Warden (18) and Velloch the Archmage (25). Beating an opponent unlocks the next one
+- **Controls:** mouse clicks only (no dragging). `Esc` opens the pause popup
+- **Rules:** hero health 20, 20-card deck, 5 board slots per side, up to 8 cards in hand. Mana crystals increase by one
+  each turn up to 10 and are fully refilled every turn. You always go first. Each draw from an empty deck deals 1, 2,
+  3, ... damage, and a match that goes past 60 turns ends in a loss. The game has no hero power, random-target effects,
+  turn timer, payments, ads, card packs or gacha
+- **Progress:** the first win against each opponent puts three fixed new cards into your 20-card deck and takes out the
+  same number. A loss only puts one more loss on the record and ends the win streak. Pressing `Challenge again` starts a new
+  match right away
 
 ## Status
 
-Played and checked on macOS during development. Not built for release yet: `build` has not been run on it.
+Played and checked on macOS during development. There is no release build yet because `build` has not been run.
 
 ## Change it with AI
 
-Give these in the Claude Code (or Codex) session in `open-game-works-core/`:
+Enter these in the Claude Code (or Codex) session in `open-game-works-core/`.
 
-- `update game: open-game-works-game-mana-clash <request>`: runs the loop on your request and merges it into `main`
+- `update game: open-game-works-game-mana-clash <request>`: runs the loop on your request and merges the result into `main`
 - `build: open-game-works-game-mana-clash DEV`: builds the game, tags `dev-<version>` and deploys the DEV server
 
-First put the reference gameplay videos in place (the judge compares the game with them; they are not in git): run
-this for each file under `## video` of [reference.md](records/setup/reference/reference.md) (needs `yt-dlp`):
+First put the reference gameplay videos in place. The judge agent compares the game with these videos, which are not
+in git. Run this for each file listed under `## video` in [reference.md](records/setup/reference/reference.md)
+(needs `yt-dlp`).
 
 ```
 cd <workspace>/open-game-works-core
@@ -65,17 +69,17 @@ tools/bin/ogw game reference open-game-works-game-mana-clash https://www.youtube
 ### Before the first DEV build
 
 - `settings.json` has no DEV build values yet (such as `appId`, `serverImage`, `environments.DEV.serverUrl` and
-  `environments.DEV.deploy`); the lead agent asks you for them
-- The only build platform is `macos`: builds need a Mac with Xcode, and Docker for a PostgreSQL 18 container
+  `environments.DEV.deploy`). The lead agent asks for the missing values
+- The only build platform is `macos`. Builds need a Mac with Xcode, and Docker to run a PostgreSQL 18 container
 - Windows: `client/resource` is a symbolic link, so enable Developer Mode and run
   `git config --global core.symlinks true` before cloning. The loop and DEV and STG builds do not run on Windows
 
 ## How it is built
 
-A match is one run of the core module `play-session`. The Godot client plays the whole match in its own simulation;
-the TypeScript server hands out the decks and seed, checks the result, and saves the record and reward cards. It pins
-core [0.1.0](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0) (`coreVersion` in
-`settings.json`); `client/core/` and `server/core/` are copies of that release.
+A match is one run of the core module `play-session`. The Godot client plays the whole match in its own simulation.
+The TypeScript server hands out the decks and seed, checks the result, and saves the record and reward cards. The core
+is pinned to [0.1.0](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0) as set by
+`coreVersion` in `settings.json`. `client/core/` and `server/core/` are copies of that release.
 
 ```
 client (Godot, client/)                     server (TypeScript, server/)
@@ -94,10 +98,10 @@ FinishPlaySession (result) -------------->  verify: values in bounds, win or los
 | [settings.json](settings.json) | core version, engine, core modules, languages, platforms, resolution |
 | [contract/](contract/) | protobuf contract between client and server |
 | [data/](data/) | CSV tables (cards, decks, opponents, settings), translations, fixtures |
-| [resource/](resource/) | images, music, sound effects, font, scenes, prefabs; [resources.csv](resource/resources.csv) |
+| [resource/](resource/) | images, music, sound effects, font, scenes, prefabs, [resources.csv](resource/resources.csv) |
 | [client/](client/) | Godot project (title, lobby, battle with its simulation) and tests |
 | [server/](server/) | TypeScript server hooks of `play-session` and tests |
-| [records/](records/) | process records, including the reference game notes |
+| [records/](records/) | process records. The reference game notes are here too |
 
 Made with the [open-game-works harness](https://github.com/wnsrn3436/open-game-works-core).
 

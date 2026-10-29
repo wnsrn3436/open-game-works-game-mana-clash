@@ -10,8 +10,8 @@ CPU 결투자와 일대일로 겨루는 macOS용 카드 배틀 게임. AI 에이
 ## 직접 플레이하기
 
 [하네스 README의 빠른 시작](https://github.com/wnsrn3436/open-game-works-core/blob/main/README.ko.md#빠른-시작)대로
-open-game-works 워크스페이스를 준비한다. 그다음 이 저장소를 `games/`에 클론하고(데이터 도구가 읽는 로컬
-`id-registry` 브랜치도 만든다), 인스턴스를 띄워 플레이한다.
+open-game-works 워크스페이스를 준비한다. 그다음 이 저장소를 `games/`에 클론하고 데이터 도구가 읽는 로컬
+`id-registry` 브랜치도 만든 뒤 인스턴스를 띄워 플레이한다.
 
 ```
 cd <workspace>/games
@@ -24,13 +24,13 @@ tools/bin/ogw instance start open-game-works-game-mana-clash   # 인스턴스 id
 tools/bin/ogw instance stop <instance id>
 ```
 
-처음 `instance start`를 하기 전에 하네스 세션에서 `update env`를 실행한다(전에 실행했더라도 다시 한다). 이 게임의
+처음 `instance start`를 하기 전에는 이미 실행한 적이 있어도 하네스 세션에서 `update env`를 다시 실행한다. 이 게임의
 엔진이 이때 설치된다.
 
 ## 게임 소개
 
-플레이어는 결투 마법사가 되어 싱글 플레이 턴제 카드 배틀을 한다. 매 턴 마나로 하수인과 주문을 내고, 하수인으로
-공격한다. 상대 영웅의 체력이 0이 되면 이기고, 남은 마나와 보드의 공격력으로 그 체력을 정확히 0으로 만드는 한 턴을
+플레이어는 결투 마법사가 되어 싱글 플레이 턴제 카드 배틀을 한다. 매 턴 마나로 하수인과 주문을 내고 하수인으로
+공격한다. 상대 영웅의 체력이 0이 되면 이긴다. 남은 마나와 보드의 공격력으로 그 체력을 정확히 0으로 만드는 한 턴을
 찾는 것이 목표다.
 
 - **카드:** 20장(하수인 15장, 주문 5장)과 다섯 가지 키워드: 수호, 결계, 돌격, 등장 시, 소멸 시
@@ -52,9 +52,9 @@ tools/bin/ogw instance stop <instance id>
 `open-game-works-core/`의 Claude Code(또는 Codex) 세션에 입력한다.
 
 - `update game: open-game-works-game-mana-clash <request>`: 요청대로 루프를 돌리고 결과를 `main`에 병합한다
-- `build: open-game-works-game-mana-clash DEV`: 게임을 빌드하고, `dev-<version>` 태그를 붙이고, DEV 서버를 배포한다
+- `build: open-game-works-game-mana-clash DEV`: 게임을 빌드해 `dev-<version>` 태그를 붙이고 DEV 서버를 배포한다
 
-먼저 참고 게임 플레이 영상을 제자리에 넣는다(판정 에이전트가 이 영상과 게임을 비교하는데, 영상은 git에 없다).
+먼저 참고 게임 플레이 영상을 제자리에 넣는다. 판정 에이전트가 이 영상과 게임을 비교하는데 영상은 git에 없다.
 [reference.md](records/setup/reference/reference.md)의 `## video`에 적힌 파일마다 다음을 실행한다(`yt-dlp` 필요).
 
 ```
@@ -67,15 +67,15 @@ tools/bin/ogw game reference open-game-works-game-mana-clash https://www.youtube
 - `settings.json`에는 아직 DEV 빌드 값(예: `appId`, `serverImage`, `environments.DEV.serverUrl`,
   `environments.DEV.deploy`)이 없다. 리드 에이전트가 빠진 값을 묻는다
 - 빌드 플랫폼은 `macos` 하나다. 빌드에는 Xcode가 있는 Mac과, PostgreSQL 18 컨테이너를 띄울 Docker가 필요하다
-- Windows: `client/resource`가 심볼릭 링크이므로, 클론하기 전에 개발자 모드를 켜고
+- Windows: `client/resource`가 심볼릭 링크이므로 클론하기 전에 개발자 모드를 켜고
   `git config --global core.symlinks true`를 실행한다. 루프와 DEV·STG 빌드는 Windows에서 돌지 않는다
 
 ## 만든 방식
 
-대전 한 판은 코어 모듈 `play-session`의 실행 한 번이다. Godot 클라이언트가 자체 시뮬레이션으로 대전 전체를 진행하고,
-TypeScript 서버는 덱과 시드를 내주고, 결과를 확인하고, 전적과 보상 카드를 저장한다. 코어는
-[0.1.0](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0)으로 고정되어 있고(`settings.json`의
-`coreVersion`), `client/core/`와 `server/core/`는 그 릴리스의 복사본이다.
+대전 한 판은 코어 모듈 `play-session`의 실행 한 번이다. Godot 클라이언트가 자체 시뮬레이션으로 대전 전체를 진행한다.
+TypeScript 서버는 덱과 시드를 내주고 결과를 확인한 뒤 전적과 보상 카드를 저장한다. 코어는 `settings.json`의
+`coreVersion`에 적힌 대로 [0.1.0](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0)으로
+고정되어 있다. `client/core/`와 `server/core/`는 그 릴리스의 복사본이다.
 
 ```
 client (Godot, client/)                     server (TypeScript, server/)
