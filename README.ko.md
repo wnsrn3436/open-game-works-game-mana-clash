@@ -62,15 +62,13 @@ cd <workspace>/open-game-works-core
 tools/bin/ogw game reference open-game-works-game-mana-clash https://www.youtube.com/watch?v=<video id>
 ```
 
-<details><summary>첫 DEV 빌드 전에</summary>
+### 첫 DEV 빌드 전에
 
 - `settings.json`에는 아직 DEV 빌드 값(예: `appId`, `serverImage`, `environments.DEV.serverUrl`,
   `environments.DEV.deploy`)이 없다. 리드 에이전트가 빠진 값을 묻는다
 - 빌드 플랫폼은 `macos` 하나다. 빌드에는 Xcode가 있는 Mac과, PostgreSQL 18 컨테이너를 띄울 Docker가 필요하다
 - Windows: `client/resource`가 심볼릭 링크이므로, 클론하기 전에 개발자 모드를 켜고
   `git config --global core.symlinks true`를 실행한다. 루프와 DEV·STG 빌드는 Windows에서 돌지 않는다
-
-</details>
 
 ## 만든 방식
 

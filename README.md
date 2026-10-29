@@ -62,15 +62,13 @@ cd <workspace>/open-game-works-core
 tools/bin/ogw game reference open-game-works-game-mana-clash https://www.youtube.com/watch?v=<video id>
 ```
 
-<details><summary>Before the first DEV build</summary>
+### Before the first DEV build
 
 - `settings.json` has no DEV build values yet (such as `appId`, `serverImage`, `environments.DEV.serverUrl` and
   `environments.DEV.deploy`); the lead agent asks you for them
 - The only build platform is `macos`: builds need a Mac with Xcode, and Docker for a PostgreSQL 18 container
 - Windows: `client/resource` is a symbolic link, so enable Developer Mode and run
   `git config --global core.symlinks true` before cloning. The loop and DEV and STG builds do not run on Windows
-
-</details>
 
 ## How it is built
 
