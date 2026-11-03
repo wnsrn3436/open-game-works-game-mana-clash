@@ -29,12 +29,13 @@ tools/bin/ogw instance stop <instance id>
 
 ## 게임 소개
 
-혼자 하는 턴제 카드 배틀이다. 결투 마법사가 되어 매 턴 마나로 하수인과 주문을 내고, 하수인으로 공격한다. 상대 영웅의
-체력이 0이 되면 이긴다. 남은 마나와 보드의 공격력으로 상대 체력을 정확히 0으로 만드는 한 턴을 찾는 것이 목표다.
+플레이어는 결투 마법사가 되어 싱글 플레이 턴제 카드 배틀을 한다. 매 턴 마나로 하수인과 주문을 내고 하수인으로
+공격한다. 상대 영웅의 체력이 0이 되면 이긴다. 남은 마나와 보드의 공격력으로 그 체력을 정확히 0으로 만드는 한 턴을
+찾는 것이 목표다.
 
 - **카드:** 20장(하수인 15장, 주문 5장). 키워드는 수호, 결계, 돌격, 등장 시, 소멸 시 다섯 가지다
 - **상대:** CPU 세 명과 차례로 겨룬다. 수련생 미로(연습 상대, 영웅 체력 14), 숲의 파수꾼 타라(18), 대마법사
-  벨로크(25) 순이고, 이기면 다음 상대가 열린다
+  벨로크(25) 순이고 이기면 다음 상대가 열린다
 - **조작:** 마우스 클릭뿐이다(드래그 없음). `Esc`로 일시정지 팝업을 연다
 - **규칙:** 영웅 체력 20, 덱 20장, 보드 한쪽당 5칸, 손패 최대 8장. 마나 수정은 매 턴 하나씩 늘어 최대 10개이고 매 턴
   가득 다시 채워진다. 플레이어가 항상 선공이다. 빈 덱에서 뽑을 때마다 1, 2, 3, ... 피해를 받고, 60턴을 넘긴 대전은
@@ -53,7 +54,7 @@ tools/bin/ogw instance stop <instance id>
 - `update game: open-game-works-game-mana-clash <request>`: 요청대로 루프를 돌리고 결과를 `main`에 병합한다
 - `build: open-game-works-game-mana-clash DEV`: 게임을 빌드해 `dev-<version>` 태그를 붙이고 DEV 서버를 배포한다
 
-먼저 레퍼런스 게임 플레이 영상을 내려받아 둔다. 판정 에이전트가 이 영상과 게임을 비교하는데, 영상은 git에 없다.
+먼저 레퍼런스 게임 플레이 영상을 제자리에 넣는다. 판정 에이전트가 이 영상과 게임을 비교하는데 영상은 git에 없다.
 [reference.md](records/setup/reference/reference.md)의 `## video`에 적힌 파일마다 다음을 실행한다(`yt-dlp` 필요).
 
 ```
@@ -71,10 +72,10 @@ tools/bin/ogw game reference open-game-works-game-mana-clash https://www.youtube
 
 ## 만든 방식
 
-대전 한 판이 코어 모듈 `play-session`의 플레이 세션 하나다. Godot 클라이언트가 자체 시뮬레이션으로 대전 전체를 진행한다.
+대전 한 판은 코어 모듈 `play-session`의 실행 한 번이다. Godot 클라이언트가 자체 시뮬레이션으로 대전 전체를 진행한다.
 TypeScript 서버는 덱과 시드를 내주고 결과를 확인한 뒤 전적과 보상 카드를 저장한다. 코어는 `settings.json`의
 `coreVersion`에 적힌 대로 [0.1.0](https://github.com/wnsrn3436/open-game-works-core-impl/releases/tag/v0.1.0)으로
-고정되어 있다. `client/core/`와 `server/core/`는 그 릴리스의 사본이다.
+고정되어 있다. `client/core/`와 `server/core/`는 그 릴리스의 복사본이다.
 
 ```
 client (Godot, client/)                     server (TypeScript, server/)
@@ -108,7 +109,7 @@ FinishPlaySession (result) -------------->  verify: 값의 범위와 승패의 �
 |---|---|
 | 게임 고유의 콘텐츠(문서, contract, 데이터, 콘텐츠 코드, 씬, 프리팹과 그 밖의 리소스) | [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ko) |
 | `resource/resources.csv`에서 `LicenseRef-game-owned`로 표시된 리소스(게임 자체의 절차적 생성으로 만든 것) | 게임 콘텐츠의 일부: CC BY-NC-ND 4.0 |
-| `client/core/`, `server/core/`: open-game-works 코어 릴리스의 사본, [open-game-works-core-impl](https://github.com/wnsrn3436/open-game-works-core-impl)과 같음 | Apache License 2.0([LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt)) |
+| `client/core/`, `server/core/`: open-game-works 코어 릴리스의 복사본, [open-game-works-core-impl](https://github.com/wnsrn3436/open-game-works-core-impl)과 같음 | Apache License 2.0([LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt)) |
 | `resource/font/main.ttf`(Noto Sans KR) | SIL Open Font License 1.1([LICENSES/OFL-1.1-NotoSansKR.txt](LICENSES/OFL-1.1-NotoSansKR.txt)) |
 
 `resource/resources.csv`에는 리소스마다 만든 방법(`method`)과 사용한 모델이나 출처의 라이선스(`license`)가 적혀 있고,
