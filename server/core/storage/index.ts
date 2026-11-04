@@ -29,6 +29,7 @@ import {
   create_user,
   delete_user,
   export_user_rows,
+  find_user_by_public_code,
   get_user_record,
   read_game_rows,
   read_user_rows,
@@ -40,7 +41,9 @@ import {
   set_user_created_at,
   sweep_expired,
   upgrade_user_rows,
+  type NewUser,
   type RawRow,
+  type SweepResult,
   type UserRecord,
 } from './rows.ts';
 import { apply_schema, schema_lock, table_def, type ColumnType, type Scope } from './schema.ts';
@@ -80,6 +83,7 @@ import {
 } from './tx.ts';
 import { register_user_change, run_user_changes, send_user_change, type ChangeCaller } from './user_change.ts';
 import { canonical_json } from './canonical_json.ts';
+import { is_public_code_input } from './public_code.ts';
 import { check_hook_output } from './hook_output.ts';
 
 export type { RequestCtx, HookChangeSource } from './request_ctx.ts';
@@ -93,7 +97,9 @@ export type { DbHandle, FailureCode, GameTx, ItemConverter, Pass, UserChangeAppl
 export type { FullStateResult, ResponseDelta, TakenDelta } from './delta.ts';
 export type { KindClass, KindValue } from './kinds.ts';
 export type { Random } from './random.ts';
-export type { RawRow, UserRecord } from './rows.ts';
+export type { NewUser, RawRow, SweepFailure, SweepResult, UserRecord } from './rows.ts';
+/** The `## API` operation `is_public_code_input`. */
+export { is_public_code_input } from './public_code.ts';
 export type { ColumnType, Scope } from './schema.ts';
 export type { PublicStateEntry } from './state.ts';
 export type { RequestFields, UserTxResult } from './tx.ts';
@@ -154,9 +160,11 @@ export interface Storage {
   run_user_changes(): Promise<number | 'FAILED'>;
   db(ctx_or_tx: RequestCtx | GameTx): DbHandle;
   read_db(): DbHandle;
-  create_user(tx: GameTx): bigint;
+  create_user(tx: GameTx): NewUser;
   delete_user(ctx: RequestCtx): void;
   get_user_record(db: DbHandle, user_id: bigint): UserRecord | null;
+  find_user_by_public_code(db: DbHandle, public_code: string): bigint | null;
+  is_public_code_input(text: string): boolean;
   set_user_created_at(ctx: RequestCtx, time: bigint): void;
   scan_users(db: DbHandle, after: bigint, max: number, version?: bigint | number | null): bigint[];
   sample_users(db: DbHandle, max: number): bigint[];
@@ -179,7 +187,7 @@ export interface Storage {
   ): void;
   export_user_rows(db: DbHandle, user_id: bigint): Record<string, Record<string, unknown>[]>;
   register_item_converter(fn: ItemConverter): void;
-  sweep_expired(): Promise<number | 'FAILED'>;
+  sweep_expired(): Promise<SweepResult>;
   random_u32(source: RandomSource): number;
   random_int(source: RandomSource, min: bigint, max: bigint): bigint;
   random_weighted(source: RandomSource, weights: readonly (bigint | number)[]): number;
@@ -418,6 +426,8 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
       delete_user(core, ctx);
     },
     get_user_record: (handle, user_id) => get_user_record(handle, user_id),
+    find_user_by_public_code: (handle, public_code) => find_user_by_public_code(handle, public_code),
+    is_public_code_input,
     set_user_created_at: (ctx, time) => {
       set_user_created_at(core, ctx, time);
     },

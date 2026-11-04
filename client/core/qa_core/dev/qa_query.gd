@@ -46,6 +46,8 @@ static func state_json() -> String:
 		_JSON.pair("boot_stage", _JSON.text(_name_of(BOOT_STAGE_NAMES, stage))),
 		_JSON.pair("scene_key", _JSON.text(SceneCore.current_scene_key() if SceneCore.is_initialized() else "")),
 		_JSON.pair("in_transition", _JSON.boolean(SceneCore.is_initialized() and SceneCore.is_transitioning())),
+		_JSON.pair("ui_flow", _JSON.boolean(UICore.is_initialized() and UICore.is_flow_in_progress())),
+		_JSON.pair("finite_tweens", _JSON.integer(TweenCore.get_finite_playing_count() if TweenCore.is_initialized() else 0)),
 		_JSON.pair("panels", _JSON.strings(UICore.get_panel_stack() if UICore.is_initialized() else PackedStringArray())),
 		_JSON.pair("popups", _JSON.strings(UICore.get_open_popups() if UICore.is_initialized() else PackedStringArray())),
 		_JSON.pair("input_blocks", _input_blocks_json()),
@@ -266,6 +268,7 @@ static func list_ui_json() -> String:
 			_JSON.pair("button", _JSON.boolean(ui_button != null)),
 			_JSON.pair("pad_action", _JSON.boolean(pad_action)),
 			_JSON.pair("modal_covered", _JSON.boolean(UICore.is_initialized() and UICore.is_modal_covered(element))),
+			_JSON.pair("dimmed", _JSON.boolean(UICore.is_initialized() and UICore.is_dimmed(element))),
 			_JSON.pair("text_input", _JSON.boolean(is_text_input(element))),
 			_JSON.pair("focused", _JSON.boolean(element == focus and (is_text_input(element) or ui_button != null))),
 		])))

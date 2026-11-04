@@ -3,10 +3,11 @@
  * `### schema`).
  */
 import { createHash } from 'node:crypto';
-import type { DbConn, DbTxConn, Dialect } from './db/types.ts';
+import { DbError, type DbConn, type DbTxConn, type Dialect, type Row } from './db/types.ts';
+import { pick_public_code } from './public_code.ts';
 
 /** The highest core schema version this `storage` applies. Same value as the file `core-schema-version`. */
-export const CORE_SCHEMA_VERSION = 1;
+export const CORE_SCHEMA_VERSION = 2;
 
 /** The key of the schema lock (`pg_advisory_xact_lock`). */
 const SCHEMA_LOCK_KEY = 0x6f6777n;
@@ -173,24 +174,32 @@ export function table_def(input: TableInput): TableDef | string {
   if (typeof indexes === 'string') return fail(indexes);
   const shape = check_shape(input, columns, key);
   if (shape !== null) return fail(shape);
+  const expiry = typeof input.expiry === 'string' ? input.expiry : null;
   return {
     name,
     scope: input.scope,
     columns,
     key,
-    expiry: typeof input.expiry === 'string' ? input.expiry : null,
+    expiry,
     snapshot: input.snapshot === true,
     personal: typeof input.personal === 'string' ? input.personal : null,
-    indexes,
+    indexes: with_expiry_index(indexes, expiry),
   };
+}
+
+/** The index list with the index of the expiry column alone added when no index starts with that column. */
+function with_expiry_index(indexes: string[][], expiry: string | null): string[][] {
+  if (expiry === null || indexes.some((index) => index[0] === expiry)) return indexes;
+  return [...indexes, [expiry]];
 }
 
 function create_table_sql(dialect: Dialect, name: string, columns: readonly Column[], key: readonly string[]): string {
   return `CREATE TABLE ${quote(name)} (${columns.map((c) => column_sql(dialect, c)).join(', ')}, PRIMARY KEY (${key.map(quote).join(', ')}))`;
 }
 
+/** `IF NOT EXISTS` keeps an index of the same name that an operator made before, e.g. with `CREATE INDEX CONCURRENTLY`. */
 function create_index_sql(table: string, columns: readonly string[]): string {
-  return `CREATE INDEX ${quote(index_name(table, columns))} ON ${quote(table)} (${columns.map(quote).join(', ')})`;
+  return `CREATE INDEX IF NOT EXISTS ${quote(index_name(table, columns))} ON ${quote(table)} (${columns.map(quote).join(', ')})`;
 }
 
 /** Base table statements of core schema version 1. */
@@ -213,8 +222,13 @@ function base_v1(dialect: Dialect): string[] {
   ];
 }
 
+/** Core schema version 2: the public code of each user, unique. Rows of before are filled at server start. */
+function base_v2(dialect: Dialect): string[] {
+  return [`ALTER TABLE "user" ADD COLUMN public_code ${text_type(dialect)}`, `CREATE UNIQUE INDEX ix_user_public_code ON "user" (public_code)`];
+}
+
 /** Core schema changes by version: index 0 is version 1. A new version adds its statements at the end. */
-const CORE_SCHEMA: readonly ((dialect: Dialect) => string[])[] = [base_v1];
+const CORE_SCHEMA: readonly ((dialect: Dialect) => string[])[] = [base_v1, base_v2];
 
 function storage_schema_exists(conn: DbConn, dialect: Dialect): boolean {
   const sql =
@@ -300,12 +314,66 @@ function apply_table(conn: DbConn, dialect: Dialect, table: TableDef): string | 
   return null;
 }
 
+/** How many rows one fill query of server start takes. */
+const FILL_BATCH = 1000;
+
+/** SQLSTATE `unique_violation`. */
+const UNIQUE_VIOLATION = '23505';
+
+const FILL_UPDATE =
+  'UPDATE "user" SET public_code = $1 WHERE user_id = $2 AND public_code IS NULL AND NOT EXISTS (SELECT 1 FROM "user" WHERE public_code = $1) RETURNING user_id';
+
+/**
+ * One fill update; null when the picked code met a code that the `NOT EXISTS` did not see. On PostgreSQL the
+ * `NOT EXISTS` does not see a code that `create_user` of another server instance inserted and has not committed: the
+ * unique index waits for that transaction and fails the update when it commits. A savepoint keeps that failure from
+ * aborting the schema transaction. SQLite holds the write lock (`BEGIN IMMEDIATE`), so every code is committed.
+ */
+function fill_update(conn: DbConn, dialect: Dialect, user_id: Row[string]): Row[] | null {
+  if (dialect === 'sqlite') return conn.query(FILL_UPDATE, [pick_public_code(), user_id]);
+  conn.query('SAVEPOINT fill_public_code');
+  let written: Row[] | null;
+  try {
+    written = conn.query(FILL_UPDATE, [pick_public_code(), user_id]);
+  } catch (error) {
+    if (!(error instanceof DbError) || error.code !== UNIQUE_VIOLATION) throw error;
+    conn.query('ROLLBACK TO SAVEPOINT fill_public_code');
+    written = null;
+  }
+  conn.query('RELEASE SAVEPOINT fill_public_code');
+  return written;
+}
+
+/**
+ * The start fill: gives each `user` row whose `public_code` is null a public code. The update writes only while that
+ * row's code is still null and no row has the picked code; when it writes nothing and the row is still null, or the
+ * unique index fails it, it picks again.
+ */
+function fill_public_codes(conn: DbConn, dialect: Dialect): void {
+  for (;;) {
+    const rows = conn.query('SELECT user_id FROM "user" WHERE public_code IS NULL ORDER BY user_id LIMIT $1', [FILL_BATCH]);
+    if (rows.length === 0) return;
+    for (const row of rows) {
+      for (;;) {
+        const written = fill_update(conn, dialect, row.user_id ?? null);
+        if (written === null) continue;
+        if (written.length > 0) break;
+        const now = conn.query('SELECT public_code FROM "user" WHERE user_id = $1', [row.user_id ?? null])[0];
+        if (now === undefined || now.public_code !== null) break;
+      }
+    }
+  }
+}
+
 /** The first statement of the schema transaction: the schema lock (SQLite holds it by `BEGIN IMMEDIATE`). */
 export function schema_lock(dialect: Dialect): { sql: string; params: readonly bigint[] } | null {
   return dialect === 'sqlite' ? null : { sql: 'SELECT pg_advisory_xact_lock(CAST($1 AS BIGINT)) AS locked', params: [SCHEMA_LOCK_KEY] };
 }
 
-/** Applies the base tables and the module tables in an open schema transaction. Returns why server start fails. */
+/**
+ * Applies the base tables and the module tables in an open schema transaction, then fills the null public codes.
+ * Returns why server start fails.
+ */
 export function apply_schema(conn: DbTxConn, dialect: Dialect, tables: readonly TableDef[]): string | null {
   const base = apply_base(conn, dialect);
   if (base !== null) return base;
@@ -313,6 +381,7 @@ export function apply_schema(conn: DbTxConn, dialect: Dialect, tables: readonly 
     const reason = apply_table(conn, dialect, table);
     if (reason !== null) return reason;
   }
+  fill_public_codes(conn, dialect);
   return null;
 }
 

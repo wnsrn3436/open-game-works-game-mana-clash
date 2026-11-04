@@ -39,8 +39,6 @@ export interface Realtime {
 const DATA_VERSION = /^[0-9a-f]{64}-[0-9a-f]{64}$/;
 const APP_VERSION = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/;
 const WINDOW_MS = 1000n;
-/** Room code draws before a `ROOM_CREATE` is `ROOM_BUSY` (`### room`). */
-const ROOM_CODE_DRAWS = 100;
 /** The WebSocket close code after `CLOSE`; its reason is the `CLOSE` code. */
 const CLOSE_WITH_CODE = 4000;
 
@@ -99,6 +97,8 @@ interface Room {
   readonly data_version: string;
   readonly client_version: string;
   entry: Entry | null;
+  /** A `ROOM_START` of this room is making its match: from member rating resolution until `create_match` ends, also through a host change. */
+  making_match: boolean;
 }
 
 interface UserSlot {
@@ -282,8 +282,8 @@ export function create_realtime(env: Env, results: Results): Realtime {
     const slot = users.get(user_id);
     const room = slot?.room ?? null;
     if (slot === undefined || room === null) return;
+    // `Matching` without an entry is a match being created: `create_match` makes the room `Open` after `MATCH_FOUND`.
     if (room.status === 'Matching' && room.entry !== null) remove_entry(room.entry, false);
-    room.status = 'Open';
     const at = room.members.indexOf(user_id);
     if (at >= 0) room.members.splice(at, 1);
     slot.room = null;
@@ -291,10 +291,10 @@ export function create_realtime(env: Env, results: Results): Realtime {
     else send_room_state(room);
   };
 
-  /** A room code no room has, or null when all `ROOM_CODE_DRAWS` draws collide. */
+  /** A room code no room has, or null when all `matchmaker.roomCodeMaxPicks` picks collide. */
   const new_room_code = (): string | null => {
     const alphabet = settings.room_code_alphabet;
-    for (let draw = 0; draw < ROOM_CODE_DRAWS; draw += 1) {
+    for (let pick = 0; pick < settings.room_code_max_picks; pick += 1) {
       let code = '';
       for (let i = 0; i < settings.room_code_length; i += 1) code += alphabet[randomInt(alphabet.length)] ?? '';
       if (!rooms.has(code)) return code;
@@ -567,10 +567,16 @@ export function create_realtime(env: Env, results: Results): Realtime {
     return members;
   };
 
+  /** A new match would take a member whose connection is bound to a match session out of that match. */
+  const member_in_match = (user_id: bigint): boolean => {
+    const client = client_of(user_id);
+    return client !== null && env.p2p.is_bound(client);
+  };
+
   /** A room frame or party request of the host that failed before member rating resolution, or null to go on. */
   const host_error = (slot: UserSlot, room: Room | null): number | null => {
     if (room === null || room.members[0] !== slot.client.user_id) return CoreError.CORE_ERROR_ROOM_NOT_HOST;
-    if (room.status === 'Matching') return CoreError.CORE_ERROR_ROOM_BUSY;
+    if (room.status === 'Matching' || room.making_match || room.members.some(member_in_match)) return CoreError.CORE_ERROR_ROOM_BUSY;
     if (env.admin.is_kill_switched('MATCH_REQUEST')) return CoreError.CORE_ERROR_FEATURE_DISABLED;
     return null;
   };
@@ -657,6 +663,7 @@ export function create_realtime(env: Env, results: Results): Realtime {
       data_version: client.data_version,
       client_version: client.client_version,
       entry: null,
+      making_match: false,
     };
     rooms.set(room.code, room);
     slot.room = room;
@@ -728,16 +735,21 @@ export function create_realtime(env: Env, results: Results): Realtime {
       room_failed(client, error ?? CoreError.CORE_ERROR_INVALID_REQUEST, request);
       return;
     }
-    const members = await resolve_members(room, mode, request);
-    if (members === null || live(client) === null) return;
-    const seats: Seat[] = members.map((m, i) => ({
-      user_id: m.user_id,
-      rating: m.rating,
-      team: mode.team_size > 0 ? Math.floor(i / mode.team_size) : 0,
-      party: 1,
-      client: m.client,
-    }));
-    await create_match(mode, room.lockstep, room.data_version, room.client_version, 'Room', seats, []);
+    room.making_match = true;
+    try {
+      const members = await resolve_members(room, mode, request);
+      if (members === null || live(client) === null) return;
+      const seats: Seat[] = members.map((m, i) => ({
+        user_id: m.user_id,
+        rating: m.rating,
+        team: mode.team_size > 0 ? Math.floor(i / mode.team_size) : 0,
+        party: 1,
+        client: m.client,
+      }));
+      await create_match(mode, room.lockstep, room.data_version, room.client_version, 'Room', seats, []);
+    } finally {
+      room.making_match = false;
+    }
   };
 
   const p2p_frame = async (client: Client, frame: CoreContract.MatchmakerFrame): Promise<void> => {
@@ -983,8 +995,8 @@ export function create_realtime(env: Env, results: Results): Realtime {
       for (const step of run_queue(queue.entries, rule_of(mode), at)) {
         if (step.kind === 'timeout') {
           const entry = step.entry;
-          remove_entry(entry);
           for (const m of entry.members) match_failed(m.client, CoreContract.MatchFailReason.MATCH_FAIL_REASON_TIMEOUT);
+          remove_entry(entry);
           continue;
         }
         for (const entry of step.entries) {

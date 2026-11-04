@@ -4,12 +4,13 @@
  */
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 import * as GameData from '../../generated/data/game_data.ts';
+import { is_public_code_input } from '../storage/index.ts';
 import { DELETION_CODE_CHARS } from './account.ts';
 import { E, audit_log, deletion_url, error_log, security_log, truncated_ip, type AuthState } from './context.ts';
 import type { Ctx } from './deps.ts';
 import { timed } from './social.ts';
 import { count_deletion_attempt, count_deletion_ip, delete_deletion_code, find_deletion_code, find_social_link } from './tables.ts';
-import { positive_int64, sha256_hex } from './token.ts';
+import { sha256_hex } from './token.ts';
 import { withdraw } from './withdraw.ts';
 
 const MINUTE_MS = 60_000n;
@@ -135,7 +136,7 @@ export function deletion_page(a: AuthState, texts: PageText, request: RouteReque
   const nonce = randomBytes(16).toString('base64');
   const confirm = (id: string): string => `<label><input type="checkbox" name="confirm" value="yes" id="${id}"> ${t('auth_deletion_confirm')}</label>`;
   let main = `<h1>${t('auth_deletion_title')}</h1><p>${t('auth_deletion_body')}</p>`;
-  main += `<form method="post" action="/account/deletion"><input type="hidden" name="method" value="code"><label>${t('auth_deletion_user_id')} <input name="user_id" inputmode="numeric" autocomplete="off" required></label><label>${t('auth_deletion_code')} <input name="code" autocomplete="off" required></label>${confirm('confirm_code')}<button type="submit">${t('auth_deletion_submit')}</button></form>`;
+  main += `<form method="post" action="/account/deletion"><input type="hidden" name="method" value="code"><label>${t('auth_deletion_user_id')} <input name="public_code" autocomplete="off" autocapitalize="characters" spellcheck="false" required></label><label>${t('auth_deletion_code')} <input name="code" autocomplete="off" required></label>${confirm('confirm_code')}<button type="submit">${t('auth_deletion_submit')}</button></form>`;
   const google = a.settings.adapter_google;
   if (google !== null) {
     main += `<form method="post" action="/account/deletion" id="google_form"><input type="hidden" name="method" value="google"><p>${t('auth_deletion_google')}</p>${confirm('confirm_google')}`;
@@ -155,7 +156,7 @@ function result_page(a: AuthState, texts: PageText, language: string, status: nu
   return html_response(status, nonce, document(language, nonce, texts.text(language, 'auth_deletion_title'), main));
 }
 
-export type DeletionForm = { readonly method: 'code'; readonly user_id: bigint; readonly code: string } | { readonly method: 'google'; readonly credential: string };
+export type DeletionForm = { readonly method: 'code'; readonly public_code: string; readonly code: string } | { readonly method: 'google'; readonly credential: string };
 
 /** The fields of a form body; null when a field comes twice. */
 function form_fields(body: string): Map<string, string> | null {
@@ -167,15 +168,15 @@ function form_fields(body: string): Map<string, string> | null {
   return values;
 }
 
-const FORM_FIELDS = { code: ['method', 'confirm', 'user_id', 'code'], google: ['method', 'confirm', 'credential'] } as const;
+const FORM_FIELDS = { code: ['method', 'confirm', 'public_code', 'code'], google: ['method', 'confirm', 'credential'] } as const;
 
-/** The `code` method form: a user ID of 1 or more in `int64` and a code of the deletion code characters. */
+/** The `code` method form: a public code input of `storage` and a code of the deletion code characters. */
 function code_form(values: ReadonlyMap<string, string>, code_length: number): DeletionForm | null {
-  const user_id = positive_int64(values.get('user_id') ?? '');
-  if (user_id === null) return null;
+  const public_code = values.get('public_code') ?? '';
+  if (!is_public_code_input(public_code)) return null;
   const code = (values.get('code') ?? '').replace(/[\s-]/g, '').toUpperCase();
   if (!new RegExp(`^[${DELETION_CODE_CHARS}]{${String(code_length)}}$`).test(code)) return null;
-  return { method: 'code', user_id, code };
+  return { method: 'code', public_code, code };
 }
 
 /**
@@ -195,7 +196,10 @@ export function parse_form(body: string, code_length: number, max_credential_byt
   return { method, credential };
 }
 
-type Outcome = { readonly result: 'done' | 'fail' | 'retry' | 'unavailable'; readonly user_id: bigint | null };
+/** The identity check and withdrawal of steps 4 and 5. `retry` (500) has the cause its `error` log gives. */
+type Outcome =
+  | { readonly result: 'done' | 'fail' | 'unavailable'; readonly user_id: bigint | null }
+  | { readonly result: 'retry'; readonly user_id: bigint | null; readonly cause: string };
 
 /** The withdrawal of step 5 in the user's transaction; `INTERNAL` (rolled back) when a `remove_user` failed. */
 function delete_account(a: AuthState, ctx: Ctx): 'pass' | number {
@@ -204,22 +208,33 @@ function delete_account(a: AuthState, ctx: Ctx): 'pass' | number {
 
 /** Step 5 in the user's transaction, and what the transaction result means for the page. */
 async function delete_in_transaction(a: AuthState, user_id: bigint, before: (ctx: Ctx) => boolean): Promise<Outcome> {
-  let result: Outcome['result'] = 'fail';
+  const check = { passed: false };
   const committed = await a.modules.storage.run_user_transaction(user_id, (ctx) => {
     if (!before(ctx)) return 'pass';
-    const deleted = delete_account(a, ctx);
-    result = deleted === 'pass' ? 'done' : 'retry';
-    return deleted;
+    check.passed = true;
+    return delete_account(a, ctx);
   });
   if (committed === 'WITHDRAWN') return { result: 'fail', user_id };
-  if (committed === 'FAILED' || committed === 'REJECTED') return { result: 'retry', user_id };
-  return { result, user_id };
+  if (committed === 'FAILED') return { result: 'retry', user_id, cause: 'run_user_transaction of the identity check is FAILED' };
+  // REJECTED: a remove_user failed and the change function rolled the withdrawal back.
+  if (committed === 'REJECTED') return { result: 'retry', user_id, cause: 'a remove_user is FAILED' };
+  return { result: check.passed ? 'done' : 'fail', user_id };
 }
 
-/** The `code` method: a wrong code counts an attempt and the last allowed attempt deletes the code. */
-function check_code(a: AuthState, form: Extract<DeletionForm, { method: 'code' }>): Promise<Outcome> {
+/**
+ * The `code` method: the user of the public code (read with `read_db`), then its transaction. A wrong code counts an
+ * attempt and the last allowed attempt deletes the code.
+ */
+async function check_code(a: AuthState, form: Extract<DeletionForm, { method: 'code' }>): Promise<Outcome> {
   const { storage } = a.modules;
-  return delete_in_transaction(a, form.user_id, (ctx) => {
+  let user_id: bigint | null;
+  try {
+    user_id = storage.find_user_by_public_code(storage.read_db(), form.public_code);
+  } catch {
+    return { result: 'retry', user_id: null, cause: 'the read_db lookup of the public code failed' };
+  }
+  if (user_id === null) return { result: 'fail', user_id: null };
+  return delete_in_transaction(a, user_id, (ctx) => {
     const db = storage.db(ctx);
     const row = find_deletion_code(db, ctx.user_id);
     if (row === null || row.expires_at <= a.modules['server-time'].clock_now()) return false;
@@ -232,7 +247,7 @@ function check_code(a: AuthState, form: Extract<DeletionForm, { method: 'code' }
   });
 }
 
-/** The `google` method: `verify` outside any transaction, then the linked user's transaction. */
+/** The `google` method: `verify` outside any transaction, the link row read with `read_db`, then the linked user's transaction. */
 async function check_google(a: AuthState, form: Extract<DeletionForm, { method: 'google' }>, ip: string): Promise<Outcome> {
   const google = a.google;
   if (google === null) return { result: 'fail', user_id: null };
@@ -242,7 +257,12 @@ async function check_google(a: AuthState, form: Extract<DeletionForm, { method: 
     error_log(a, `login-google verify failed on the account deletion page: ${verified.failure}`, { request: 'POST /account/deletion' }, { ip: truncated_ip(ip) });
     return { result: 'unavailable', user_id: null };
   }
-  const link = find_social_link(a.modules.storage.read_db(), 'LOGIN_PROVIDER_GOOGLE', verified.value);
+  let link: { user_id: bigint } | null;
+  try {
+    link = find_social_link(a.modules.storage.read_db(), 'LOGIN_PROVIDER_GOOGLE', verified.value);
+  } catch {
+    return { result: 'retry', user_id: null, cause: 'the read_db lookup of the auth_social_link row failed' };
+  }
   if (link === null) return { result: 'fail', user_id: null };
   return delete_in_transaction(a, link.user_id, () => true);
 }
@@ -264,7 +284,10 @@ export async function deletion_post(a: AuthState, texts: PageText, request: Rout
   const now = m['server-time'].clock_now();
   const window_start = m['server-time'].get_window_start(MINUTE_MS, now);
   const count = await m.storage.run_game_transaction((tx) => count_deletion_ip(m.storage.db(tx), client_ip, window_start, window_start + MINUTE_MS));
-  if (count === 'FAILED') return page(500, 'auth_deletion_retry');
+  if (count === 'FAILED') {
+    error_log(a, 'account deletion failed: run_game_transaction of the IP limit is FAILED', target, { ip: truncated_ip(client_ip) });
+    return page(500, 'auth_deletion_retry');
+  }
   if (count > BigInt(a.settings.deletion_attempts_per_minute)) {
     security_log(a, 'account deletion attempts over the IP limit', target, 'rate_limited_ip', client_ip);
     return page(429, 'auth_deletion_rate_limited');
@@ -283,7 +306,7 @@ export async function deletion_post(a: AuthState, texts: PageText, request: Rout
   }
   if (outcome.result === 'unavailable') return page(502, 'auth_deletion_retry');
   if (outcome.result === 'retry') {
-    error_log(a, 'account deletion failed: a remove_user or the user transaction failed', who, { method: form.method });
+    error_log(a, `account deletion failed: ${outcome.cause}`, who, { method: form.method });
     return page(500, 'auth_deletion_retry');
   }
   audit_log(a, 'account deleted on the web account deletion page', who, { reason: 'web_deletion', method: form.method, ip: truncated_ip(client_ip) });

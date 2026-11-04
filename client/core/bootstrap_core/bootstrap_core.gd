@@ -122,6 +122,9 @@ static var _trace: PackedStringArray = PackedStringArray()
 ## the ad units it passed with the ads adapter.
 static var _traced_adapters: Dictionary[String, RefCounted] = {}
 static var _traced_ad_units: Dictionary[int, String] = {}
+## Core test state. The `SystemPopupParam` of each `UICore.open_system_popup` call while `_trace_enabled` is true, in
+## call order. The trace entry of a call is `UICore.open_system_popup:<index in this list>`.
+static var _traced_popups: Array[SystemPopupParam] = []
 ## Core test state. The realtime transport of the last boot, as `p2p relay_only=<bool>` wrapped by the DEV code, or
 ## empty when the test realtime transport was passed.
 static var _realtime_transport_kind: String = ""
@@ -963,21 +966,27 @@ static func _login_failed(result: LoginResult) -> void:
 	if result != null:
 		status = result.status
 	if status == AuthCore.LoginStatus.BANNED:
+		var public_code := _grouped_public_code(result.public_code)
 		var args := FormatArgs.new()
-		args.set_string("user_id", str(result.user_id))
+		args.set_string("public_code", public_code)
 		args.set_int("until_at", result.ban_until_at)
 		args.set_string("url", result.deletion_url)
 		var body := ReservedString.bootstrap_banned()
 		if result.ban_until_at == 0:
 			body = ReservedString.bootstrap_banned_permanent()
-		var args_text := ""
-		if _trace_enabled:
-			args_text = "user_id=%d until_at=%d url=%s" % [result.user_id, result.ban_until_at, result.deletion_url]
-		_open_failure_popup(body, args, true, true, args_text)
+		_open_failure_popup(body, args, true, true)
 	elif status == AuthCore.LoginStatus.AGE_BLOCKED:
 		_open_failure_popup(ReservedString.bootstrap_age_blocked(), null, false, true)
 	else:
 		_open_failure_popup(ReservedString.bootstrap_login_failed(), null, false, true)
+
+
+## The `public_code` format argument: an 8-character public code in two groups of 4 joined with `-`. An empty
+## public code (no public code) stays empty.
+static func _grouped_public_code(public_code: String) -> String:
+	if public_code.length() != 8:
+		return public_code
+	return public_code.substr(0, 4) + "-" + public_code.substr(4)
 
 
 static func _on_deletion_pressed() -> void:
@@ -991,17 +1000,14 @@ static func _on_deletion_pressed() -> void:
 		return
 	if code.ok:
 		var args := FormatArgs.new()
-		var user_id := 0
+		var public_code := ""
 		if _login_result != null:
-			user_id = _login_result.user_id
-		args.set_string("user_id", str(user_id))
+			public_code = _grouped_public_code(_login_result.public_code)
+		args.set_string("public_code", public_code)
 		args.set_string("code", code.code)
 		args.set_int("expires_at", code.expires_at)
 		args.set_string("url", code.url)
-		var args_text := ""
-		if _trace_enabled:
-			args_text = "user_id=%d code=%s expires_at=%d url=%s" % [user_id, code.code, code.expires_at, code.url]
-		_open_failure_popup(ReservedString.bootstrap_banned_deletion_code(), args, false, true, args_text)
+		_open_failure_popup(ReservedString.bootstrap_banned_deletion_code(), args, false, true)
 	else:
 		_open_failure_popup(ReservedString.bootstrap_banned_deletion_failed(), null, false, true)
 
@@ -1031,13 +1037,7 @@ static func _open_fatal_popup() -> void:
 ## Opens a failure popup: the fatal popup, the login failure popup or the deletion code popup. Its buttons are
 ## `[bootstrap_banned_deletion]` when `with_deletion` and then `[bootstrap_restart]`. Back input does not close it.
 ## Not opening it is fatal for a login failure popup, and the fatal screen for the fatal popup.
-static func _open_failure_popup(
-		body: String,
-		args: FormatArgs,
-		with_deletion: bool,
-		login_failure: bool,
-		args_text: String = ""
-) -> void:
+static func _open_failure_popup(body: String, args: FormatArgs, with_deletion: bool, login_failure: bool) -> void:
 	_popup_serial += 1
 	var serial := _popup_serial
 	_popup_pressed = false
@@ -1053,10 +1053,8 @@ static func _open_failure_popup(
 	var opened := false
 	if _is_initialized("UICore"):
 		if _trace_enabled:
-			var labels := ReservedString.bootstrap_restart()
-			if with_deletion:
-				labels = "%s,%s" % [ReservedString.bootstrap_banned_deletion(), labels]
-			_trace_call("UICore.open_system_popup body=%s buttons=%s args=%s" % [body, labels, args_text])
+			_trace_call("UICore.open_system_popup:%d" % _traced_popups.size())
+			_traced_popups.append(param)
 		opened = await UICore.open_system_popup(param, _node._on_failure_popup_hidden.bind(serial))
 	if serial != _popup_serial:
 		return
@@ -1122,6 +1120,8 @@ static func _show_fatal_screen() -> void:
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var label := Label.new()
 	label.text = _FATAL_SCREEN_TEXT
+	# The engine font: after `LocalizationCore.load_fonts` the theme default font is the game font chain.
+	label.add_theme_font_override("font", ThemeDB.fallback_font)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1282,6 +1282,7 @@ static func _shutdown() -> void:
 	_trace_enabled = false
 	_traced_adapters.clear()
 	_traced_ad_units.clear()
+	_traced_popups.clear()
 	_realtime_transport_kind = ""
 	CoreBuildInfo.platform = CoreBuildInfo.os_platform()
 	CoreBuildInfo.storage_root = CoreBuildInfo.DEFAULT_STORAGE_ROOT

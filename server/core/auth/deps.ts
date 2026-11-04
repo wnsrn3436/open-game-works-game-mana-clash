@@ -81,6 +81,7 @@ export interface FullState {
 }
 
 export interface UserRecord {
+  readonly public_code: string;
   readonly created_at: bigint;
   readonly withdrawn_at: bigint | null;
 }
@@ -109,9 +110,10 @@ export interface Storage {
   after_commit(ctx: Ctx, run: () => unknown): void;
   db(ctx_or_tx: Ctx | GameTx): DbHandle;
   read_db(): DbHandle;
-  create_user(tx: GameTx): bigint;
+  create_user(tx: GameTx): { readonly user_id: bigint; readonly public_code: string };
   delete_user(ctx: Ctx): void;
   get_user_record(db: DbHandle, user_id: bigint): UserRecord | null;
+  find_user_by_public_code(db: DbHandle, public_code: string): bigint | null;
   scan_users(db: DbHandle, after_user_id: bigint, max: number): readonly bigint[];
   read_full_state(ctx: Ctx): FullState;
   register_table(
@@ -178,12 +180,12 @@ export interface RemoteConfig {
   get_client_config(ctx: Ctx): { readonly entries: readonly CoreContract.RemoteConfigEntry[]; readonly assignments: readonly CoreContract.ExperimentAssignment[] };
 }
 
-/** `ranking`, `push`, `iap`, `block-report` `remove_user`. */
+/** `ranking`, `push`, `iap` `remove_user`. */
 export interface RemoveUser {
   remove_user(ctx: Ctx): unknown;
 }
 
-/** `chat`, `friend`, `guild` `remove_user`. */
+/** `chat`, `friend`, `guild`, `block-report` `remove_user`. */
 export interface FallibleRemoveUser {
   remove_user(ctx: Ctx): 'FAILED' | null | undefined;
 }
@@ -214,7 +216,7 @@ export interface AuthModules {
   readonly friend?: FallibleRemoveUser;
   readonly guild?: FallibleRemoveUser;
   readonly chat?: FallibleRemoveUser;
-  readonly 'block-report'?: RemoveUser;
+  readonly 'block-report'?: FallibleRemoveUser;
 }
 
 export type Environment = 'LOCAL' | 'DEV' | 'STG' | 'PROD';

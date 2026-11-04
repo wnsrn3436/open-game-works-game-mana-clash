@@ -15,6 +15,8 @@ const _NODE := preload("res://core/qa_core/dev/qa_core_node.gd")
 const _COMMAND := preload("res://core/qa_core/dev/qa_command.gd")
 const _BUILTINS := preload("res://core/qa_core/dev/qa_builtins.gd")
 const _TELEMETRY := preload("res://core/qa_core/dev/qa_telemetry.gd")
+## Release inputs: not recorded in telemetry `inputs` and not counted in goal interval input counts.
+const _RELEASE_COMMANDS: PackedStringArray = ["touch_up", "key_up", "mouse_up", "pad_button_up"]
 const _CHANNEL := preload("res://core/qa_core/dev/qa_channel.gd")
 const _INPUT := preload("res://core/qa_core/dev/qa_input.gd")
 const _DEBUG := preload("res://core/qa_core/dev/qa_debug_screen.gd")
@@ -29,6 +31,7 @@ const _KEY_STATS_REFRESH: String = "QACore.statsRefreshMs"
 const _KEY_TEXT_MAX_CHARS: String = "QACore.textMaxChars"
 const _KEY_VIDEO_FPS: String = "QACore.videoFps"
 const _KEY_VIDEO_MAX: String = "QACore.videoMaxMs"
+const _KEY_CAPTURE_JPG_QUALITY: String = "QACore.captureJpgQuality"
 const _KEY_FEEDBACK_WINDOW: String = "QACore.feedbackWindowMs"
 const _KEY_IDLE_THRESHOLD: String = "QACore.idleThresholdMs"
 const _KEY_TELEMETRY_MAX: String = "QACore.telemetryMaxRecords"
@@ -38,11 +41,7 @@ const _KEY_SOFTLOCK_INPUTS: String = "QACore.softlockNoResponseInputs"
 const _KEY_STEP_MAX: String = "QACore.stepMaxMs"
 const _KEY_TIME_SCALE_MAX: String = "QACore.timeScaleMaxPermille"
 const _KEY_TOUCH_INDEX_COUNT: String = "QACore.touchIndexCount"
-const _KEY_TEXT_SCALES: String = "AccessibilityCore.textScales"
 const _KEY_BASE_RESOLUTION: String = "baseResolution"
-const _KEY_UI_CHECK_SCREENS: String = "uiCheckScreens"
-const _KEY_GAMEPAD_SUPPORTED: String = "gamepadSupported"
-const _KEY_SUPPORTED_LANGUAGES: String = "supportedLanguages"
 ## Reason tags of `QACore.softlockBlockMs`: the block reasons that forced release does not cover.
 const _SOFTLOCK_REASONS: PackedStringArray = ["scene", "cutscene", "tutorial", "ad", "boot"]
 const _LAUNCH_PORT: String = "OGW_AUTOMATION_PORT"
@@ -60,6 +59,10 @@ const _NORMAL_TIME_SCALE: int = 1000
 const _STEP_HOLD_REASON: String = "step"
 ## Process frames a capture waits for a drawn frame before it draws one itself.
 const _CAPTURE_DRAW_FRAMES: int = 2
+## The least `QACore.captureJpgQuality`: the engine takes the JPEG quality in whole percents.
+const _MIN_JPG_QUALITY: int = 10
+## The largest `QACore.captureJpgQuality`, the permille of JPEG quality 1.
+const _MAX_JPG_QUALITY: int = 1000
 
 static var _is_initialized: bool = false
 static var _node: _NODE = null
@@ -72,6 +75,7 @@ static var _stats_refresh_ms: int = 0
 static var _text_max_chars: int = 0
 static var _video_fps: int = 0
 static var _video_max_ms: int = 0
+static var _capture_jpg_quality: int = 0
 static var _softlock_no_response_ms: int = 0
 static var _softlock_inputs: int = 0
 static var _step_max_ms: int = 0
@@ -239,6 +243,7 @@ static func _cleanup() -> void:
 	_text_max_chars = 0
 	_video_fps = 0
 	_video_max_ms = 0
+	_capture_jpg_quality = 0
 	_softlock_no_response_ms = 0
 	_softlock_inputs = 0
 	_step_max_ms = 0
@@ -493,6 +498,8 @@ static func _finish(command: _COMMAND, ok: bool, result: String, bytes: PackedBy
 	command.ok = ok
 	command.result = result
 	command.bytes = bytes
+	if command.session == _session:
+		_clear_input_budget(command)
 	if not ok and command.on_fail.is_valid() and command.session == _session:
 		command.on_fail.call()
 	if not ok:
@@ -572,11 +579,39 @@ static func _on_frame_start(node: _NODE) -> void:
 	while _frame_input_count < _pending_inputs.size():
 		if not _is_initialized or node != _node or not InputCore.is_initialized():
 			return
+		_add_input_budget(_pending_commands[_frame_input_count])
 		InputCoreDev.inject_device_input(_pending_inputs[_frame_input_count])
 		_frame_input_count += 1
 	if _is_initialized and node == _node and _frame_start_call.is_valid():
 		_frame_start_count += 1
 		_frame_start_call.call_deferred()
+
+
+## Frame code, right before a device input of input command `command` (`null` for none) goes in: in step mode with
+## budget 0, game time not paused and no lockstep match playing, 1 ms of step budget, so the engine features run in the
+## frame of the input.
+static func _add_input_budget(command: _COMMAND) -> void:
+	if command == null or not TimeCore.is_initialized() or not TimeCoreDev.is_step_mode():
+		return
+	if TimeCoreDev.get_step_budget() != 0 or TimeCore.is_paused() or _in_lockstep_play():
+		return
+	TimeCoreDev.add_step_budget(1)
+	command.added_budget = true
+
+
+## Whether the client is in `Playing` of a lockstep match, where only the steps of the match move game time.
+static func _in_lockstep_play() -> bool:
+	return RealtimeCore.is_initialized() and RealtimeCore.match_state() == RealtimeCore.MatchState.PLAYING \
+		and RealtimeCore.match_info().lockstep
+
+
+## A command that added input budget ended with budget left (a time scale too low to use it in the frame): turning step
+## mode on again makes the budget 0, so a `step` after it starts from 0.
+static func _clear_input_budget(command: _COMMAND) -> void:
+	if not command.added_budget or not TimeCore.is_initialized() or not TimeCoreDev.is_step_mode():
+		return
+	if TimeCoreDev.get_step_budget() > 0:
+		_set_step_mode(true)
 
 
 ## Records the device inputs the frame start put in and takes them off, then lets the commands that wait for the
@@ -752,13 +787,13 @@ static func _send_response(command: _COMMAND) -> void:
 
 
 ## One `capture_video` frame message.
-static func _send_frame(command: _COMMAND, frame: int, png: PackedByteArray) -> bool:
+static func _send_frame(command: _COMMAND, frame: int, image: PackedByteArray) -> bool:
 	if _channel == null or command.session != _session:
 		return false
 	return _channel_send(_JSON.object(PackedStringArray([
 		_JSON.pair("id", _JSON.integer(command.request_id)),
 		_JSON.pair("frame", _JSON.integer(frame)),
-		_JSON.pair("bytes", _JSON.text(Marshalls.raw_to_base64(png))),
+		_JSON.pair("bytes", _JSON.text(Marshalls.raw_to_base64(image))),
 	])))
 
 
@@ -780,7 +815,10 @@ static func _note_input(command: _COMMAND) -> void:
 	if command == null or command.input_recorded:
 		return
 	command.input_recorded = true
-	_telemetry.add_input(command.name)
+	if command.name in _RELEASE_COMMANDS:
+		_telemetry.add_release()
+	else:
+		_telemetry.add_input(command.name)
 	_inputs_since_state += 1
 
 
@@ -972,8 +1010,9 @@ static func _request_quit() -> void:
 # --- screen capture ---
 
 
-## Async. PNG of the root viewport in a frame drawn without the debug layer. Empty on failure.
-static func _capture_png() -> PackedByteArray:
+## Async. PNG, or JPEG of quality `QACore.captureJpgQuality` with `jpg`, of the root viewport in a frame drawn without
+## the debug layer. Empty on failure.
+static func _capture_image(jpg: bool) -> PackedByteArray:
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
 	if tree == null or is_headless():
 		return PackedByteArray()
@@ -992,10 +1031,12 @@ static func _capture_png() -> PackedByteArray:
 		layer.visible = true
 	if image == null:
 		return PackedByteArray()
-	# The PNG is the size of the window of the automation coordinates, the test window under `set_test_screen`.
+	# The image is the size of the window of the automation coordinates, the test window under `set_test_screen`.
 	var window: Vector2i = ResolutionCore.get_window_size() if ResolutionCore.is_initialized() else image.get_size()
 	if window.x >= 1 and window.y >= 1 and image.get_size() != window:
 		image.resize(window.x, window.y)
+	if jpg:
+		return image.save_jpg_to_buffer(float(_capture_jpg_quality) / float(_MAX_JPG_QUALITY))
 	return image.save_png_to_buffer()
 
 
@@ -1031,20 +1072,16 @@ static func _read_settings() -> bool:
 	# The least value of each integer setting.
 	var int_keys: Dictionary[String, int] = {
 		_KEY_COMMAND_TIMEOUT: 1, _KEY_CHANNEL_MAX_BYTES: 1, _KEY_STATS_REFRESH: 1, _KEY_TEXT_MAX_CHARS: 1,
-		_KEY_VIDEO_FPS: 1, _KEY_VIDEO_MAX: 1, _KEY_FEEDBACK_WINDOW: 0, _KEY_IDLE_THRESHOLD: 0, _KEY_TELEMETRY_MAX: 0,
-		_KEY_SOFTLOCK_NO_RESPONSE: 0, _KEY_SOFTLOCK_INPUTS: 1, _KEY_STEP_MAX: 1,
-		_KEY_TIME_SCALE_MAX: _NORMAL_TIME_SCALE, _KEY_TOUCH_INDEX_COUNT: 1,
+		_KEY_VIDEO_FPS: 1, _KEY_VIDEO_MAX: 1, _KEY_CAPTURE_JPG_QUALITY: _MIN_JPG_QUALITY,
+		_KEY_FEEDBACK_WINDOW: 0, _KEY_IDLE_THRESHOLD: 0, _KEY_TELEMETRY_MAX: 0, _KEY_SOFTLOCK_NO_RESPONSE: 0,
+		_KEY_SOFTLOCK_INPUTS: 1, _KEY_STEP_MAX: 1, _KEY_TIME_SCALE_MAX: _NORMAL_TIME_SCALE, _KEY_TOUCH_INDEX_COUNT: 1,
 	}
 	for key: String in int_keys:
 		if not CoreSettings.has_int(key) or CoreSettings.get_int(key) < int_keys[key]:
 			LogCore.log_error(_TAG, "init: setting %s is missing or not an integer of at least %d" % [key, int_keys[key]])
 			return false
-	for key: String in [_KEY_TEXT_SCALES, _KEY_UI_CHECK_SCREENS, _KEY_SUPPORTED_LANGUAGES]:
-		if not _is_array_setting(key):
-			LogCore.log_error(_TAG, "init: setting %s is missing or not an array" % key)
-			return false
-	if not CoreSettings.has_bool(_KEY_GAMEPAD_SUPPORTED):
-		LogCore.log_error(_TAG, "init: setting %s is missing or not a boolean" % _KEY_GAMEPAD_SUPPORTED)
+	if CoreSettings.get_int(_KEY_CAPTURE_JPG_QUALITY) > _MAX_JPG_QUALITY:
+		LogCore.log_error(_TAG, "init: setting %s is over %d" % [_KEY_CAPTURE_JPG_QUALITY, _MAX_JPG_QUALITY])
 		return false
 	var base: PackedInt64Array = CoreSettings.get_int_array(_KEY_BASE_RESOLUTION)
 	if base.size() != 2 or base[0] < 1 or base[1] < 1:
@@ -1061,6 +1098,7 @@ static func _read_settings() -> bool:
 	_text_max_chars = CoreSettings.get_int(_KEY_TEXT_MAX_CHARS)
 	_video_fps = CoreSettings.get_int(_KEY_VIDEO_FPS)
 	_video_max_ms = CoreSettings.get_int(_KEY_VIDEO_MAX)
+	_capture_jpg_quality = CoreSettings.get_int(_KEY_CAPTURE_JPG_QUALITY)
 	_softlock_no_response_ms = CoreSettings.get_int(_KEY_SOFTLOCK_NO_RESPONSE)
 	_softlock_inputs = CoreSettings.get_int(_KEY_SOFTLOCK_INPUTS)
 	_step_max_ms = CoreSettings.get_int(_KEY_STEP_MAX)
@@ -1072,12 +1110,6 @@ static func _read_settings() -> bool:
 	_telemetry.idle_threshold_ms = CoreSettings.get_int(_KEY_IDLE_THRESHOLD)
 	_telemetry.max_records = maxi(CoreSettings.get_int(_KEY_TELEMETRY_MAX), 1)
 	return true
-
-
-# ogw:input_boundary
-static func _is_array_setting(key: String) -> bool:
-	var value: Variant = JSON.parse_string(CoreSettings.get_json(key))
-	return value is Array
 
 
 ## Reads `QACore.softlockBlockMs` into `out`: a non-negative integer for each reason tag of `_SOFTLOCK_REASONS`.

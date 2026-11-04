@@ -2,12 +2,14 @@
  * Users, raw rows, export, expiry and `upgrade_user_rows` (`storage` `### base table`, `### raw row`, `### expiry`,
  * `### storage format`).
  */
-import { is_db_failure, type DbValue, type Row } from './db/types.ts';
+import { network_time_limit } from '../server-time/network_time_limit.ts';
+import { is_db_failure, type DbError, type DbValue, type Dialect, type Row } from './db/types.ts';
 import { adapter_of, any_state_of, big, bytes, DbHandle, q, StorageMisuse, user_state_of, writable, type StorageCore, type TxState } from './core.ts';
 import { ConversionFailed, read_value } from './state.ts';
 import { from_json_value, json_value, quote, type TableDef } from './schema.ts';
 import { delete_item, write_item } from './state.ts';
 import { lock_row } from './tx.ts';
+import { normalize_public_code, pick_public_code, pick_user_id } from './public_code.ts';
 
 /** One row of a snapshot (`### raw row`). */
 export interface RawRow {
@@ -18,6 +20,8 @@ export interface RawRow {
 }
 
 export interface UserRecord {
+  /** Empty only for a row that a server of an earlier core version made after this server's start fill. */
+  readonly public_code: string;
   readonly created_at: bigint;
   readonly withdrawn_at: bigint | null;
 }
@@ -45,11 +49,23 @@ function byte_compare(a: string, b: string): number {
   return Buffer.compare(x, y);
 }
 
-export function create_user(core: StorageCore, tx: unknown): bigint {
+export interface NewUser {
+  readonly user_id: bigint;
+  readonly public_code: string;
+}
+
+/** Inserts nothing on a taken user ID or public code (a withdrawn user's row included), and then picks both again. */
+export function create_user(core: StorageCore, tx: unknown): NewUser {
   const state = any_state_of(core, tx);
   if (state.kind !== 'game') throw new StorageMisuse('storage: create_user needs a game tx');
   writable(state);
-  return big(q(state, 'INSERT INTO "user" (created_at) VALUES ($1) RETURNING user_id', [core.time.clock_now()])[0]?.user_id);
+  const now = core.time.clock_now();
+  for (;;) {
+    const user_id = pick_user_id();
+    const public_code = pick_public_code();
+    const inserted = q(state, 'INSERT INTO "user" (user_id, public_code, created_at) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING RETURNING user_id', [user_id, public_code, now]);
+    if (inserted.length > 0) return { user_id, public_code };
+  }
 }
 
 export function delete_user(core: StorageCore, ctx: unknown): void {
@@ -69,9 +85,18 @@ export function delete_user(core: StorageCore, ctx: unknown): void {
 
 export function get_user_record(db: unknown, user_id: unknown): UserRecord | null {
   if (typeof user_id !== 'bigint') throw new StorageMisuse('storage: the user ID is not a bigint');
-  const row = handle(db).query('SELECT created_at, withdrawn_at FROM "user" WHERE user_id = $1', [user_id])[0];
+  const row = handle(db).query('SELECT public_code, created_at, withdrawn_at FROM "user" WHERE user_id = $1', [user_id])[0];
   if (row === undefined) return null;
-  return { created_at: big(row.created_at), withdrawn_at: row.withdrawn_at === null ? null : big(row.withdrawn_at) };
+  return { public_code: typeof row.public_code === 'string' ? row.public_code : '', created_at: big(row.created_at), withdrawn_at: row.withdrawn_at === null ? null : big(row.withdrawn_at) };
+}
+
+/** The user ID of the row whose public code is the code of that public code input (a withdrawn user's included). */
+export function find_user_by_public_code(db: unknown, text: unknown): bigint | null {
+  const db_handle = handle(db);
+  const code = normalize_public_code(text);
+  if (code === null) return null;
+  const row = db_handle.query('SELECT user_id FROM "user" WHERE public_code = $1', [code])[0];
+  return row === undefined ? null : big(row.user_id);
 }
 
 export function set_user_created_at(core: StorageCore, ctx: unknown, time: unknown): void {
@@ -322,20 +347,70 @@ function upgrade_one(core: StorageCore, state: TxState, kind: Parameters<typeof 
   }
 }
 
-/** `sweep_expired`: one delete per table with an expiry column; no user lock and no row lock. */
-export async function sweep_expired(core: StorageCore): Promise<number | 'FAILED'> {
-  const targets = [{ name: 'game_state', expiry: 'expires_at' }, ...[...core.tables.values()].filter((t) => t.expiry !== null).map((t) => ({ name: t.name, expiry: t.expiry ?? '' }))];
-  let deleted = 0;
-  try {
-    for (const target of targets) {
-      deleted += await adapter_of(core).autocommit(
-        { sql: `DELETE FROM ${quote(target.name)} WHERE ${quote(target.expiry)} <= $1`, params: [core.time.clock_now()] },
-        core.settings.user_lock_wait_ms,
-      );
-    }
-  } catch (error) {
-    if (is_db_failure(error)) return 'FAILED';
-    throw error;
+/** A table whose expiry delete was `FAILED` in a `sweep_expired` run, with the DB error code. */
+export interface SweepFailure {
+  readonly table: string;
+  readonly code: string;
+}
+
+/** What one `sweep_expired` run did: the rows it deleted and the tables it stopped at. */
+export interface SweepResult {
+  readonly deleted: number;
+  readonly failed: readonly SweepFailure[];
+}
+
+/** The DB error code of a failed delete: a PostgreSQL SQLSTATE or a SQLite result code; empty without a DB answer. */
+function db_error_code(dialect: Dialect, error: DbError): string {
+  const answered = dialect === 'postgresql' ? /^[0-9A-Z]{5}$/.test(error.code) : /^[0-9]+$/.test(error.code);
+  return answered ? error.code : '';
+}
+
+/**
+ * One batch delete of the expired rows of a table, by row address: `$1` is the time, `$2` the batch size. The outer
+ * expiry condition keeps a PostgreSQL row that an upsert rewrote after the inner select.
+ */
+function sweep_sql(dialect: Dialect, table: string, expiry: string): string {
+  const expired = `${quote(expiry)} <= $1`;
+  if (dialect === 'postgresql') {
+    return `DELETE FROM ${quote(table)} WHERE ctid = ANY(ARRAY(SELECT ctid FROM ${quote(table)} WHERE ${expired} LIMIT $2)) AND ${expired}`;
   }
-  return deleted;
+  return `DELETE FROM ${quote(table)} WHERE rowid IN (SELECT rowid FROM ${quote(table)} WHERE ${expired} LIMIT $2) AND ${expired}`;
+}
+
+/** Resolves in a later event loop turn, after the timers that are due have run. */
+function next_turn(): Promise<void> {
+  return new Promise((resolve) => setImmediate(resolve));
+}
+
+/**
+ * `sweep_expired`: batch deletes per table with an expiry column, each in its own transaction; no user lock and no
+ * row lock. A table stops at a delete of fewer rows than the batch size, at the end of its time budget, or at a
+ * `FAILED` delete, which goes to the failed table list.
+ */
+export async function sweep_expired(core: StorageCore): Promise<SweepResult> {
+  const targets = [{ name: 'game_state', expiry: 'expires_at' }, ...[...core.tables.values()].filter((t) => t.expiry !== null).map((t) => ({ name: t.name, expiry: t.expiry ?? '' }))];
+  const adapter = adapter_of(core);
+  const batch = core.settings.sweep_batch_size;
+  const failed: SweepFailure[] = [];
+  let deleted = 0;
+  for (const target of targets) {
+    const budget = network_time_limit(BigInt(core.settings.sweep_table_budget_ms));
+    const sql = sweep_sql(adapter.dialect, target.name, target.expiry);
+    const now = core.time.clock_now();
+    try {
+      for (;;) {
+        const count = await adapter.autocommit({ sql, params: [now, BigInt(batch)] }, core.settings.user_lock_wait_ms);
+        deleted += count;
+        if (count < batch) break;
+        // An uncontended SQLite statement resolves without leaving the event loop turn, so the budget's timer could
+        // never fire (and no other request could run) without this turn of the event loop.
+        await next_turn();
+        if (budget.aborted) break;
+      }
+    } catch (error) {
+      if (!is_db_failure(error)) throw error;
+      failed.push({ table: target.name, code: db_error_code(adapter.dialect, error) });
+    }
+  }
+  return { deleted, failed };
 }
