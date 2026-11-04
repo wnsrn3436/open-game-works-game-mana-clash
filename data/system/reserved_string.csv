@@ -42,10 +42,10 @@ id,text
 [auth_google_desktop_done],로그인이 끝났습니다. 게임으로 돌아가세요.
 [bootstrap_fatal_error],오류로 게임이 멈췄습니다.
 [bootstrap_login_failed],로그인하지 못했습니다.
-[bootstrap_banned],사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
-[bootstrap_banned_permanent],사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url}
+[bootstrap_banned],사용자 {public_code}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
+[bootstrap_banned_permanent],사용자 {public_code}의 이용이 제한되었습니다. 자세히: {url}
 [bootstrap_banned_deletion],계정 삭제 요청
-[bootstrap_banned_deletion_code],사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
+[bootstrap_banned_deletion_code],사용자 {public_code}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
 [bootstrap_banned_deletion_failed],삭제 코드를 받지 못했습니다.
 [bootstrap_age_blocked],이 나이에는 이 게임을 이용할 수 없습니다.
 [bootstrap_restart],다시 시작
@@ -82,8 +82,8 @@ id,text
 [ui_licenses_title],라이선스
 [ui_licenses_close],닫기
 [auth_deletion_title],계정 삭제
-[auth_deletion_body],게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.
-[auth_deletion_user_id],사용자 ID
+[auth_deletion_body],게임에서 받은 사용자 코드와 삭제 코드를 입력하세요.
+[auth_deletion_user_id],사용자 코드
 [auth_deletion_code],삭제 코드
 [auth_deletion_confirm],삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.
 [auth_deletion_submit],삭제

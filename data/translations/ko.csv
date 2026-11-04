@@ -55,7 +55,7 @@ reserved_string.text.[auth_age_month],월,ed8a406d02b187b8,ed8a406d02b187b8,월
 reserved_string.text.[auth_age_title],태어난 연도와 월을 입력하세요,55de38dd31149ce7,55de38dd31149ce7,태어난 연도와 월을 입력하세요
 reserved_string.text.[auth_age_year],연도,afd218a26904f527,afd218a26904f527,연도
 reserved_string.text.[auth_deletion_back],뒤로,2df06869205b07fe,2df06869205b07fe,뒤로
-reserved_string.text.[auth_deletion_body],게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.,55eb5264f9b60fa1,55eb5264f9b60fa1,게임에서 받은 사용자 ID와 삭제 코드를 입력하세요.
+reserved_string.text.[auth_deletion_body],게임에서 받은 사용자 코드와 삭제 코드를 입력하세요.,9455cf4bf38634f2,9455cf4bf38634f2,게임에서 받은 사용자 코드와 삭제 코드를 입력하세요.
 reserved_string.text.[auth_deletion_code],삭제 코드,f1fee09ca28dbb39,f1fee09ca28dbb39,삭제 코드
 reserved_string.text.[auth_deletion_confirm],삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.,611a6cb9cb15b714,611a6cb9cb15b714,삭제한 데이터는 되돌릴 수 없다는 것을 이해했습니다.
 reserved_string.text.[auth_deletion_done],계정 삭제를 요청했습니다.,a83d15176d635fa1,a83d15176d635fa1,계정 삭제를 요청했습니다.
@@ -65,7 +65,7 @@ reserved_string.text.[auth_deletion_rate_limited],시도가 너무 많습니다.
 reserved_string.text.[auth_deletion_retry],다시 시도,196856a662bd9084,196856a662bd9084,다시 시도
 reserved_string.text.[auth_deletion_submit],삭제,6139b6c3ed73cd4a,6139b6c3ed73cd4a,삭제
 reserved_string.text.[auth_deletion_title],계정 삭제,07051913f67d3a7e,07051913f67d3a7e,계정 삭제
-reserved_string.text.[auth_deletion_user_id],사용자 ID,85f6a450a02dcda1,85f6a450a02dcda1,사용자 ID
+reserved_string.text.[auth_deletion_user_id],사용자 코드,0cf615c03c628746,0cf615c03c628746,사용자 코드
 reserved_string.text.[auth_go_to_title],타이틀로,ebf1eb5c33b7d645,ebf1eb5c33b7d645,타이틀로
 reserved_string.text.[auth_google_desktop_done],로그인이 끝났습니다. 게임으로 돌아가세요.,778b373ddaab6ecf,778b373ddaab6ecf,로그인이 끝났습니다. 게임으로 돌아가세요.
 reserved_string.text.[auth_privacy_ad_personalization],맞춤 광고,c2f59f8ae2b8a3b0,c2f59f8ae2b8a3b0,맞춤 광고
@@ -144,11 +144,11 @@ reserved_string.text.[battle_wait_enemy],상대 차례예요. 잠시 기다려 �
 reserved_string.text.[battle_you],나,1098bbe54520ab2a,1098bbe54520ab2a,나
 reserved_string.text.[battle_your_turn],내 차례,aaefbb8fe1762463,aaefbb8fe1762463,내 차례
 reserved_string.text.[bootstrap_age_blocked],이 나이에는 이 게임을 이용할 수 없습니다.,c2a04b5c97e36f72,c2a04b5c97e36f72,이 나이에는 이 게임을 이용할 수 없습니다.
-reserved_string.text.[bootstrap_banned],사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url},d6a3d0efe4190174,d6a3d0efe4190174,사용자 {user_id}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
+reserved_string.text.[bootstrap_banned],사용자 {public_code}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url},de70f84bb0453197,de70f84bb0453197,사용자 {public_code}의 이용이 {until_at:datetime}까지 제한되었습니다. 자세히: {url}
 reserved_string.text.[bootstrap_banned_deletion],계정 삭제 요청,de7f6a00aed6d1f3,de7f6a00aed6d1f3,계정 삭제 요청
-reserved_string.text.[bootstrap_banned_deletion_code],사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.,4db23020009349b0,4db23020009349b0,사용자 {user_id}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
+reserved_string.text.[bootstrap_banned_deletion_code],사용자 {public_code}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.,b219ca5c03c249cb,b219ca5c03c249cb,사용자 {public_code}: {expires_at:datetime} 전에 {url}에서 코드 {code}를 입력하세요.
 reserved_string.text.[bootstrap_banned_deletion_failed],삭제 코드를 받지 못했습니다.,3bb73ea5715cd650,3bb73ea5715cd650,삭제 코드를 받지 못했습니다.
-reserved_string.text.[bootstrap_banned_permanent],사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url},a3db2da77b390862,a3db2da77b390862,사용자 {user_id}의 이용이 제한되었습니다. 자세히: {url}
+reserved_string.text.[bootstrap_banned_permanent],사용자 {public_code}의 이용이 제한되었습니다. 자세히: {url},b053f77951fddbbd,b053f77951fddbbd,사용자 {public_code}의 이용이 제한되었습니다. 자세히: {url}
 reserved_string.text.[bootstrap_fatal_error],오류로 게임이 멈췄습니다.,a3bdb0beee2103ce,a3bdb0beee2103ce,오류로 게임이 멈췄습니다.
 reserved_string.text.[bootstrap_login_failed],로그인하지 못했습니다.,b42ac90bab1504c0,b42ac90bab1504c0,로그인하지 못했습니다.
 reserved_string.text.[bootstrap_restart],다시 시작,c0128255dc47e432,c0128255dc47e432,다시 시작

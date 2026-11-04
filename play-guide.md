@@ -46,9 +46,9 @@ Fight CPU duelists with cards and bring the enemy hero's health (the number in t
 
 ## fastest start path
 
-1. (new user) terms popup `tap_anchor terms_agree_all` → `tap_anchor terms_confirm`
-2. With no finished match, the match screen opens right after login. If the lobby opened, `tap_anchor lobby_play`
-3. After the `내 차례` (Your turn) display disappears, press a hand card with a green border (e.g. `tap_anchor hand_card_1`)
+1. (new user) terms popup `click_anchor terms_agree_all` → `click_anchor terms_confirm`
+2. With no finished match, the match screen opens right after login. If the lobby opened, `click_anchor lobby_play`
+3. After the `내 차례` (Your turn) display disappears, press a hand card with a green border (e.g. `click_anchor hand_card_1`)
 
 ## play mode
 
