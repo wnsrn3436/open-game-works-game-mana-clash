@@ -1757,11 +1757,6 @@
       "minimum": 1,
       "x-owner": "human"
     },
-    "QACore.rewardPresentationWindowMs": {
-      "type": "integer",
-      "minimum": 1,
-      "x-owner": "human"
-    },
     "storage.dbAnswerWaitMs": {
       "type": "integer",
       "minimum": 1
@@ -2778,7 +2773,6 @@
     "QACore.softlockNoResponseInputs",
     "QACore.stepMaxMs",
     "QACore.frameIntervalMaxCount",
-    "QACore.rewardPresentationWindowMs",
     "storage.dbAnswerWaitMs",
     "AdCore.sdkCallTimeoutMs",
     "AuthCore.storageCallTimeoutMs",
