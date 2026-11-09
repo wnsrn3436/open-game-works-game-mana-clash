@@ -1,7 +1,8 @@
 import { DatabaseSync, type SQLInputValue, type StatementSync } from 'node:sqlite';
 import { network_time_limit } from '../../server-time/network_time_limit.ts';
+import type { DbMeter } from './meter.ts';
 import { TimedQueue } from './timed_queue.ts';
-import { DbError, type BeginOptions, type Begun, type DbAdapter, type DbConn, type DbTxConn, type DbValue, type Row, type Statement } from './types.ts';
+import { check_text_param, DbError, type BeginOptions, type Begun, type DbAdapter, type DbConn, type DbTxConn, type DbValue, type Row, type Statement } from './types.ts';
 
 const SQLITE_BUSY = 5;
 const SQLITE_LOCKED = 6;
@@ -43,6 +44,7 @@ function db_error(error: unknown): DbError {
 
 function param(value: DbValue): SQLInputValue {
   if (typeof value === 'boolean') return value ? 1 : 0;
+  check_text_param(value);
   return value;
 }
 
@@ -90,16 +92,19 @@ class Mutex {
   }
 }
 
+/** One node:sqlite connection: every statement is a synchronous DB call of the meter. */
 class Connection implements DbConn {
   private readonly db: DatabaseSync;
+  private readonly meter: DbMeter | null;
   private readonly cache = new Map<string, StatementSync>();
 
-  constructor(db: DatabaseSync) {
+  constructor(db: DatabaseSync, meter: DbMeter | null) {
     this.db = db;
+    this.meter = meter;
   }
 
   query(sql: string, params: readonly DbValue[] = []): Row[] {
-    try {
+    return this.call(() => {
       const statement = this.prepare(sql);
       const columns = statement.columns();
       return statement.all(...params.map(param)).map((raw) => {
@@ -107,23 +112,23 @@ class Connection implements DbConn {
         for (const column of columns) row[column.name] = value_of(raw[column.name], column.type);
         return row;
       });
-    } catch (error) {
-      throw db_error(error);
-    }
+    });
   }
 
   /** Runs one statement; the number of rows it changed. */
   run(sql: string, params: readonly DbValue[] = []): number {
-    try {
-      return Number(this.prepare(sql).run(...params.map(param)).changes);
-    } catch (error) {
-      throw db_error(error);
-    }
+    return this.call(() => Number(this.prepare(sql).run(...params.map(param)).changes));
   }
 
   exec(sql: string): void {
-    try {
+    this.call(() => {
       this.db.exec(sql);
+    });
+  }
+
+  private call<T>(fn: () => T): T {
+    try {
+      return this.meter === null ? fn() : this.meter.sync(fn);
     } catch (error) {
       throw db_error(error);
     }
@@ -202,6 +207,16 @@ class Transaction implements DbTxConn {
   }
 }
 
+/** The pause between two tries of setting WAL at open. */
+const WAL_RETRY_MS = 5;
+const WAL_PAUSE = new Int32Array(new SharedArrayBuffer(4));
+
+/** True for `SQLITE_BUSY` and `SQLITE_LOCKED` (`database is locked`). */
+function is_busy(error: unknown): boolean {
+  const code = (error as { errcode?: unknown } | null)?.errcode;
+  return code === 5 || code === 6 || (error instanceof Error && error.message.includes('database is locked'));
+}
+
 /**
  * SQLite: WAL journal, one write connection whose transactions open with `BEGIN IMMEDIATE` one at a time, and a
  * separate read connection. A transaction waits for the one before it on this connection up to the lock wait limit
@@ -215,26 +230,63 @@ export class SqliteAdapter implements DbAdapter {
   private reader: Connection | null = null;
   private handles: DatabaseSync[] = [];
   private readonly mutex = new Mutex();
+  private readonly meter: DbMeter | null;
+  private readonly open_wait_ms: number;
 
-  constructor(path: string) {
+  /**
+   * `meter`: where the synchronous DB calls go (`DbMeter`). `open_wait_ms`: how long setting the journal mode at
+   * open waits for another connection to the same file (`storage.schemaLockWaitMs`), so server instances started
+   * together on one new file open one at a time, as their schema step runs.
+   */
+  constructor(path: string, meter: DbMeter | null = null, open_wait_ms = 0) {
     this.path = path;
+    this.meter = meter;
+    this.open_wait_ms = open_wait_ms;
   }
 
   open(): void {
     try {
       const write = new DatabaseSync(this.path, { readBigInts: true });
       this.handles.push(write);
-      write.exec('PRAGMA busy_timeout = 0');
-      write.exec('PRAGMA journal_mode = WAL');
+      this.sync(() => {
+        write.exec('PRAGMA busy_timeout = 0');
+      });
+      // One synchronous DB call: the thread blocks through every try and every pause between them.
+      this.sync(() => {
+        this.set_wal(write);
+      });
       const read = new DatabaseSync(this.path, { readOnly: true, readBigInts: true });
       this.handles.push(read);
-      this.writer = new Connection(write);
-      this.reader = new Connection(read);
+      this.writer = new Connection(write, this.meter);
+      this.reader = new Connection(read, this.meter);
     } catch (error) {
       this.close();
       const failure = db_error(error);
       throw new DbError('connection', failure.code, `cannot open SQLite database ${this.path}: ${failure.message}`);
     }
+  }
+
+  /**
+   * `PRAGMA journal_mode = WAL`. While another connection opens the same new file, SQLite answers it with
+   * `SQLITE_BUSY` without its busy handler, so it tries again every `WAL_RETRY_MS`, blocking the thread like the
+   * schema step of server start, for up to `open_wait_ms`.
+   */
+  private set_wal(write: DatabaseSync): void {
+    const tries = Math.max(1, Math.ceil(this.open_wait_ms / WAL_RETRY_MS));
+    for (let attempt = 1; ; attempt += 1) {
+      try {
+        write.exec('PRAGMA journal_mode = WAL');
+        return;
+      } catch (error) {
+        if (attempt >= tries || !is_busy(error)) throw error;
+        Atomics.wait(WAL_PAUSE, 0, 0, WAL_RETRY_MS);
+      }
+    }
+  }
+
+  /** Runs a statement of `open` outside a `Connection` as a synchronous DB call of the meter. */
+  private sync<T>(call: () => T): T {
+    return this.meter === null ? call() : this.meter.sync(call);
   }
 
   get read(): DbConn {

@@ -2,7 +2,7 @@
  * Body rules (processing order step 5): a JSON body or, for a binary body operation, the query string checked
  * against the operation's input fields, with the rules admin-api sets by field name.
  */
-import { is_integer_text, is_plain_object, JsonNumber, plain_json, utf8_length } from './json.ts';
+import { is_clean_text, is_integer_text, is_plain_object, JsonNumber, plain_json, utf8_length } from './json.ts';
 import type { AdminInput, FieldMap, FieldType } from './types.ts';
 
 export interface BodyLimits {
@@ -56,8 +56,9 @@ function int32_of(raw: unknown, query: boolean): unknown {
   return value >= INT32_MIN && value <= INT32_MAX ? value : INVALID;
 }
 
+/** `string`: at most `admin-api.maxStringBytes` UTF-8 bytes, no U+0000 and no unpaired surrogate. */
 function string_of(raw: unknown, limits: BodyLimits): unknown {
-  return typeof raw === 'string' && utf8_length(raw) <= limits.max_string_bytes ? raw : INVALID;
+  return typeof raw === 'string' && is_clean_text(raw) && utf8_length(raw) <= limits.max_string_bytes ? raw : INVALID;
 }
 
 function enum_of(raw: unknown, elements: readonly string[]): unknown {
@@ -123,8 +124,10 @@ function value_of(type: FieldType, raw: unknown, limits: BodyLimits, query: bool
       return check_object(type.fields, raw, limits, query) ?? INVALID;
     case 'object_union':
       return union_of(type.fields, raw, limits, query);
-    case 'json':
-      return plain_json(raw);
+    case 'json': {
+      const value = plain_json(raw);
+      return value === undefined ? INVALID : value;
+    }
   }
 }
 
@@ -164,9 +167,13 @@ export function check_json_body(fields: FieldMap, body: unknown, limits: BodyLim
   return input !== null && range_rule(input, limits) ? input : null;
 }
 
-/** Checks the query string of a binary body operation. A field given twice breaks the body rules. */
+/**
+ * Checks the query string of a binary body operation, parsed as `URLSearchParams` parses it. A field given twice
+ * breaks the body rules.
+ */
 export function check_query(fields: FieldMap, search: URLSearchParams, limits: BodyLimits): AdminInput | null {
-  const raw: Record<string, unknown> = {};
+  // No prototype: a key such as `__proto__` stays an own key and is refused as an unknown field.
+  const raw: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
   for (const [key, value] of search) {
     if (Object.hasOwn(raw, key)) return null;
     raw[key] = value;

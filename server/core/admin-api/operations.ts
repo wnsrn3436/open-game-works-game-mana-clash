@@ -10,6 +10,9 @@ import { read_states } from './states.ts';
 import { ban_in_force, delete_ban, KILL_SWITCH_KIND, MAINTENANCE_KIND, read_ban, read_switches, write_ban, write_switch, type BanRow } from './tables.ts';
 import type { AdminApiModules, AdminInput, AdminOutput, AdminTransaction, FieldMap, FieldType, HandlerFailure, Role } from './types.ts';
 
+/** The element names of `ItemChangeSource` by value. */
+const SOURCE_NAMES: ReadonlyMap<number, string> = new Map(Object.entries(CoreContract.ItemChangeSource).map(([name, value]) => [value, name]));
+
 /** An admin-api operation: the handler function form plus what admin-api's own operations need. */
 export interface OwnOperation {
   readonly name: string;
@@ -129,7 +132,10 @@ function user_reads(c: OperationContext): OwnOperation[] {
           ban: read_ban(storage.db(ctx), user_id),
         }))
       : null;
-    if (read === 'FAILED') return fail('internal');
+    if (read === 'FAILED') {
+      c.log_error('get_user', user_id, 'admin operation get_user: the transaction failed');
+      return fail('internal');
+    }
     if (read !== null) return ok({ user_id, created_at: record.created_at, withdrawn_at: null, ...read.value, ban: ban_json(read.value.ban, server_time.clock_now()) });
     // A withdrawn user: no state, the record as it is now.
     const now = storage.get_user_record(storage.read_db(), user_id) ?? record;
@@ -147,7 +153,10 @@ function user_reads(c: OperationContext): OwnOperation[] {
           exported_at: server_time.now(ctx),
         }))
       : null;
-    if (read === 'FAILED') return fail('internal');
+    if (read === 'FAILED') {
+      c.log_error('export_personal_data', user_id, 'admin operation export_personal_data: the transaction failed');
+      return fail('internal');
+    }
     const data = read?.value ?? { user_state: {}, tables: storage.export_user_rows(storage.read_db(), user_id), exported_at: server_time.clock_now() };
     const text = JSON.stringify(output_json({ user_id, created_at: record.created_at, exported_at: data.exported_at, user_state: data.user_state, tables: data.tables }));
     if (utf8_length(text) > c.max_export_bytes) {
@@ -207,7 +216,9 @@ function item_operations(c: OperationContext): OwnOperation[] {
     input: { user_id: { type: INT64 }, from_at: { type: INT64 }, to_at: { type: INT64 }, after_seq: { type: INT64 }, limit: { type: INT32 } },
     user_target: null,
     execute(input) {
-      const entries = item_ledger.list_history(input.user_id as bigint, input.from_at as bigint, input.to_at as bigint, input.after_seq as bigint, input.limit as number);
+      const rows = item_ledger.list_history(input.user_id as bigint, input.from_at as bigint, input.to_at as bigint, input.after_seq as bigint, input.limit as number);
+      // A base proto enum value of output JSON is its element name.
+      const entries = rows.map((row) => ({ ...row, source: SOURCE_NAMES.get(row.source) ?? 'ITEM_CHANGE_SOURCE_UNSPECIFIED' }));
       return Promise.resolve(ok({ entries }));
     },
   };
@@ -218,8 +229,8 @@ function item_operations(c: OperationContext): OwnOperation[] {
 /** `send_mail`, `broadcast_mail`, `cancel_broadcast`. */
 function mail_operations(c: OperationContext): OwnOperation[] {
   const { mailbox } = c.modules;
-  // `json` values keep integers past 2^53 as `bigint`; the mail input JSON takes them as decimal strings.
-  const mail_of = (value: unknown) => mailbox.mail_input_from_json(output_json(value));
+  // `json` values keep integers past 2^53 as `bigint`, which `mail_input_from_json` takes as JSON integers.
+  const mail_of = (value: unknown) => mailbox.mail_input_from_json(value);
 
   return [
     {

@@ -4,7 +4,7 @@
  */
 import { network_time_limit } from '../server-time/network_time_limit.ts';
 import { is_db_failure, type DbError, type DbValue, type Dialect, type Row } from './db/types.ts';
-import { adapter_of, any_state_of, big, bytes, DbHandle, q, StorageMisuse, user_state_of, writable, type StorageCore, type TxState } from './core.ts';
+import { adapter_of, any_state_of, ascending_ids, big, bytes, DbHandle, in_id_list, q, StorageMisuse, user_state_of, writable, type StorageCore, type TxState } from './core.ts';
 import { ConversionFailed, read_value } from './state.ts';
 import { from_json_value, json_value, quote, type TableDef } from './schema.ts';
 import { delete_item, write_item } from './state.ts';
@@ -24,6 +24,12 @@ export interface UserRecord {
   readonly public_code: string;
   readonly created_at: bigint;
   readonly withdrawn_at: bigint | null;
+}
+
+/** An element of the `get_user_records` output. */
+export interface UserRecordEntry {
+  readonly user_id: bigint;
+  readonly record: UserRecord;
 }
 
 const STATE_TABLES = ['server_state', 'user_state'] as const;
@@ -83,11 +89,26 @@ export function delete_user(core: StorageCore, ctx: unknown): void {
   state.item_mails = [];
 }
 
+function user_record(row: Row): UserRecord {
+  return { public_code: typeof row.public_code === 'string' ? row.public_code : '', created_at: big(row.created_at), withdrawn_at: row.withdrawn_at === null ? null : big(row.withdrawn_at) };
+}
+
 export function get_user_record(db: unknown, user_id: unknown): UserRecord | null {
   if (typeof user_id !== 'bigint') throw new StorageMisuse('storage: the user ID is not a bigint');
   const row = handle(db).query('SELECT public_code, created_at, withdrawn_at FROM "user" WHERE user_id = $1', [user_id])[0];
-  if (row === undefined) return null;
-  return { public_code: typeof row.public_code === 'string' ? row.public_code : '', created_at: big(row.created_at), withdrawn_at: row.withdrawn_at === null ? null : big(row.withdrawn_at) };
+  return row === undefined ? null : user_record(row);
+}
+
+/** `get_user_records`: the `get_user_record` output of each listed user that has a `user` row, read with one query. */
+export function get_user_records(core: StorageCore, db: unknown, user_ids: unknown): UserRecordEntry[] {
+  const db_handle = handle(db);
+  if (!Array.isArray(user_ids) || !(user_ids as unknown[]).every((id) => typeof id === 'bigint')) throw new StorageMisuse('storage: get_user_records user IDs are not a list of bigints');
+  const ids = ascending_ids(user_ids as bigint[]);
+  if (ids.length === 0) return [];
+  const list = in_id_list(core, 'user_id', ids, 1);
+  return db_handle
+    .query(`SELECT user_id, public_code, created_at, withdrawn_at FROM "user" WHERE ${list.sql} ORDER BY user_id`, [list.param])
+    .map((row) => ({ user_id: big(row.user_id), record: user_record(row) }));
 }
 
 /** The user ID of the row whose public code is the code of that public code input (a withdrawn user's included). */
@@ -106,18 +127,55 @@ export function set_user_created_at(core: StorageCore, ctx: unknown, time: unkno
   q(state, 'UPDATE "user" SET created_at = $1 WHERE user_id = $2', [time, state.user_id]);
 }
 
-export function scan_users(db: unknown, after: unknown, max: unknown, version?: unknown): bigint[] {
+export function scan_users(core: StorageCore, db: unknown, after: unknown, max: unknown, version?: unknown): bigint[] {
   if (typeof after !== 'bigint' || typeof max !== 'number' || !Number.isSafeInteger(max) || max < 1) throw new StorageMisuse('storage: scan_users input is not (bigint, integer >= 1)');
   if (version !== undefined && version !== null && typeof version !== 'bigint' && typeof version !== 'number') throw new StorageMisuse('storage: scan_users version is not an integer');
-  const lower = version === undefined || version === null ? null : BigInt(version);
-  const filter =
-    lower === null
-      ? ''
-      : ' AND (EXISTS (SELECT 1 FROM user_state s WHERE s.user_id = u.user_id AND s.contract_version < $3) OR EXISTS (SELECT 1 FROM server_state s WHERE s.user_id = u.user_id AND s.contract_version < $3))';
-  const params: DbValue[] = lower === null ? [after, max] : [after, max, lower];
-  return handle(db)
-    .query(`SELECT u.user_id FROM "user" u WHERE u.user_id > $1 AND u.withdrawn_at IS NULL${filter} ORDER BY u.user_id LIMIT $2`, params)
-    .map((row) => big(row.user_id));
+  const db_handle = handle(db);
+  if (version === undefined || version === null) {
+    return db_handle.query('SELECT user_id FROM "user" WHERE user_id > $1 AND withdrawn_at IS NULL ORDER BY user_id LIMIT $2', [after, max]).map((row) => big(row.user_id));
+  }
+  return users_below(core, db_handle, after, max, BigInt(version));
+}
+
+/**
+ * `scan_users` with a contract version: the users above `after` that are not withdrawn and have a row below `lower`.
+ * It reads only the index `(contract_version, user_id)` of each state table (core schema version 3): per contract
+ * version below `lower`, the first `max` users above the cursor. So the work of one call follows `max` and the number
+ * of those versions, not the number of users, also when no user is left.
+ */
+function users_below(core: StorageCore, db_handle: DbHandle, after: bigint, max: number, lower: bigint): bigint[] {
+  const sources = STATE_TABLES.flatMap((table) => versions_below(db_handle, table, lower).map((version) => ({ table, version })));
+  const found: bigint[] = [];
+  let cursor = after;
+  for (;;) {
+    const want = max - found.length;
+    const candidates = new Set<bigint>();
+    for (const { table, version } of sources) {
+      const rows = db_handle.query(`SELECT DISTINCT user_id FROM ${table} WHERE contract_version = $1 AND user_id > $2 ORDER BY user_id LIMIT $3`, [version, cursor, want]);
+      for (const row of rows) candidates.add(big(row.user_id));
+    }
+    // The first `want` of the candidates are the first `want` users of all sources: each source gave its first `want`.
+    const first = ascending_ids([...candidates]).slice(0, want);
+    if (first.length === 0) return found;
+    const list = in_id_list(core, 'user_id', first, 1);
+    const kept = db_handle.query(`SELECT user_id FROM "user" WHERE ${list.sql} AND withdrawn_at IS NULL ORDER BY user_id`, [list.param]).map((row) => big(row.user_id));
+    found.push(...kept);
+    // Fewer than `want` candidates: every source has given all its users above the cursor.
+    if (found.length === max || first.length < want) return found;
+    cursor = first[first.length - 1] as bigint;
+  }
+}
+
+/** The distinct contract versions below `lower` in a state table, one index step each. */
+function versions_below(db_handle: DbHandle, table: string, lower: bigint): bigint[] {
+  const versions: bigint[] = [];
+  let row = db_handle.query(`SELECT contract_version FROM ${table} WHERE contract_version < $1 ORDER BY contract_version LIMIT 1`, [lower])[0];
+  while (row !== undefined) {
+    const version = big(row.contract_version);
+    versions.push(version);
+    row = db_handle.query(`SELECT contract_version FROM ${table} WHERE contract_version > $1 AND contract_version < $2 ORDER BY contract_version LIMIT 1`, [version, lower])[0];
+  }
+  return versions;
 }
 
 /**

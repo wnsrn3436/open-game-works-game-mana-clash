@@ -22,6 +22,9 @@ static var _overlays: Array[ColorRect] = []
 ## Current handle of each channel, indexed by `ScreenEffectChannel`. `null` when the channel has no effect.
 static var _current: Array[ScreenEffectHandle] = []
 static var _tween_options: TweenOptions = null
+## World skip of `ScreenEffectCoreDev.set_world_skip`: `World` requests that pass the input check end `Completed` at
+## once without touching the overlay.
+static var _world_skip: bool = false
 
 
 static func init() -> bool:
@@ -83,18 +86,22 @@ static func is_initialized() -> bool:
 
 ## Puts the overlay of `channel` in `color` and changes its opacity linearly from `start_opacity` to `target_opacity`
 ## over `duration_ms`, progressing on `time_basis`.
+# ogw:input_boundary
 static func fade(
-	channel: ScreenEffectChannel, owner: Object, color: Color, start_opacity: float, target_opacity: float,
+	channel: ScreenEffectChannel, owner: Variant, color: Color, start_opacity: float, target_opacity: float,
 	duration_ms: int, time_basis: TweenCore.TimeBasis = TweenCore.TimeBasis.REAL_TIME
 ) -> ScreenEffectHandle:
-	if not _check_request("fade", channel, owner, time_basis):
+	var owner_object: Object = _object_of(owner)
+	if not _check_request("fade", channel, owner_object, time_basis):
 		return _failed_handle()
 	if (
 		not _check_color("fade", color) or not _check_opacity("fade", start_opacity)
 		or not _check_opacity("fade", target_opacity) or not _check_duration("fade", duration_ms)
 	):
 		return _failed_handle()
-	var handle: ScreenEffectHandle = _new_handle(channel, owner)
+	if _is_skipped(channel):
+		return _skipped_handle(channel, owner_object)
+	var handle: ScreenEffectHandle = _new_handle(channel, owner_object)
 	var replaced: ScreenEffectHandle = _make_current(channel, handle)
 	var overlay: ColorRect = _overlays[channel]
 	overlay.modulate = Color(color.r, color.g, color.b, start_opacity)
@@ -114,11 +121,13 @@ static func fade(
 
 ## Puts the overlay of `channel` in `color` and raises its opacity from 0 to the smaller of `max_opacity` and the flash
 ## opacity limit over `rise_ms`, keeps it for `hold_ms` and lowers it to 0 over `fall_ms`, progressing on `time_basis`.
+# ogw:input_boundary
 static func flash(
-	channel: ScreenEffectChannel, owner: Object, color: Color, max_opacity: float, rise_ms: int, hold_ms: int,
+	channel: ScreenEffectChannel, owner: Variant, color: Color, max_opacity: float, rise_ms: int, hold_ms: int,
 	fall_ms: int, time_basis: TweenCore.TimeBasis = TweenCore.TimeBasis.REAL_TIME
 ) -> ScreenEffectHandle:
-	if not _check_request("flash", channel, owner, time_basis):
+	var owner_object: Object = _object_of(owner)
+	if not _check_request("flash", channel, owner_object, time_basis):
 		return _failed_handle()
 	if (
 		not _check_color("flash", color) or not _check_opacity("flash", max_opacity)
@@ -126,8 +135,10 @@ static func flash(
 		or not _check_duration("flash", fall_ms)
 	):
 		return _failed_handle()
+	if _is_skipped(channel):
+		return _skipped_handle(channel, owner_object)
 	var peak: float = minf(max_opacity, _flash_limit)
-	var handle: ScreenEffectHandle = _new_handle(channel, owner)
+	var handle: ScreenEffectHandle = _new_handle(channel, owner_object)
 	var replaced: ScreenEffectHandle = _make_current(channel, handle)
 	var overlay: ColorRect = _overlays[channel]
 	overlay.modulate = Color(color.r, color.g, color.b, 0.0)
@@ -149,15 +160,19 @@ static func flash(
 ## Plays a loaded tween preset definition that changes only the overlay `Color` and `Opacity` and repeats a finite
 ## number of times, progressing on `time_basis`. A definition that does not change `Color` plays in the present overlay
 ## color.
+# ogw:input_boundary
 static func play_preset(
-	channel: ScreenEffectChannel, owner: Object, definition: TweenDefinition,
+	channel: ScreenEffectChannel, owner: Variant, definition: TweenDefinition,
 	time_basis: TweenCore.TimeBasis = TweenCore.TimeBasis.REAL_TIME
 ) -> ScreenEffectHandle:
-	if not _check_request("play_preset", channel, owner, time_basis):
+	var owner_object: Object = _object_of(owner)
+	if not _check_request("play_preset", channel, owner_object, time_basis):
 		return _failed_handle()
 	if not _check_preset(definition, _overlays[channel]):
 		return _failed_handle()
-	var handle: ScreenEffectHandle = _new_handle(channel, owner)
+	if _is_skipped(channel):
+		return _skipped_handle(channel, owner_object)
+	var handle: ScreenEffectHandle = _new_handle(channel, owner_object)
 	var replaced: ScreenEffectHandle = _make_current(channel, handle)
 	var overlay: ColorRect = _overlays[channel]
 	overlay.visible = true
@@ -205,14 +220,17 @@ static func clear_handle(handle: ScreenEffectHandle) -> void:
 	_clear_channel(handle._channel)
 
 
-## `clear_handle` of the handle of every channel whose owner is `owner`.
-static func clear_owner(owner: Object) -> void:
+## `clear_handle` of the handle of every channel whose owner is `owner`. A missing or destroyed owner does nothing: the
+## frame check clears the channels of a destroyed owner.
+# ogw:input_boundary
+static func clear_owner(owner: Variant) -> void:
 	if not _is_initialized:
 		LogCore.log_error(_TAG, "clear_owner called before init")
 		return
-	if not is_instance_valid(owner):
+	var owner_object: Object = _object_of(owner)
+	if owner_object == null:
 		return
-	var owner_id: int = owner.get_instance_id()
+	var owner_id: int = owner_object.get_instance_id()
 	for channel: int in _CHANNEL_COUNT:
 		var handle: ScreenEffectHandle = _current[channel]
 		if handle != null and handle._owner_id == owner_id:
@@ -299,6 +317,7 @@ static func _reset_state() -> void:
 	_overlays = []
 	_current = []
 	_tween_options = null
+	_world_skip = false
 
 
 static func _layer_of(channel: int) -> UICore.UILayer:
@@ -314,6 +333,18 @@ static func _layer_of(channel: int) -> UICore.UILayer:
 static func _failed_handle() -> ScreenEffectHandle:
 	var handle: ScreenEffectHandle = ScreenEffectHandle.new()
 	handle._finish(ScreenEffectResult.FAILED)
+	return handle
+
+
+## True when the World skip is on and `channel` is `World`.
+static func _is_skipped(channel: int) -> bool:
+	return _world_skip and channel == ScreenEffectChannel.WORLD
+
+
+## A handle of a skipped request: `Completed`, and never the current handle of its channel, so it controls no overlay.
+static func _skipped_handle(channel: int, owner: Object) -> ScreenEffectHandle:
+	var handle: ScreenEffectHandle = _new_handle(channel, owner)
+	handle._finish(ScreenEffectResult.COMPLETED)
 	return handle
 
 
@@ -425,7 +456,8 @@ static func _apply_end_state(overlay: ColorRect, definition: TweenDefinition) ->
 				overlay.modulate.a = value.x
 
 
-## Channel, time basis and owner check of every request, with the init check.
+## Channel, time basis and owner check of every request, with the init check. `owner` is `null` when the owner object
+## is missing or destroyed.
 static func _check_request(operation: String, channel: int, owner: Object, time_basis: int) -> bool:
 	if not _is_initialized:
 		LogCore.log_error(_TAG, "%s called before init" % operation)
@@ -436,7 +468,7 @@ static func _check_request(operation: String, channel: int, owner: Object, time_
 	if time_basis < 0 or time_basis >= TweenCore.TimeBasis.size():
 		LogCore.log_error(_TAG, "%s: %d is not a TimeBasis" % [operation, time_basis])
 		return false
-	if not is_instance_valid(owner):
+	if owner == null:
 		LogCore.log_error(_TAG, "%s: the owner object is missing or destroyed" % operation)
 		return false
 	return true
@@ -489,6 +521,16 @@ static func _check_preset(definition: TweenDefinition, overlay: ColorRect) -> bo
 		LogCore.log_error(_TAG, "play_preset: the definition fails the TweenCore definition check")
 		return false
 	return true
+
+
+## The object `value` holds, or `null` when it holds none or a destroyed one. A typed `Object` parameter stops the call
+## before its body for a destroyed object, so the owner comes in as a `Variant`.
+# ogw:input_boundary
+static func _object_of(value: Variant) -> Object:
+	if typeof(value) != TYPE_OBJECT or not is_instance_valid(value):
+		return null
+	var object: Object = value
+	return object
 
 
 ## A finite number from 0 to 1.

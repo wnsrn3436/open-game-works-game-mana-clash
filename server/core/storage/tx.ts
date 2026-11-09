@@ -60,6 +60,19 @@ function secure_seed(): bigint {
   return randomBytes(8).readBigInt64BE();
 }
 
+const PURPOSE_NAME = /^[a-z][a-z0-9_]*$/;
+
+/**
+ * `make_seed` (seed source of `### ctx`): a random seed made outside a user transaction. With a seed provider, the value
+ * it returns for request ID empty string, user ID 0 and the purpose name as the request name; otherwise, or when it
+ * returns none, a value from secure random. A purpose name that is not snake_case throws.
+ */
+export function make_seed(core: StorageCore, purpose: unknown): bigint {
+  if (typeof purpose !== 'string' || !PURPOSE_NAME.test(purpose)) throw new StorageMisuse(`storage: make_seed of ${JSON.stringify(purpose)}: the purpose name is not snake_case`);
+  const provider = core.seed_provider;
+  return (provider === null ? null : provider('', 0n, purpose)) ?? secure_seed();
+}
+
 /** Runs the synchronous function in the transaction's async context; a thenable result is a misuse. */
 function in_context<T>(core: StorageCore, state: TxState, fn: () => T): T {
   const result = core.als.run(state, fn);
@@ -168,6 +181,15 @@ async function open_user(core: StorageCore, user_id: bigint, fields: RequestFiel
     await begun.conn.rollback();
     return 'WITHDRAWN';
   }
+  let seed: bigint;
+  try {
+    // The seed provider (`## DEV`) is called once per request transaction, before its ctx is made.
+    const provider = core.seed_provider;
+    seed = (fields === null || provider === null ? null : provider(fields.request_id, user_id, fields.request_name)) ?? secure_seed();
+  } catch (error) {
+    await begun.conn.rollback();
+    throw error;
+  }
   const ctx = new Ctx(core.data, core.data_version);
   const state = new TxState('user', begun.conn, user_id, ctx);
   core.open.add(state);
@@ -176,8 +198,7 @@ async function open_user(core: StorageCore, user_id: bigint, fields: RequestFiel
     Object.assign(ctx, fields ?? {});
     ctx.user_id = user_id;
     ctx.request_time = core.time.user_now(user_id, handle_of(state));
-    const provided = fields === null || core.seed_provider === null ? null : core.seed_provider(fields.request_id);
-    ctx.seed = provided ?? secure_seed();
+    ctx.seed = seed;
     state.random = new Random(ctx.seed);
   } catch (error) {
     await rollback(core, state);
@@ -187,15 +208,27 @@ async function open_user(core: StorageCore, user_id: bigint, fields: RequestFiel
   return state;
 }
 
-/** Runs a body; a lock or connection failure ends it as `FAILED`, any other throw rolls back and throws. */
+/**
+ * Runs a body. A body of a transaction that `fail_transaction` marked ends as `FAILED`, by return or by throw. Any other
+ * body that ends by return or by throw after a statement of this transaction broke it ends it as `FAILED`; the one
+ * exception is a body that throws the `sql` failure of the statement that broke it, which rolls
+ * back and throws. Any other throw rolls back and throws, also a lock or connection failure of a `read_db` statement:
+ * it is not a statement of this transaction.
+ */
 async function body<T>(core: StorageCore, state: TxState, fn: () => T): Promise<{ value: T } | 'FAILED'> {
+  let value: T;
   try {
-    return { value: in_context(core, state, fn) };
+    value = in_context(core, state, fn);
   } catch (error) {
     await rollback(core, state);
-    if (is_db_failure(error)) return 'FAILED';
+    // `fail_transaction` comes before every other rule for the throw, the statement failure rule included.
+    if (state.failed) return 'FAILED';
+    if (state.broken && (error !== state.broken_by || is_db_failure(error))) return 'FAILED';
     throw error;
   }
+  if (!state.broken) return { value };
+  await rollback(core, state);
+  return 'FAILED';
 }
 
 async function run_user(core: StorageCore, user_id: bigint, fields: RequestFields | null, mode: Mode, fn: (ctx: RequestCtx) => unknown): Promise<unknown> {
@@ -288,6 +321,11 @@ export function run_savepoint(core: StorageCore, ctx: unknown, fn: () => Pass | 
     state.unmark(false);
     throw error;
   }
+  if (state.broken) {
+    // An aborted transaction keeps its abort: no revert and no release, and the operation that opened it is `FAILED`.
+    state.unmark(false);
+    throw new DbError('lock', 'broken', 'storage: the transaction has failed inside run_savepoint');
+  }
   if (result === 'pass') {
     state.unmark(false);
     q(state, `RELEASE SAVEPOINT ${name}`);
@@ -325,6 +363,20 @@ export function run_read_only<T>(core: StorageCore, ctx_or_tx: unknown, fn: () =
   } finally {
     state.read_only -= 1;
   }
+}
+
+/**
+ * `fail_transaction`: marks the transaction failed, as a failed statement does. Every later `query` and storage
+ * operation on it throws, and it rolls back and is `FAILED` when its function ends, by return or by throw. A call on a
+ * transaction it already marked does nothing.
+ */
+export function fail_transaction(core: StorageCore, ctx_or_tx: unknown): void {
+  // A second call on a transaction this already marked does nothing.
+  const marked = typeof ctx_or_tx === 'object' && ctx_or_tx !== null ? core.states.get(ctx_or_tx) : undefined;
+  if (marked?.active === true && marked.failed) return;
+  const state = any_state_of(core, ctx_or_tx);
+  state.failed = true;
+  state.broken = true;
 }
 
 export function after_commit(core: StorageCore, ctx: unknown, fn: () => unknown): void {
@@ -378,10 +430,11 @@ export function row_lock_key(core: Pick<StorageCore, 'kinds'>, table: string, ke
 
 /** Locks the row `(table, values)` until the transaction ends; `FAILED` on a lock wait over the limit or a deadlock. */
 export function lock_row(state: TxState, table: string, values: readonly unknown[]): 'FAILED' | undefined {
+  // An aborted transaction makes every later lock `FAILED`, also of a row it locked before the abort.
+  if (state.broken) return 'FAILED';
   const id = lock_key(table, values);
   if (state.locked.has(id)) return undefined;
   try {
-    if (state.broken) throw new DbError('lock', 'broken', 'storage: the transaction has failed');
     state.conn.lock_key(id);
   } catch (error) {
     mark_broken(state, error);

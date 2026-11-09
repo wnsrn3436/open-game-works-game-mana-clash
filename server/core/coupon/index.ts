@@ -13,7 +13,7 @@ import { alphabet_error, code_bound_after, generate_code, is_valid_code, normali
 export { normalize_code } from './code.ts';
 
 /** The `storage` operations coupon calls. */
-export type CouponStorage = Pick<Storage, 'register_table' | 'db' | 'lock_game_row' | 'run_user_transaction' | 'with_hook_change_source' | 'after_commit'>;
+export type CouponStorage = Pick<Storage, 'register_table' | 'db' | 'lock_game_row' | 'run_user_transaction' | 'with_hook_change_source' | 'on_commit'>;
 
 /** The `server-time` operations coupon calls. */
 export type CouponServerTime = Pick<ServerTimeApi, 'is_reached' | 'is_reached_strict' | 'clock_now' | 'get_window_start'>;
@@ -366,13 +366,19 @@ export function create_coupon(input: CouponInput): CouponModule {
     return coupon;
   };
 
+  /**
+   * The step 4 row lock. False when `lock_game_row` is `FAILED`: that breaks the transaction, so `storage` makes the
+   * request transaction `FAILED` and `routing` leaves the `error` log.
+   */
+  const lock_use_row = (ctx: RequestCtx, table: string, key: readonly unknown[]): boolean => storage.lock_game_row(ctx, table, key) !== 'FAILED';
+
   /** Step 4: locks the coupon row (`shared`) or the code row (`unique`) and reads the use limit again. Null when it is free. */
   const check_use_limit = (ctx: RequestCtx, db: DbHandle, coupon: CouponRow, code: string): CoreContract.CoreError | null => {
     if (coupon.kind === 'unique') {
-      if (storage.lock_game_row(ctx, CODE_TABLE, [code]) === 'FAILED') return CoreContract.CoreError.CORE_ERROR_INTERNAL;
+      if (!lock_use_row(ctx, CODE_TABLE, [code])) return CoreContract.CoreError.CORE_ERROR_INTERNAL;
       return find_code(db, code)?.redeemed_by === null ? null : CoreContract.CoreError.CORE_ERROR_COUPON_USED_UP;
     }
-    if (storage.lock_game_row(ctx, COUPON_TABLE, [coupon.coupon_id]) === 'FAILED') return CoreContract.CoreError.CORE_ERROR_INTERNAL;
+    if (!lock_use_row(ctx, COUPON_TABLE, [coupon.coupon_id])) return CoreContract.CoreError.CORE_ERROR_INTERNAL;
     const locked = find_coupon(db, coupon.coupon_id);
     if (locked === null) return CoreContract.CoreError.CORE_ERROR_COUPON_INVALID;
     return locked.max_uses !== 0 && locked.used_count >= BigInt(locked.max_uses) ? CoreContract.CoreError.CORE_ERROR_COUPON_USED_UP : null;
@@ -398,9 +404,10 @@ export function create_coupon(input: CouponInput): CouponModule {
     if (!run_hook(ctx, coupon.coupon_id)) return CoreContract.CoreError.CORE_ERROR_INTERNAL;
     const { user_id, request_id } = ctx;
     const args: LogValue = { coupon_id: String(coupon.coupon_id), code } as unknown as LogValue;
-    storage.after_commit(ctx, () =>
-      logging.write({ kind: 'audit', level: 'info', message: 'coupon redeemed', user_id, request_id, request: REDEEM_REQUEST, fields: { args } }),
-    );
+    // At the commit itself, so a server stop right after the commit does not drop the line.
+    storage.on_commit(ctx, () => {
+      logging.write({ kind: 'audit', level: 'info', message: 'coupon redeemed', user_id, request_id, request: REDEEM_REQUEST, fields: { args } });
+    });
     const response = new CoreContract.RedeemCouponResponse();
     response.items = received;
     return response;

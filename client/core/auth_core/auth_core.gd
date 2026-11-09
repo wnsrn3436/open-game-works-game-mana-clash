@@ -2,8 +2,8 @@ class_name AuthCore
 extends RefCounted
 ## Terms, age, privacy choice, ad push consent and tracking permission flows; guest, social and auto login, the login
 ## token storage, the install marker, account recovery, the access token refresh, account link and switch, logout,
-## withdrawal, the web guest storage request and link prompt, and the web account deletion code. Hands the login
-## session to `NetworkCore` and the analytics consent to `LogCore`.
+## logout of the other devices, withdrawal, the web guest storage request and link prompt, and the web account
+## deletion code. Hands the login session to `NetworkCore` and the analytics consent to `LogCore`.
 
 enum TermsStatus { AGREED, REFUSED, FAILED }
 enum LoginStatus { SUCCESS, NO_TOKEN, CANCELLED, REJECTED, CONSENT_REQUIRED, BANNED, AGE_BLOCKED, FAILED }
@@ -61,6 +61,9 @@ static var _replaced_popup_open: bool = false
 ## Consent of the last consent apply. `null` when there is none.
 static var _applied_consent: ConsentInfo = null
 static var _waits: Array[_WAIT] = []
+## Waits of the callers of storage operations. `release` and `clear_dev_values` end them as failures: `_storage_call`
+## then returns `null`, and its caller returns its failure value with no further work and no log.
+static var _storage_waits: Array[_WAIT] = []
 static var _popup_waits: Array[_POPUP_WAIT] = []
 # Settings `init` reads.
 static var _refresh_margin_ms: int = 0
@@ -81,7 +84,7 @@ static var _google_server_client_id: String = ""
 static var _google_ios_client_id: String = ""
 static var _google_desktop_client_id: String = ""
 
-# DEV state. The DEV operations read and write it.
+# DEV state. The DEV operations read and write it. `release` keeps it; `clear_dev_values` deletes it.
 ## Fake account name of `set_fake_social_account`. Empty when it was not set.
 static var _fake_social_account: String = ""
 ## `CoreContract.TrackingStatus` of `set_fake_tracking_status`. -1 when it was not set.
@@ -149,8 +152,20 @@ static func init() -> bool:
 
 static func release() -> void:
 	if not _is_initialized:
+		_clear_pre_init_values()
 		return
 	_clean_up(true)
+
+
+## `release` of an AuthCore that is not initialized: deletes only what was set before `init` (the scope text, the
+## social adapters and the test replacements), and keeps what `release` keeps.
+static func _clear_pre_init_values() -> void:
+	_storage_scope = ""
+	_social_adapters = {}
+	_test_storage = null
+	_test_url_opener = Callable()
+	_test_persist_requester = Callable()
+	_test_tracking = null
 
 
 static func is_initialized() -> bool:
@@ -170,6 +185,7 @@ static func _clean_up(detach: bool) -> void:
 	_waits = []
 	for wait: _WAIT in waits:
 		wait.finish()
+	_end_storage_waits()
 	var popup_waits: Array[_POPUP_WAIT] = _popup_waits
 	_popup_waits = []
 	for popup_wait: _POPUP_WAIT in popup_waits:
@@ -226,9 +242,6 @@ static func _clean_up(detach: bool) -> void:
 	_google_server_client_id = ""
 	_google_ios_client_id = ""
 	_google_desktop_client_id = ""
-	_fake_social_account = ""
-	_fake_tracking = -1
-	_dev_storage = null
 	_test_storage = null
 	_test_url_opener = Callable()
 	_test_persist_requester = Callable()
@@ -410,7 +423,7 @@ static func _auto_login() -> LoginResult:
 	var linked: PackedInt32Array = _pending_linked
 	if token.is_empty():
 		var read: _STORAGE.Outcome = await _storage_call(StorageOp.READ)
-		if life != _life:
+		if life != _life or read == null:
 			return _login_result(LoginStatus.FAILED)
 		if read.status == _STORAGE.Status.NOT_FOUND:
 			return await login(CoreContract.LoginProvider.LOGIN_PROVIDER_GUEST)
@@ -436,10 +449,10 @@ static func _auto_login() -> LoginResult:
 	if response == null or response.result == null:
 		LogCore.log_error(_TAG, "auto login: response has no result")
 		return _login_result(LoginStatus.FAILED)
-	var written: bool = await _write_item(response.result.login_token, response.result.linked_providers)
-	if life != _life:
+	var written: _STORAGE.Outcome = await _write_item(response.result.login_token, response.result.linked_providers)
+	if life != _life or written == null:
 		return _login_result(LoginStatus.FAILED)
-	if written:
+	if written.status == _STORAGE.Status.OK:
 		_clear_pending()
 	else:
 		_pending_token = response.result.login_token
@@ -457,7 +470,7 @@ static func _check_install_marker() -> bool:
 		LogCore.log_error(_TAG, "install marker read %s" % _file_error_name(marker.error))
 		return false
 	var removed: _STORAGE.Outcome = await _storage_call(StorageOp.REMOVE)
-	if life != _life:
+	if life != _life or removed == null:
 		return false
 	if removed.status != _STORAGE.Status.OK and removed.status != _STORAGE.Status.NOT_FOUND:
 		return false
@@ -512,7 +525,7 @@ static func _account_recovery(linked: PackedInt32Array) -> LoginResult:
 		if confirm != Choice.FIRST:
 			continue
 		var removed: _STORAGE.Outcome = await _storage_call(StorageOp.REMOVE)
-		if life != _life:
+		if life != _life or removed == null:
 			break
 		if removed.status != _STORAGE.Status.OK and removed.status != _STORAGE.Status.NOT_FOUND:
 			return _login_result(LoginStatus.FAILED)
@@ -703,8 +716,8 @@ static func login(provider: CoreContract.LoginProvider) -> LoginResult:
 	if _session != null:
 		LogCore.log_error(_TAG, "login: a session opened while the login waited")
 		return _login_result(LoginStatus.FAILED)
-	var written: bool = await _write_item(response.result.login_token, response.result.linked_providers)
-	if life != _life or not written:
+	var written: _STORAGE.Outcome = await _write_item(response.result.login_token, response.result.linked_providers)
+	if life != _life or written == null or written.status != _STORAGE.Status.OK:
 		return _login_result(LoginStatus.FAILED)
 	_clear_pending()
 	return _open_session(response.result)
@@ -984,20 +997,36 @@ static func _show_session_replaced() -> void:
 # --- login token storage ---
 
 
-## Storage operation on the item of the storage scope. Waits for the operations started before it.
+## Storage operation on the item of the storage scope. Waits for the operations started before it. `null` when
+## `release` or `clear_dev_values` ended the wait: the caller then returns its failure value with no further work and
+## no log.
 static func _storage_call(op: StorageOp, text: String = "") -> _STORAGE.Outcome:
+	var life: RefCounted = _life
+	return await _storage_end(op, _storage_begin(op, text), life)
+
+
+## Starts a storage operation as `_storage_call` and returns its wait without waiting, so that the caller can do
+## in-memory work after the operation is in the queue. `_storage_end` gives its outcome. `null` when there is no
+## storage scope, after the error log.
+static func _storage_begin(op: StorageOp, text: String = "") -> _WAIT:
 	if _storage_scope.is_empty() or _storage == null:
 		LogCore.log_error(_TAG, "login token storage %s: no storage scope" % _op_name(op))
-		return _STORAGE.Outcome.new(_STORAGE.Status.FAILED)
-	var life: RefCounted = _life
+		return null
 	var wait: _WAIT = _WAIT.new()
-	_waits.append(wait)
+	_storage_waits.append(wait)
 	_run_storage(_storage, op, _storage_scope, text, wait)
+	return wait
+
+
+## Outcome of a wait of `_storage_begin` started at `life`, as `_storage_call`. A `null` wait is `Failed`.
+static func _storage_end(op: StorageOp, wait: _WAIT, life: RefCounted) -> _STORAGE.Outcome:
+	if wait == null:
+		return _STORAGE.Outcome.new(_STORAGE.Status.FAILED)
 	if not wait.finished:
 		await wait.done
-	_waits.erase(wait)
+	_storage_waits.erase(wait)
 	if life != _life or not wait.result is _STORAGE.Outcome:
-		return _STORAGE.Outcome.new(_STORAGE.Status.FAILED)
+		return null
 	var outcome: _STORAGE.Outcome = wait.result as _STORAGE.Outcome
 	if outcome.status != _STORAGE.Status.OK and outcome.status != _STORAGE.Status.NOT_FOUND:
 		LogCore.log_error(_TAG, "login token storage %s: %s" % [_op_name(op), _STORAGE.status_name(outcome.status)])
@@ -1005,6 +1034,15 @@ static func _storage_call(op: StorageOp, text: String = "") -> _STORAGE.Outcome:
 		LogCore.log_error(_TAG, "login token storage write: NotFound")
 		return _STORAGE.Outcome.new(_STORAGE.Status.FAILED)
 	return outcome
+
+
+## Ends the waits of the callers of storage operations as failures. The operations go on in their order, and their
+## late results are dropped.
+static func _end_storage_waits() -> void:
+	var waits: Array[_WAIT] = _storage_waits
+	_storage_waits = []
+	for wait: _WAIT in waits:
+		wait.finish()
 
 
 ## Runs one storage operation after the one started before it. `wait` gets the outcome; `null` drops it.
@@ -1022,6 +1060,8 @@ static func _run_storage(storage: _STORAGE, op: StorageOp, name: String, text: S
 			outcome = await storage.write_item(name, text)
 		_:
 			outcome = await storage.remove_item(name)
+	if outcome == null:
+		outcome = _STORAGE.Outcome.new(_STORAGE.Status.FAILED)
 	if _storage_queue.tail == mine:
 		_storage_queue.tail = null
 	mine.finish()
@@ -1029,10 +1069,9 @@ static func _run_storage(storage: _STORAGE, op: StorageOp, name: String, text: S
 		wait.finish(outcome)
 
 
-## Writes the storage item. `true` on success.
-static func _write_item(token: String, linked: PackedInt32Array) -> bool:
-	var written: _STORAGE.Outcome = await _storage_call(StorageOp.WRITE, _item_text(token, linked))
-	return written.status == _STORAGE.Status.OK
+## Writes the storage item. `null` when the wait was ended, as `_storage_call`.
+static func _write_item(token: String, linked: PackedInt32Array) -> _STORAGE.Outcome:
+	return await _storage_call(StorageOp.WRITE, _item_text(token, linked))
 
 
 ## Writes the pending token. Clears it on success when it is still the same token.
@@ -1041,7 +1080,8 @@ static func _write_pending_token() -> void:
 		return
 	var life: RefCounted = _life
 	var token: String = _pending_token
-	if await _write_item(token, _pending_linked) and life == _life and _pending_token == token:
+	var written: _STORAGE.Outcome = await _write_item(token, _pending_linked)
+	if written != null and written.status == _STORAGE.Status.OK and life == _life and _pending_token == token:
 		_clear_pending()
 
 
@@ -1164,7 +1204,8 @@ static func prepare_consent() -> ConsentResult:
 	if _session == null:
 		return ConsentResult.FAILED
 	if _session.consent.below_minimum_age:
-		await _block_age()
+		if not await _block_age():
+			return ConsentResult.FAILED
 		return ConsentResult.AGE_BLOCKED
 	if _privacy_choices and _session.consent.privacy_version != _consent_version:
 		var param: _POPUP_PARAM = _POPUP_PARAM.new()
@@ -1369,22 +1410,26 @@ static func _consent_info() -> ConsentInfo:
 	return info
 
 
-## Below the minimum age: server `auth` deleted the account.
-static func _block_age() -> void:
+## Below the minimum age: server `auth` deleted the account. The session ends in memory, with the marker written,
+## before the wait for the storage remove, so a wait that `release` or `clear_dev_values` ends leaves no half-ended
+## session. `false` when that wait was ended: the caller then returns its failure value.
+static func _block_age() -> bool:
 	var life: RefCounted = _life
 	var session: _SESSION = _session
+	var remove: _WAIT = _storage_begin(StorageOp.REMOVE)
 	_session = null
 	_clear_pending()
-	var removed: _STORAGE.Outcome = await _storage_call(StorageOp.REMOVE)
-	if life != _life:
-		return
-	if removed.status != _STORAGE.Status.OK and removed.status != _STORAGE.Status.NOT_FOUND:
-		LogCore.log_error(_TAG, "age block: storage item was not removed")
 	var marker: FileResult = LocalDataCore.write_file(_AGE_BLOCK_MARKER, PackedByteArray([_MARKER_BYTE]))
 	if not marker.ok:
 		LogCore.log_error(_TAG, "age block marker write %s" % _file_error_name(marker.error))
 	if session != null:
 		_end_session(SessionEndReason.AGE_BLOCKED)
+	var removed: _STORAGE.Outcome = await _storage_end(StorageOp.REMOVE, remove, life)
+	if removed == null:
+		return false
+	if removed.status != _STORAGE.Status.OK and removed.status != _STORAGE.Status.NOT_FOUND:
+		LogCore.log_error(_TAG, "age block: storage item was not removed")
+	return true
 
 
 ## Birth year and month from the age popup; opens it again when it closes without confirm. 0 on failure.
@@ -1484,15 +1529,24 @@ static func link_account(provider: CoreContract.LoginProvider) -> LinkStatus:
 	var response: CoreContract.LinkAccountResponse = call.response as CoreContract.LinkAccountResponse
 	if response == null or _session == null:
 		return LinkStatus.FAILED
-	_session.linked_providers = response.linked_providers
-	var token: String = _session.login_token
-	if _pending_token == token:
+	var session: _SESSION = _session
+	session.linked_providers = response.linked_providers
+	var token: String = session.login_token
+	if not _pending_token.is_empty():
 		_pending_linked = response.linked_providers
-	if await _write_item(token, response.linked_providers):
-		if life == _life and _pending_token == token:
+	var written: _STORAGE.Outcome = await _write_item(token, response.linked_providers)
+	if life != _life or written == null:
+		return LinkStatus.FAILED
+	if written.status == _STORAGE.Status.OK:
+		if _pending_token == token:
 			_clear_pending()
-	elif life == _life:
+	else:
 		LogCore.log_error(_TAG, "link_account: storage item was not written again")
+		# The pending token rules write the item again until a write succeeds.
+		if _pending_token.is_empty() and _session == session:
+			_pending_token = token
+			_pending_sent_token = token
+			_pending_linked = response.linked_providers
 	return LinkStatus.SUCCESS
 
 
@@ -1529,14 +1583,14 @@ static func switch_account(provider: CoreContract.LoginProvider) -> LoginResult:
 	if response == null or response.result == null:
 		LogCore.log_error(_TAG, "switch_account: response has no result")
 		return _login_result(LoginStatus.FAILED)
-	var written: bool = await _write_item(response.result.login_token, response.result.linked_providers)
-	if life != _life:
+	var written: _STORAGE.Outcome = await _write_item(response.result.login_token, response.result.linked_providers)
+	if life != _life or written == null:
 		return _login_result(LoginStatus.FAILED)
-	if written:
+	if written.status == _STORAGE.Status.OK:
 		_clear_pending()
 	_publish_session_ended(SessionEndReason.SWITCH)
 	_request_restart()
-	if not written:
+	if written.status != _STORAGE.Status.OK:
 		return _login_result(LoginStatus.FAILED)
 	var result: LoginResult = _login_result(LoginStatus.SUCCESS)
 	result.user_id = response.result.user_id
@@ -1554,6 +1608,18 @@ static func logout() -> void:
 	await _forget_account(SessionEndReason.LOGOUT)
 
 
+## Ends the login of the other devices. The session, the pending token and the storage item stay as they are.
+static func logout_other_devices() -> bool:
+	if not _check("logout_other_devices"):
+		return false
+	if _session == null:
+		LogCore.log_error(_TAG, "logout_other_devices: no session")
+		return false
+	var life: RefCounted = _life
+	var call: _CALL = await _send(CoreContract.LogoutOtherDevicesRequest.new(), true)
+	return life == _life and call != null and call.ok
+
+
 static func withdraw() -> bool:
 	if not _check("withdraw"):
 		return false
@@ -1563,21 +1629,22 @@ static func withdraw() -> bool:
 		return false
 	LocalDataCore.remove_value(LocalDataCore.FileKind.DEVICE, _KEY_TERMS_VERSION)
 	LocalDataCore.remove_value(LocalDataCore.FileKind.DEVICE, _KEY_PRIVACY_TERMS_VERSION)
-	await _forget_account(SessionEndReason.WITHDRAW)
-	return true
+	return await _forget_account(SessionEndReason.WITHDRAW)
 
 
 ## Logout and withdrawal: removes the storage item, the pending token and the session, then asks for a restart.
-static func _forget_account(reason: SessionEndReason) -> void:
+## `false` when `release` or `clear_dev_values` ended the wait of the remove.
+static func _forget_account(reason: SessionEndReason) -> bool:
 	var life: RefCounted = _life
 	_clear_pending()
 	var removed: _STORAGE.Outcome = await _storage_call(StorageOp.REMOVE)
-	if life != _life:
-		return
+	if life != _life or removed == null:
+		return false
 	if removed.status != _STORAGE.Status.OK and removed.status != _STORAGE.Status.NOT_FOUND:
 		LogCore.log_error(_TAG, "storage item was not removed")
 	_end_session(reason)
 	_request_restart()
+	return true
 
 
 static func issue_deletion_code() -> DeletionCodeResult:

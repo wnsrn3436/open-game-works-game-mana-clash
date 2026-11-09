@@ -81,6 +81,13 @@ export function change_failure_code(result: ItemChangeResult | GameContract.Game
   return CoreContract.CoreError.CORE_ERROR_INTERNAL;
 }
 
+/** The `source` a core module passed; throws on `Recovery`, `Overflow` and none, without a log. */
+function core_source(given: Source | undefined): Source {
+  const source = given ?? Source.ITEM_CHANGE_SOURCE_UNSPECIFIED;
+  if (source !== Source.ITEM_CHANGE_SOURCE_RECOVERY && source !== Source.ITEM_CHANGE_SOURCE_OVERFLOW && source !== Source.ITEM_CHANGE_SOURCE_UNSPECIFIED) return source;
+  throw new Error(`item-ledger: change source ${source_name(source)} is not for callers`);
+}
+
 /** Who calls a change operation: a core module (the module object) or content code (member `content`). */
 export type Caller = 'core' | 'content';
 
@@ -227,7 +234,9 @@ function input_problem(id: number, amount: bigint | null, info: ItemInfo | null,
 
 export class Ledger {
   /** `item-ledger.historyRetentionMs`. */
-  readonly retention_ms: bigint;
+  readonly history_retention_ms: bigint;
+  /** `item-ledger.onceKeyRetentionMs`. */
+  readonly once_key_retention_ms: bigint;
   readonly storage: Storage;
   readonly time: ServerTimeApi;
   readonly logging: Logging;
@@ -235,14 +244,14 @@ export class Ledger {
   /** True when the server instance has DEV code: source `Cheat` changes are allowed. */
   readonly cheat_open: boolean;
   private readonly hook_depth = new WeakMap<object, number>();
-  private readonly hook_misuse = new WeakSet<object>();
   /** The `ItemInfo` cache, by `DataSet`. */
   private readonly item_cache = new WeakMap<GameData.DataSet, Map<number, ItemInfo | null>>();
   /** Recovery items by their `cap_bonus_item`, by `DataSet`. */
   private readonly dependent_cache = new WeakMap<GameData.DataSet, Map<number, number[]>>();
 
-  constructor(retention_ms: bigint, modules: LedgerModules, dev: boolean) {
-    this.retention_ms = retention_ms;
+  constructor(history_retention_ms: bigint, once_key_retention_ms: bigint, modules: LedgerModules, dev: boolean) {
+    this.history_retention_ms = history_retention_ms;
+    this.once_key_retention_ms = once_key_retention_ms;
     this.storage = modules.storage;
     this.time = modules['server-time'];
     this.logging = modules.logging;
@@ -401,25 +410,17 @@ export class Ledger {
 
   /**
    * The change source of a write; throws on a source or `once_key` the caller may not pass. A core module's `source`
-   * is used as given; content code's `source` is not used.
+   * is used as given; content code's `source` is not used. A misuse, as one of `storage`, leaves no log and has
+   * changed nothing.
    */
   resolve(ctx: RequestCtx, input: ChangeSourceInput | undefined, caller: Caller): ChangeSource {
     const ref = input?.ref ?? '';
     const once_key = input?.once_key ?? '';
-    if (caller === 'core') return { source: this.core_source(ctx, input?.source), ref, once_key };
-    if (has_core_once_key_prefix(once_key)) {
-      this.error(ctx, 'content code passed a once_key with a core once_key prefix');
-      throw new Error('item-ledger: content once_key starts with a core once_key prefix');
-    }
+    // A `once_key` with an unpaired surrogate has no UTF-8 bytes to hash.
+    if (typeof once_key === 'string' && !once_key.isWellFormed()) throw new Error('item-ledger: once_key holds an unpaired surrogate');
+    if (caller === 'core') return { source: core_source(input?.source), ref, once_key };
+    if (has_core_once_key_prefix(once_key)) throw new Error('item-ledger: content once_key starts with a core once_key prefix');
     return content_change_source(ctx, input);
-  }
-
-  /** The `source` a core module passed; throws on `Recovery`, `Overflow` and none. */
-  private core_source(ctx: RequestCtx, given: Source | undefined): Source {
-    const source = given ?? Source.ITEM_CHANGE_SOURCE_UNSPECIFIED;
-    if (source !== Source.ITEM_CHANGE_SOURCE_RECOVERY && source !== Source.ITEM_CHANGE_SOURCE_OVERFLOW && source !== Source.ITEM_CHANGE_SOURCE_UNSPECIFIED) return source;
-    this.error(ctx, `item change source ${source_name(source)} is not a source a caller passes`);
-    throw new Error(`item-ledger: change source ${source_name(source)} is not for callers`);
   }
 
   /** Throws when a source `Cheat` change runs where the DEV code is not in the server instance. */
@@ -429,29 +430,36 @@ export class Ledger {
     throw new Error('item-ledger: source Cheat change without the DEV code');
   }
 
-  /** A write operation called from inside `validate_item_change` or `after_item_change` throws. */
+  /**
+   * A write operation called from inside `validate_item_change` or `after_item_change` changes nothing and throws,
+   * without a log. A hook that catches the throw goes on; one that lets it out fails (`call_hook`).
+   */
   guard_write(ctx: RequestCtx, operation: string): void {
     if ((this.hook_depth.get(ctx) ?? 0) === 0) return;
-    this.hook_misuse.add(ctx);
-    this.error(ctx, `${operation} called inside an item-ledger hook`);
     throw new Error(`item-ledger: ${operation} inside an item-ledger hook`);
+  }
+
+  /**
+   * A hook failure: one `error` log, then the transaction of ctx is marked failed, so it rolls back and is `FAILED`
+   * also when a caller catches the throw that follows.
+   */
+  private hook_failure(ctx: RequestCtx, message: string, stack_trace: string | null, error: unknown): never {
+    this.error(ctx, message, { stack_trace });
+    this.storage.fail_transaction(ctx);
+    throw error;
   }
 
   private call_hook<T>(ctx: RequestCtx, name: string, fn: () => T): T {
     this.hook_depth.set(ctx, (this.hook_depth.get(ctx) ?? 0) + 1);
-    let out: T;
     try {
-      out = fn();
+      return fn();
     } catch (e) {
-      if (!this.hook_misuse.has(ctx)) this.error(ctx, `hook ${name} threw`, { stack_trace: e instanceof Error ? (e.stack ?? e.message) : String(e) });
-      throw e;
+      return this.hook_failure(ctx, `hook ${name} threw`, e instanceof Error ? (e.stack ?? e.message) : String(e), e);
     } finally {
       const depth = (this.hook_depth.get(ctx) ?? 1) - 1;
       if (depth === 0) this.hook_depth.delete(ctx);
       else this.hook_depth.set(ctx, depth);
     }
-    if (this.hook_misuse.has(ctx)) throw new Error(`item-ledger: write operation inside hook ${name}`);
-    return out;
   }
 
   /** `validate_item_change`: null for `pass`, else the `GameError`. */
@@ -461,8 +469,7 @@ export class Ledger {
     const out: unknown = this.call_hook(ctx, 'validate_item_change', () => hook(ctx, source, changes));
     if (out === 'pass') return null;
     if (typeof out === 'number' && Number.isInteger(out) && out > 0) return out as GameContract.GameError;
-    this.error(ctx, 'hook validate_item_change returned neither pass nor a GameError');
-    throw new Error('item-ledger: validate_item_change output');
+    return this.hook_failure(ctx, 'hook validate_item_change returned neither pass nor a GameError', null, new Error('item-ledger: validate_item_change output'));
   }
 
   after(ctx: RequestCtx, source: ChangeSource, changes: readonly ItemBalanceChange[]): void {
@@ -470,8 +477,7 @@ export class Ledger {
     if (!hook) return;
     const out: unknown = this.call_hook(ctx, 'after_item_change', () => hook(ctx, source, changes));
     if (out === null || out === undefined) return;
-    this.error(ctx, 'hook after_item_change returned a value');
-    throw new Error('item-ledger: after_item_change output');
+    this.hook_failure(ctx, 'hook after_item_change returned a value', null, new Error('item-ledger: after_item_change output'));
   }
 
   already_applied(ctx: RequestCtx, source: ChangeSource): boolean {
@@ -722,7 +728,7 @@ export class Change {
       const dur = (c.info.timed as GameData.ItemTimedRow).duration;
       const cap = c.info.max_amount * dur;
       let k = d;
-      if (c.value + d * dur > cap) {
+      if (d > 0n && c.value + d * dur > cap) {
         if (c.info.overflow !== GameData.ItemOverflow.Discard) throw new Failure(ItemChangeResult.LIMIT_EXCEEDED);
         k = max(0n, floor_div(cap - c.value, dur));
       }
@@ -734,7 +740,7 @@ export class Change {
     }
     const next = c.value + d;
     if (d < 0n && next < 0n) throw new Failure(ItemChangeResult.NOT_ENOUGH);
-    if (d < 0n || next <= c.info.balance_limit) {
+    if (d <= 0n || next <= c.info.balance_limit) {
       c.value = next;
       return;
     }
@@ -742,7 +748,7 @@ export class Change {
     const applied = min(d, max(0n, c.info.balance_limit - c.value));
     c.value += applied;
     work.overflow.set(id, d - applied);
-    if (c.info.overflow === GameData.ItemOverflow.Convert) work.convert.push({ id, n: d - applied });
+    if (c.info.overflow === GameData.ItemOverflow.Convert && d > applied) work.convert.push({ id, n: d - applied });
   }
 
   /** Subtracts a group item's amount from its members in `members` order. */
@@ -804,10 +810,10 @@ export class Change {
     }
     rows.push(...this.entry_rows());
     const db = ledger.storage.db(ctx);
-    const expires = ledger.time.clock_now() + ledger.retention_ms;
-    insert_history(db, ctx.user_id, t, ctx.request_id === '' ? null : ctx.request_id, expires, rows);
+    const now = ledger.time.clock_now();
+    insert_history(db, ctx.user_id, t, ctx.request_id === '' ? null : ctx.request_id, now + ledger.history_retention_ms, now, rows);
     for (const e of this.entries) if (e.item_change) ledger.storage.add_item_change(ctx, item_change(e));
-    if (source.once_key !== '') put_once_key(db, ctx.user_id, source.once_key, expires);
+    if (source.once_key !== '') put_once_key(db, ctx.user_id, source.once_key, now + ledger.once_key_retention_ms);
   }
 
   /** The recovery items to reflect: the touched ones and those whose `cap_bonus_item` is touched. */

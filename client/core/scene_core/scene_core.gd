@@ -52,6 +52,8 @@ static var _transition_key: String = ""
 static var _job: _JOB = null
 ## Block token of the transition block. 0: no transition block.
 static var _block_token: int = 0
+## Stage 1 turned the panel lock on and stage 7 has not turned it off.
+static var _panel_locked: bool = false
 
 static var _loading_screen: LoadingScreenBase = null
 static var _loading_shown: bool = false
@@ -61,6 +63,10 @@ static var _shown_at: int = 0
 ## From stage 4 until stage 7 the top visual nodes under the scene holder are hidden; `_hidden` keeps them.
 static var _hiding: bool = false
 static var _hidden: Array[Node] = []
+## In the same time, the nodes under the scene holder with a `process_mode` of their own do not inherit the disabled
+## holder: they are disabled too, and `_stopped` keeps one mode per node (instance id -> the mode read when it was
+## disabled) to give it back in stage 7.
+static var _stopped: Dictionary[int, int] = {}
 
 # Progress of the transition: tasks ended and all tasks. `_progress_total` is 0 until `on_preload` returns.
 static var _progress_done: int = 0
@@ -229,6 +235,7 @@ static func _run(job: _JOB, key: String, param: RefCounted, boot: bool) -> void:
 	MessageCore.close_black_box()
 	InputBlockCore.release_all(_REASON)
 	UICore.set_panel_lock(true)
+	_panel_locked = true
 	UICore.close_all_popups()
 	if session != _session:
 		return
@@ -288,10 +295,11 @@ static func _run(job: _JOB, key: String, param: RefCounted, boot: bool) -> void:
 	# the scene resource alive after the scope drops it.
 	loaded = null
 	packed = null
-	if not (instance is SceneBase):
+	# A root of another engine class is not the scene base type, also when its script extends `SceneBase`.
+	if not (instance is SceneBase) or instance.get_class() != "Node":
 		if instance != null:
 			instance.free()
-		_fail(job, "scene root is not SceneBase. scene=" + key)
+		_fail(job, "scene root is not a Node with SceneBase. scene=" + key)
 		return
 	var scene: SceneBase = instance as SceneBase
 	scene.scene_key = key
@@ -303,6 +311,8 @@ static func _run(job: _JOB, key: String, param: RefCounted, boot: bool) -> void:
 	_fit_new_ui_root()
 	_holder.process_mode = Node.PROCESS_MODE_DISABLED
 	_holder.add_child(scene)
+	# The hiding starts before the walk, because hiding and disabling notify scene code, which may add nodes: each node
+	# that `node_added` tells from here on is hidden and disabled there.
 	_hiding = true
 	_hide_tree(_holder)
 
@@ -359,7 +369,9 @@ static func _run(job: _JOB, key: String, param: RefCounted, boot: bool) -> void:
 
 	# 7 start
 	UICore.set_panel_lock(false)
+	_panel_locked = false
 	_show_hidden()
+	_restore_stopped()
 	_holder.process_mode = Node.PROCESS_MODE_INHERIT
 	var ui_root: Control = scene.ui_root
 	if is_instance_valid(ui_root):
@@ -621,11 +633,45 @@ static func _scene_kind() -> int:
 	return ResourceCore.BaseKind.PACKED_SCENE
 
 
-# Hides every top visual node under `node`.
+# Hides every top visual node under `node` and disables every node under it with a `process_mode` of its own. Hiding and disabling notify scene code, which may remove or free a child that the
+# walk has not reached yet: the walk keeps the ids of the children, and a child that is freed or not under the scene
+# holder any more is skipped.
 static func _hide_tree(node: Node) -> void:
+	var ids: PackedInt64Array = PackedInt64Array()
 	for child: Node in node.get_children():
+		ids.append(child.get_instance_id())
+	for id: int in ids:
+		var child: Node = _under_holder(id)
+		if child == null:
+			continue
 		_hide_if_top(child)
+		child = _under_holder(id)
+		if child == null:
+			continue
+		_stop_if_own_mode(child)
+		child = _under_holder(id)
+		if child == null:
+			continue
 		_hide_tree(child)
+
+
+# The node of `id` when it is not freed and is under the scene holder, else null.
+static func _under_holder(id: int) -> Node:
+	var node: Node = instance_from_id(id) as Node
+	if node == null or not is_instance_valid(_holder) or not _holder.is_ancestor_of(node):
+		return null
+	return node
+
+
+# A node with a `process_mode` other than `PROCESS_MODE_INHERIT` does not inherit the disabled scene holder, so it gets
+# `PROCESS_MODE_DISABLED` and is kept with its mode to give it back in stage 7. A node kept before that scene code gave
+# a mode of its own again and added again is kept with the mode read now.
+static func _stop_if_own_mode(node: Node) -> void:
+	var mode: Node.ProcessMode = node.process_mode
+	if mode == Node.PROCESS_MODE_INHERIT or mode == Node.PROCESS_MODE_DISABLED:
+		return
+	_stopped[node.get_instance_id()] = mode
+	node.process_mode = Node.PROCESS_MODE_DISABLED
 
 
 # Hides `node` when it is a top visual node that is visible, and keeps it to show it in stage 7.
@@ -646,6 +692,11 @@ static func _hide_if_top(node: Node) -> void:
 		if spatial.visible and not (parent is Node3D):
 			spatial.visible = false
 			_hidden.append(node)
+	elif node is Window:
+		var window: Window = node as Window
+		if window.visible:
+			window.visible = false
+			_hidden.append(node)
 
 
 # From stage 4 until stage 7 moves it, the scene UI root of the new scene takes the position and size of the safe area
@@ -662,6 +713,17 @@ static func _fit_new_ui_root() -> void:
 	ui_root.size = area.size
 
 
+# Gives every kept node that is not freed its kept mode back without reading its mode. Giving a mode notifies scene
+# code, which may free a kept node that is not reached yet: the node is looked up by its id.
+static func _restore_stopped() -> void:
+	var stopped: Dictionary[int, int] = _stopped
+	_stopped = {}
+	for id: int in stopped:
+		var node: Node = instance_from_id(id) as Node
+		if node != null:
+			node.process_mode = stopped[id] as Node.ProcessMode
+
+
 static func _show_hidden() -> void:
 	_hiding = false
 	for node: Node in _hidden:
@@ -673,6 +735,8 @@ static func _show_hidden() -> void:
 			(node as CanvasItem).visible = true
 		elif node is Node3D:
 			(node as Node3D).visible = true
+		elif node is Window:
+			(node as Window).visible = true
 	_hidden.clear()
 
 
@@ -680,6 +744,7 @@ static func _on_node_added(node: Node) -> void:
 	if not _hiding or not is_instance_valid(_holder) or not _holder.is_ancestor_of(node):
 		return
 	_hide_if_top(node)
+	_stop_if_own_mode(node)
 
 
 # The frame check of the core node: the end of a wait until a real elapsed time.
@@ -709,7 +774,11 @@ static func _end_state(detach: bool) -> void:
 	_clear_effects()
 	if InputBlockCore.is_initialized():
 		_unblock()
-	var objects: Array[Node] = [_ui_root, _scene, _new_scene, _loading_screen, _scene_ui_area, _loading_area, _holder]
+	if _panel_locked and UICore.is_initialized():
+		UICore.set_panel_lock(false)
+	var objects: Array[Node] = [
+		_ui_root, _scene, _new_scene, _loading_screen, _scene_ui_area, _loading_area, _holder,
+	]
 	_is_initialized = false
 	_session = null
 	_node = null
@@ -730,11 +799,13 @@ static func _end_state(detach: bool) -> void:
 	_transition_key = ""
 	_job = null
 	_block_token = 0
+	_panel_locked = false
 	_loading_screen = null
 	_loading_shown = false
 	_shown_at = 0
 	_hiding = false
 	_hidden = []
+	_stopped = {}
 	_progress_done = 0
 	_progress_total = 0
 	_progress_last = 0

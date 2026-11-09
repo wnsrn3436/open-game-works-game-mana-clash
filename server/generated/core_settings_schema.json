@@ -1,0 +1,2933 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "auth.maxCredentialBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.maxDevAccountNameLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "block-report.maxCommentLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "block-report.maxRefBytes": {
+      "type": "integer",
+      "minimum": 84
+    },
+    "chat.maxTextLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxCodeInputBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "gacha.maxHistoryRows": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "guild.maxDescriptionLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxNameLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.maxReceiptBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "item-ledger.bigMaxDigits": {
+      "type": "integer",
+      "minimum": 16
+    },
+    "logging.maxErrorEntries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.maxErrorMessageLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.maxEventParams": {
+      "type": "integer",
+      "minimum": 5
+    },
+    "logging.maxEvents": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.maxStackTraceLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.maxStringLength": {
+      "type": "integer",
+      "minimum": 23
+    },
+    "matchmaker.inputLogMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.resultMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nickname.maxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "play-session.optionsMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "play-session.resultMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "public-profile.maxRequestCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.maxDeviceTokenBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ranking.maxPageSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.maxBodyBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "server-time.silentMarginMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.userLockWaitMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.schemaLockWaitMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.maxShuffleCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.maxPublicReadCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.maxGameStateList": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.userChangeMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.userChangeBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.userChangeRetryInitialMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.userChangeRetryFactorPermille": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "storage.userChangeRetryMaxIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.userChangeRetryMaxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "idempotency.responseRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idempotency.notifyRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idempotency.maxNotifyIdBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NetworkCore.requestTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NetworkCore.maxRetryAgeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "session.signatureWindowMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.securityRepeatWindowMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.maxRepeatedIps": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.reportRateLimitPerMinute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.clientLogRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.serverEventRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.analyticsSendTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.analyticsDeletionIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.analyticsDeletionBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "logging.analyticsDeletionMaxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.externalMaxResponseBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "game-update.maxFileBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "game-update.maxDeployListBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "game-update.keepDeployLists": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "game-update.deployListMaxAgeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "game-update.fileMaxAgeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "game-update.cacheRefreshMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "game-update.cdnTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "item-ledger.historyRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mailbox.defaultExpireMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mailbox.maxExpireMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mailbox.maxArgs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mailbox.maxArgLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mailbox.maxAttachments": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mailbox.maxClaimAllCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "admin-api.maxBodyBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "admin-api.bodyReadTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "admin-api.authFailuresPerMinute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "admin-api.maxStringBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "admin-api.maxSearchRangeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "admin-api.maxSearchRows": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "admin-api.operationIdRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "admin-api.switchCacheMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "admin-api.maxExportBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.accessTokenTtlMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.maxTokenBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.socialVerifyTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.jwksCacheMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.maxAgeYears": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.childAgeYears": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.digitalConsentAgeYears": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.inactiveGuestDeleteAfterMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "auth.guestSweepIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.guestSweepBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.deletionCodeLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.deletionCodeTtlMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "auth.deletionCodeMaxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "auth.deletionAttemptsPerMinute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "routing.bodyReadTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.userRateLimitPerMinute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "routing.ipRateLimitPerMinute": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "routing.corsPreflightMaxAgeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "routing.storageSweepIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "testing.maxFixtureBytes": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "testing.backgroundWaitTimeoutMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "testing.defaultStartAt": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "user-snapshot-clone.maxSnapshotBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "user-snapshot-clone.maxSampleCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "user-snapshot-clone.cloneRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "user-snapshot-clone.sweepIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "notice.maxNotices": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notice.maxStoredNotices": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notice.maxTitleChars": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "notice.maxBodyChars": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "notice.cacheMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "migration.batchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "migration.batchIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "migration.batchLeaseMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "migration.maxRecordedFailures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "migration.testSampleCount": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "push.maxDedupeKeyBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.maxScheduleAheadMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.maxScheduledPerUser": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.maxTargetUserIds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.pollIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.leaseMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.maxDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.sendBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.sendTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.retryIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "push.retryMaxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "push.recordRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "remote-config.maxStringBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "remote-config.maxGroups": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "remote-config.cacheMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.ticketTtlMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.claimWaitMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ads-reward.claimPollIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.maxQueryBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.keyCacheMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.keyRefetchIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ads-reward.keyFetchTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ads-reward.callbackRateLimitPerMinute": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.codeAlphabet": {
+      "type": "string"
+    },
+    "coupon.minCodeLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxCodeLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.generatedCodeLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxBatchCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxRewardItems": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.attemptWindowMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxAttemptsPerWindow": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "play-session.loadoutMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "p2p-signaling.stunUrls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "p2p-signaling.turnTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "p2p-signaling.maxPayloadBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "p2p-signaling.sweepIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.tickMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.maxPlayers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.reportMarginMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.sweepIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.recordRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.applyRetryInitialMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.applyRetryFactorPermille": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "matchmaker.applyRetryMaxIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.applyRetryMaxAttempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.maxFrameBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.frameReadTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.framesPerSecond": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.preAuthAcceptsPerSecond": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.preAuthFramesPerSecond": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.preAuthConnections": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "matchmaker.helloTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.roomCodeAlphabet": {
+      "type": "string"
+    },
+    "matchmaker.roomCodeLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.lockstepMaxDurationMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "nickname.minLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "nickname.allowedScripts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "nickname.allowedSymbols": {
+      "type": "string"
+    },
+    "nickname.changeCooldownMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nickname.maxLookupCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "public-profile.maxProfileBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "public-profile.lastActiveGranularityMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "block-report.maxBlocks": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "block-report.reportWindowMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "block-report.maxReportsPerWindow": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "block-report.reportRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "block-report.maxEvidenceBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxMembers": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxMembersLimit": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxOfficers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "guild.minNameLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxSearchResults": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxJoinRequestsPerUser": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.maxJoinRequestsPerGuild": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "guild.rejoinCooldownMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "guild.leaderInactiveMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "friend.maxFriends": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "friend.maxSentRequests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "friend.maxReceivedRequests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "friend.maxSearchResults": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.allowChild": {
+      "type": "boolean"
+    },
+    "chat.worldChannelCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.minIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.maxFetchCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "chat.pollIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.retentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.maxChannelListCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "chat.channelPollIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "chat.maxSystemTextBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.maxTransactionIdLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.verifyTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.notifyMaxBodyBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.notifyBodyReadTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.subscriptionSyncIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "iap.withdrawnRecordRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "iap.fakeSubscriptionPeriodMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "loot-table.maxRollCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "gacha.historyRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.aroundCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ranking.topCacheMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.maxDisplayBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ranking.seasonCheckIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ranking.seasonJobLeaseMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.rewardRetryInitialMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.rewardRetryFactorPermille": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "ranking.rewardRetryMaxIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.rewardRetryMaxAttempts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ranking.seasonRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "storage.dbMaxConnections": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "InputBlockCore.maxDurationMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "LogCore.fileMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.fileMaxCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.fileWriteIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "LogCore.sendIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "LogCore.errorQueueMaxCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.eventQueueMaxCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.sendTextMaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.sendTagMaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.eventNameMaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.eventParamMaxCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.eventParamNameMaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LogCore.eventStringMaxLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LocalDataCore.writeIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "LocalDataCore.fileMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "DataCore.downloadedFileMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "MessageCore.toastResource": {
+      "type": "string"
+    },
+    "MessageCore.blackBoxResource": {
+      "type": "string"
+    },
+    "MessageCore.toastDurationMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "MessageCore.blackBoxDurationMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "MessageCore.toastEnterTween": {
+      "type": "string"
+    },
+    "MessageCore.toastExitTween": {
+      "type": "string"
+    },
+    "MessageCore.blackBoxEnterTween": {
+      "type": "string"
+    },
+    "MessageCore.blackBoxExitTween": {
+      "type": "string"
+    },
+    "BootstrapCore.realtimeRelayOnly": {
+      "type": "boolean"
+    },
+    "NetworkCore.retryCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NetworkCore.retryDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NetworkCore.retryDelayFactorPermille": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "NetworkCore.retryDelayMaxMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NetworkCore.loadingIconDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NetworkCore.responseMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NetworkCore.devRequestRecordCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "GameUpdateCore.stallTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "GameUpdateCore.deployListMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "GameUpdateCore.signatureMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "GameUpdateCore.fileMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NoticeCore.cacheTtlMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NoticeCore.maintenanceRetryMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NoticeCore.imageMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NoticeCore.imageTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ResolutionCore.fillColor": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "ResolutionCore.fillImage": {
+      "type": "string"
+    },
+    "SafeAreaCore.rotationCheckIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "LocalizationCore.downloadedFileMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "LocalizationCore.maxFormattedLength": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "PoolCore.defaultPrefillCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "PoolCore.maxPoolSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "AuthCore.tokenRefreshMarginMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "AuthCore.webLinkPromptLogins": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "PushCore.deviceTokenTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "AuthCore.desktopSignInTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "TimeCore.reachMarginMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "TimeCore.jumpThresholdMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "CutsceneCore.typingIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "CutsceneCore.autoAdvanceDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "CutsceneCore.fastForwardDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "CutsceneCore.lineHistoryMaxCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "SceneCore.loadingMinDisplayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "SceneCore.prepareRetryCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.longPressMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.maxJudgePointers": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.maxKeysPerAction": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.maxPadButtonsPerAction": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.moveThreshold": {
+      "type": "number",
+      "minimum": 0
+    },
+    "InputCore.padAxisWaitThreshold": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    },
+    "InputCore.swipeMaxMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "InputCore.swipeMinDistance": {
+      "type": "number",
+      "minimum": 0
+    },
+    "SoundCore.bgmCrossfadeMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "SoundCore.maxConcurrent": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "SoundCore.maxConcurrentPerKey": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "SoundCore.masterPeakMaxDbtp": {
+      "type": "number",
+      "maximum": 0
+    },
+    "SoundCore.masterLimiterMarginDb": {
+      "type": "number",
+      "minimum": 0
+    },
+    "SoundCore.busLoudnessLufs": {
+      "type": "object",
+      "properties": {
+        "Bgm": {
+          "type": "number"
+        },
+        "Sfx": {
+          "type": "number"
+        },
+        "Voice": {
+          "type": "number"
+        },
+        "Ui": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "Bgm",
+        "Sfx",
+        "Voice",
+        "Ui"
+      ],
+      "additionalProperties": false
+    },
+    "SoundCore.busPeakMaxDbtp": {
+      "type": "object",
+      "properties": {
+        "Bgm": {
+          "type": "number"
+        },
+        "Sfx": {
+          "type": "number"
+        },
+        "Voice": {
+          "type": "number"
+        },
+        "Ui": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "Bgm",
+        "Sfx",
+        "Voice",
+        "Ui"
+      ],
+      "additionalProperties": false
+    },
+    "SoundCore.devHapticLogCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "RealtimeCore.connectTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RealtimeCore.reconnectTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RealtimeCore.backgroundTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RealtimeCore.messageMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "RealtimeCore.pendingMessageMax": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "RealtimeCore.simLatencyMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "RealtimeCore.simJitterMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "RealtimeCore.simLossPermille": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000,
+      "x-owner": "human"
+    },
+    "TweenCore.maxDurationMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "TweenCore.maxRepeatCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "UICore.buttonClickIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "UICore.dimResource": {
+      "type": "string"
+    },
+    "UICore.dimOpacity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "UICore.loadingIconResource": {
+      "type": "string"
+    },
+    "UICore.systemPopupResource": {
+      "type": "string"
+    },
+    "UICore.scrollLoadThresholdItems": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "UICore.keyboardGap": {
+      "type": "number",
+      "minimum": 0
+    },
+    "UICore.systemPopupScrollStep": {
+      "type": "number",
+      "minimum": 0
+    },
+    "QualityCore.levels": {
+      "type": "object",
+      "properties": {
+        "Low": {
+          "type": "object",
+          "properties": {
+            "renderScalePermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "shadow": {
+              "type": "string",
+              "enum": [
+                "Off",
+                "Low",
+                "High"
+              ]
+            },
+            "effectDensityPermille": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "frameLimitPermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "renderScalePermille",
+            "shadow",
+            "effectDensityPermille",
+            "frameLimitPermille"
+          ],
+          "additionalProperties": false
+        },
+        "Medium": {
+          "type": "object",
+          "properties": {
+            "renderScalePermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "shadow": {
+              "type": "string",
+              "enum": [
+                "Off",
+                "Low",
+                "High"
+              ]
+            },
+            "effectDensityPermille": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "frameLimitPermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "renderScalePermille",
+            "shadow",
+            "effectDensityPermille",
+            "frameLimitPermille"
+          ],
+          "additionalProperties": false
+        },
+        "High": {
+          "type": "object",
+          "properties": {
+            "renderScalePermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "shadow": {
+              "type": "string",
+              "enum": [
+                "Off",
+                "Low",
+                "High"
+              ]
+            },
+            "effectDensityPermille": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "frameLimitPermille": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "renderScalePermille",
+            "shadow",
+            "effectDensityPermille",
+            "frameLimitPermille"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "additionalProperties": false
+    },
+    "QualityCore.deviceClasses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": [
+              "Medium",
+              "High"
+            ]
+          },
+          "minMemoryBytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minProcessorCount": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "level",
+          "minMemoryBytes",
+          "minProcessorCount"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "QualityCore.autoDowngradeEnabled": {
+      "type": "boolean"
+    },
+    "QualityCore.autoDowngradeWindowMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "QualityCore.autoDowngradeFpsPermille": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "QualityCore.hitchFrameMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "AdCore.fakePresentMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "BadgeCore.refreshIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "BadgeCore.maxDisplayCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "BadgeCore.dotResource": {
+      "type": "string"
+    },
+    "CameraCore.minZoom": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "CameraCore.maxZoom": {
+      "type": "number",
+      "minimum": 0
+    },
+    "CameraCore.shakeMaxOffset": {
+      "type": "number",
+      "minimum": 0
+    },
+    "CameraCore.shakeMaxRotationDeg": {
+      "type": "number",
+      "minimum": 0
+    },
+    "CameraCore.shakeFrequencyHz": {
+      "type": "number",
+      "minimum": 0
+    },
+    "CameraCore.shakeDecayPerSecond": {
+      "type": "number",
+      "minimum": 0
+    },
+    "PaymentCore.storeCallTimeoutMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "PaymentCore.deliveryRetryDelayMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RequirementCore.maxBatchRounds": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RequirementCore.timeRecheckMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "AccessibilityCore.textScales": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "contains": {
+        "const": 1000
+      },
+      "x-owner": "human"
+    },
+    "AccessibilityCore.subtitlesDefault": {
+      "type": "boolean"
+    },
+    "AccessibilityCore.colorFilterEnabled": {
+      "type": "boolean"
+    },
+    "AccessibilityCore.colorMatrices": {
+      "type": "object",
+      "properties": {
+        "Protanopia": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 9,
+          "maxItems": 9
+        },
+        "Deuteranopia": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 9,
+          "maxItems": 9
+        },
+        "Tritanopia": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 9,
+          "maxItems": 9
+        }
+      },
+      "required": [
+        "Protanopia",
+        "Deuteranopia",
+        "Tritanopia"
+      ],
+      "additionalProperties": false
+    },
+    "AccessibilityCore.reducedShakePermille": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "AccessibilityCore.reducedFlashMaxOpacity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "AccessibilityCore.subtitleWidthPermille": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000
+    },
+    "AccessibilityCore.subtitleBoxOpacity": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "AccessibilityCore.subtitleFontSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "AccessibilityCore.subtitlePadding": {
+      "type": "number",
+      "minimum": 0
+    },
+    "AccessibilityCore.subtitleBottomMargin": {
+      "type": "number",
+      "minimum": 0
+    },
+    "VirtualPadCore.deadZonePermille": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "VirtualPadCore.sensitivityPermille": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "TutorialCore.anchorWaitWarnMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "UnitTestCore.testTimeLimitMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "UnitTestCore.runTimeLimitMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "NativeUiCore.reviewMinIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "NativeUiCore.shareTextMaxChars": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "NativeUiCore.shareImageMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "ChatCore.maxWatchedChannels": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ChatCore.failureRetryMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "RemoteConfigCore.refreshIntervalMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "QACore.commandTimeoutMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "QACore.channelMessageMaxBytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.statsRefreshMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.textMaxChars": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.videoFps": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "QACore.videoMaxMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "QACore.feedbackWindowMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "QACore.idleThresholdMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "QACore.telemetryMaxRecords": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "QACore.softlockBlockMs": {
+      "type": "object",
+      "properties": {
+        "scene": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cutscene": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tutorial": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ad": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "boot": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "scene",
+        "cutscene",
+        "tutorial",
+        "ad",
+        "boot"
+      ],
+      "additionalProperties": false,
+      "x-owner": "human"
+    },
+    "QACore.softlockNoResponseMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "QACore.softlockNoResponseInputs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "QACore.stepMaxMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.frameIntervalMaxCount": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "QACore.rewardPresentationWindowMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "storage.dbAnswerWaitMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "AdCore.sdkCallTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "AuthCore.storageCallTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "PushCore.permissionReadTimeoutMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.schemaAnswerWaitMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "InputCore.padAxisDeadzone": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 1
+    },
+    "QACore.touchIndexCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.timeScaleMaxPermille": {
+      "type": "integer",
+      "minimum": 1000
+    },
+    "LocalizationCore.bodyFontWeight": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "LocalizationCore.headingFontWeight": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000
+    },
+    "SoundCore.sfxPitchVariationCents": {
+      "type": "number",
+      "minimum": 0
+    },
+    "SoundCore.sfxVolumeVariationDb": {
+      "type": "number",
+      "minimum": 0
+    },
+    "SoundCore.voiceDuckDb": {
+      "type": "number",
+      "minimum": 0
+    },
+    "SoundCore.voiceDuckAttackMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "SoundCore.voiceDuckReleaseMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "public-profile.findPerMinute": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "QACore.captureJpgQuality": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 1000,
+      "x-owner": "human"
+    },
+    "UnitTestCore.startTimeLimitMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "storage.sweepBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "storage.sweepTableBudgetMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "coupon.maxCodePicks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.roomCodeMaxPicks": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "InputCore.padAxisSensitivities": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10000
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true,
+      "contains": {
+        "const": 1000
+      }
+    },
+    "auth.loginTokenIdleTtlMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.refundLookupIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.refundLookupBackMs": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2505600000
+    },
+    "iap.refundLookupPageCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.refundRetryCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "iap.refundRetryBatchSize": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "item-ledger.onceKeyRetentionMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "logging.metricsDurationBucketsMs": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1
+    },
+    "logging.alertWindowMs": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "logging.alertMinRequests": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "logging.alertErrorRatioPermille": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "x-owner": "human"
+    },
+    "logging.alertSlowRequestMs": {
+      "type": "integer",
+      "minimum": 0,
+      "x-owner": "human"
+    },
+    "logging.alertSlowRatioPermille": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "x-owner": "human"
+    },
+    "logging.alertErrorLogCount": {
+      "type": "integer",
+      "minimum": 1,
+      "x-owner": "human"
+    },
+    "matchmaker.flagWindowMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.flagDisagreeCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.flagForfeitCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "matchmaker.flagMissingCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.requestWorkers": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.opsReportIntervalMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "routing.readyMaxReportAgeMs": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "termsPopup": {
+      "type": "string"
+    },
+    "agePopup": {
+      "type": "string"
+    },
+    "privacyPopup": {
+      "type": "string"
+    },
+    "consent.ageConfirmation": {
+      "type": "boolean"
+    },
+    "consent.privacyChoices": {
+      "type": "boolean"
+    },
+    "consent.version": {
+      "type": "integer"
+    },
+    "consent.trackingRequest": {
+      "type": "boolean"
+    },
+    "pushConsent.adPush": {
+      "type": "boolean"
+    },
+    "pushConsentPopup": {
+      "type": "string"
+    },
+    "loginGoogle.serverClientId": {
+      "type": "string"
+    },
+    "loginGoogle.iosClientId": {
+      "type": "string"
+    },
+    "loginGoogle.desktopClientId": {
+      "type": "string"
+    },
+    "titleScene": {
+      "type": "string"
+    },
+    "firstScene": {
+      "type": "string"
+    },
+    "environments.DEV.adapters": {
+      "type": "object"
+    },
+    "environments.STG.adapters": {
+      "type": "object"
+    },
+    "environments.PROD.adapters": {
+      "type": "object"
+    },
+    "environments.DEV.adUnits": {
+      "type": "object"
+    },
+    "environments.STG.adUnits": {
+      "type": "object"
+    },
+    "environments.PROD.adUnits": {
+      "type": "object"
+    },
+    "sourceLanguage": {
+      "type": "string"
+    },
+    "supportedLanguages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "baseResolution": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "maxResolution": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "loadingScreen": {
+      "type": "string"
+    },
+    "dailyResetOffsetMs": {
+      "type": "integer"
+    },
+    "environments.DEV.adminOperators": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "environments.STG.adminOperators": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "environments.PROD.adminOperators": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "environments.DEV.adminAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.STG.adminAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.PROD.adminAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.DEV.secrets.accessTokenKey": {
+      "type": "string"
+    },
+    "environments.STG.secrets.accessTokenKey": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.accessTokenKey": {
+      "type": "string"
+    },
+    "termsDocuments": {
+      "type": "object"
+    },
+    "appId": {
+      "type": "string"
+    },
+    "appleTeamId": {
+      "type": "string"
+    },
+    "loginApple.keyId": {
+      "type": "string"
+    },
+    "environments.DEV.secrets.loginApple": {
+      "type": "string"
+    },
+    "environments.STG.secrets.loginApple": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.loginApple": {
+      "type": "string"
+    },
+    "environments.DEV.secrets.loginGoogleDesktop": {
+      "type": "string"
+    },
+    "environments.STG.secrets.loginGoogleDesktop": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.loginGoogleDesktop": {
+      "type": "string"
+    },
+    "consent.ageBandBoundaries": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "consent.minimumAge": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "environments.DEV.adapters.login-apple": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.STG.adapters.login-apple": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.PROD.adapters.login-apple": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.DEV.adapters.login-google": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.STG.adapters.login-google": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.PROD.adapters.login-google": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.DEV.serverUrl": {
+      "type": "string"
+    },
+    "environments.STG.serverUrl": {
+      "type": "string"
+    },
+    "environments.PROD.serverUrl": {
+      "type": "string"
+    },
+    "environments.DEV.secrets.devAccess": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.STG.secrets.devAccess": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.PROD.secrets.devAccess": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.DEV.devAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.STG.devAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.PROD.devAllowedCidrs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.DEV.secrets.updateSigningKey": {
+      "type": "string"
+    },
+    "environments.STG.secrets.updateSigningKey": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.updateSigningKey": {
+      "type": "string"
+    },
+    "environments.DEV.updatePublicKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.STG.updatePublicKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.PROD.updatePublicKeys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.DEV.secrets.cdn": {
+      "type": "string"
+    },
+    "environments.STG.secrets.cdn": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.cdn": {
+      "type": "string"
+    },
+    "environments.DEV.cdnR2": {
+      "type": "object"
+    },
+    "environments.STG.cdnR2": {
+      "type": "object"
+    },
+    "environments.PROD.cdnR2": {
+      "type": "object"
+    },
+    "environments.DEV.adapters.cdn": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.STG.adapters.cdn": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.PROD.adapters.cdn": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.DEV.adapters.analytics": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.STG.adapters.analytics": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.PROD.adapters.analytics": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "environments.DEV.analyticsGa4.measurementId": {
+      "type": "string"
+    },
+    "environments.STG.analyticsGa4.measurementId": {
+      "type": "string"
+    },
+    "environments.PROD.analyticsGa4.measurementId": {
+      "type": "string"
+    },
+    "environments.DEV.secrets.analytics": {
+      "type": "string"
+    },
+    "environments.STG.secrets.analytics": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.analytics": {
+      "type": "string"
+    },
+    "environments.DEV.analyticsGa4.propertyId": {
+      "type": "string"
+    },
+    "environments.STG.analyticsGa4.propertyId": {
+      "type": "string"
+    },
+    "environments.PROD.analyticsGa4.propertyId": {
+      "type": "string"
+    },
+    "environments.DEV.analyticsGa4.serviceAccountEmail": {
+      "type": "string"
+    },
+    "environments.STG.analyticsGa4.serviceAccountEmail": {
+      "type": "string"
+    },
+    "environments.PROD.analyticsGa4.serviceAccountEmail": {
+      "type": "string"
+    },
+    "environments.DEV.secrets.analyticsServiceAccount": {
+      "type": "string"
+    },
+    "environments.STG.secrets.analyticsServiceAccount": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.analyticsServiceAccount": {
+      "type": "string"
+    },
+    "environments.DEV.trustedProxyCount": {
+      "type": "integer"
+    },
+    "environments.STG.trustedProxyCount": {
+      "type": "integer"
+    },
+    "environments.PROD.trustedProxyCount": {
+      "type": "integer"
+    },
+    "environments.DEV.corsAllowedOrigins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.STG.corsAllowedOrigins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.PROD.corsAllowedOrigins": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "environments.DEV.secrets.db": {
+      "type": "string"
+    },
+    "environments.STG.secrets.db": {
+      "type": "string"
+    },
+    "environments.PROD.secrets.db": {
+      "type": "string"
+    },
+    "coreVersion": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "auth.maxCredentialBytes",
+    "auth.maxDevAccountNameLength",
+    "block-report.maxCommentLength",
+    "block-report.maxRefBytes",
+    "chat.maxTextLength",
+    "coupon.maxCodeInputBytes",
+    "gacha.maxHistoryRows",
+    "guild.maxDescriptionLength",
+    "guild.maxNameLength",
+    "iap.maxReceiptBytes",
+    "item-ledger.bigMaxDigits",
+    "logging.maxErrorEntries",
+    "logging.maxErrorMessageLength",
+    "logging.maxEventParams",
+    "logging.maxEvents",
+    "logging.maxStackTraceLength",
+    "logging.maxStringLength",
+    "matchmaker.inputLogMaxBytes",
+    "matchmaker.resultMaxBytes",
+    "nickname.maxLength",
+    "play-session.optionsMaxBytes",
+    "play-session.resultMaxBytes",
+    "public-profile.maxRequestCount",
+    "push.maxDeviceTokenBytes",
+    "ranking.maxPageSize",
+    "routing.maxBodyBytes",
+    "server-time.silentMarginMs",
+    "storage.userLockWaitMs",
+    "storage.schemaLockWaitMs",
+    "storage.maxShuffleCount",
+    "storage.maxPublicReadCount",
+    "storage.maxGameStateList",
+    "storage.userChangeMaxBytes",
+    "storage.userChangeBatchSize",
+    "storage.userChangeRetryInitialMs",
+    "storage.userChangeRetryFactorPermille",
+    "storage.userChangeRetryMaxIntervalMs",
+    "storage.userChangeRetryMaxAttempts",
+    "idempotency.responseRetentionMs",
+    "idempotency.notifyRetentionMs",
+    "idempotency.maxNotifyIdBytes",
+    "NetworkCore.requestTimeoutMs",
+    "NetworkCore.maxRetryAgeMs",
+    "session.signatureWindowMs",
+    "logging.securityRepeatWindowMs",
+    "logging.maxRepeatedIps",
+    "logging.reportRateLimitPerMinute",
+    "logging.clientLogRetentionMs",
+    "logging.serverEventRetentionMs",
+    "logging.analyticsSendTimeoutMs",
+    "logging.analyticsDeletionIntervalMs",
+    "logging.analyticsDeletionBatchSize",
+    "logging.analyticsDeletionMaxAttempts",
+    "routing.externalMaxResponseBytes",
+    "game-update.maxFileBytes",
+    "game-update.maxDeployListBytes",
+    "game-update.keepDeployLists",
+    "game-update.deployListMaxAgeMs",
+    "game-update.fileMaxAgeMs",
+    "game-update.cacheRefreshMs",
+    "game-update.cdnTimeoutMs",
+    "item-ledger.historyRetentionMs",
+    "mailbox.defaultExpireMs",
+    "mailbox.maxExpireMs",
+    "mailbox.maxArgs",
+    "mailbox.maxArgLength",
+    "mailbox.maxAttachments",
+    "mailbox.maxClaimAllCount",
+    "admin-api.maxBodyBytes",
+    "admin-api.bodyReadTimeoutMs",
+    "admin-api.authFailuresPerMinute",
+    "admin-api.maxStringBytes",
+    "admin-api.maxSearchRangeMs",
+    "admin-api.maxSearchRows",
+    "admin-api.operationIdRetentionMs",
+    "admin-api.switchCacheMs",
+    "admin-api.maxExportBytes",
+    "auth.accessTokenTtlMs",
+    "auth.maxTokenBytes",
+    "auth.socialVerifyTimeoutMs",
+    "auth.jwksCacheMs",
+    "auth.maxAgeYears",
+    "auth.childAgeYears",
+    "auth.digitalConsentAgeYears",
+    "auth.inactiveGuestDeleteAfterMs",
+    "auth.guestSweepIntervalMs",
+    "auth.guestSweepBatchSize",
+    "auth.deletionCodeLength",
+    "auth.deletionCodeTtlMs",
+    "auth.deletionCodeMaxAttempts",
+    "auth.deletionAttemptsPerMinute",
+    "routing.bodyReadTimeoutMs",
+    "routing.userRateLimitPerMinute",
+    "routing.ipRateLimitPerMinute",
+    "routing.corsPreflightMaxAgeMs",
+    "routing.storageSweepIntervalMs",
+    "testing.maxFixtureBytes",
+    "testing.backgroundWaitTimeoutMs",
+    "testing.defaultStartAt",
+    "user-snapshot-clone.maxSnapshotBytes",
+    "user-snapshot-clone.maxSampleCount",
+    "user-snapshot-clone.cloneRetentionMs",
+    "user-snapshot-clone.sweepIntervalMs",
+    "notice.maxNotices",
+    "notice.maxStoredNotices",
+    "notice.maxTitleChars",
+    "notice.maxBodyChars",
+    "notice.cacheMs",
+    "migration.batchSize",
+    "migration.batchIntervalMs",
+    "migration.batchLeaseMs",
+    "migration.maxRecordedFailures",
+    "migration.testSampleCount",
+    "push.maxDedupeKeyBytes",
+    "push.maxScheduleAheadMs",
+    "push.maxScheduledPerUser",
+    "push.maxTargetUserIds",
+    "push.pollIntervalMs",
+    "push.leaseMs",
+    "push.maxDelayMs",
+    "push.sendBatchSize",
+    "push.sendTimeoutMs",
+    "push.retryIntervalMs",
+    "push.retryMaxAttempts",
+    "push.recordRetentionMs",
+    "remote-config.maxStringBytes",
+    "remote-config.maxGroups",
+    "remote-config.cacheMs",
+    "ads-reward.ticketTtlMs",
+    "ads-reward.claimWaitMs",
+    "ads-reward.claimPollIntervalMs",
+    "ads-reward.maxQueryBytes",
+    "ads-reward.keyCacheMs",
+    "ads-reward.keyRefetchIntervalMs",
+    "ads-reward.keyFetchTimeoutMs",
+    "ads-reward.callbackRateLimitPerMinute",
+    "coupon.codeAlphabet",
+    "coupon.minCodeLength",
+    "coupon.maxCodeLength",
+    "coupon.generatedCodeLength",
+    "coupon.maxBatchCount",
+    "coupon.maxRewardItems",
+    "coupon.attemptWindowMs",
+    "coupon.maxAttemptsPerWindow",
+    "play-session.loadoutMaxBytes",
+    "p2p-signaling.stunUrls",
+    "p2p-signaling.turnTimeoutMs",
+    "p2p-signaling.maxPayloadBytes",
+    "p2p-signaling.sweepIntervalMs",
+    "matchmaker.tickMs",
+    "matchmaker.maxPlayers",
+    "matchmaker.reportMarginMs",
+    "matchmaker.sweepIntervalMs",
+    "matchmaker.recordRetentionMs",
+    "matchmaker.applyRetryInitialMs",
+    "matchmaker.applyRetryFactorPermille",
+    "matchmaker.applyRetryMaxIntervalMs",
+    "matchmaker.applyRetryMaxAttempts",
+    "matchmaker.maxFrameBytes",
+    "matchmaker.frameReadTimeoutMs",
+    "matchmaker.framesPerSecond",
+    "matchmaker.preAuthAcceptsPerSecond",
+    "matchmaker.preAuthFramesPerSecond",
+    "matchmaker.preAuthConnections",
+    "matchmaker.helloTimeoutMs",
+    "matchmaker.roomCodeAlphabet",
+    "matchmaker.roomCodeLength",
+    "matchmaker.lockstepMaxDurationMs",
+    "nickname.minLength",
+    "nickname.allowedScripts",
+    "nickname.allowedSymbols",
+    "nickname.changeCooldownMs",
+    "nickname.maxLookupCount",
+    "public-profile.maxProfileBytes",
+    "public-profile.lastActiveGranularityMs",
+    "block-report.maxBlocks",
+    "block-report.reportWindowMs",
+    "block-report.maxReportsPerWindow",
+    "block-report.reportRetentionMs",
+    "block-report.maxEvidenceBytes",
+    "guild.maxMembers",
+    "guild.maxMembersLimit",
+    "guild.maxOfficers",
+    "guild.minNameLength",
+    "guild.maxSearchResults",
+    "guild.maxJoinRequestsPerUser",
+    "guild.maxJoinRequestsPerGuild",
+    "guild.rejoinCooldownMs",
+    "guild.leaderInactiveMs",
+    "friend.maxFriends",
+    "friend.maxSentRequests",
+    "friend.maxReceivedRequests",
+    "friend.maxSearchResults",
+    "chat.allowChild",
+    "chat.worldChannelCount",
+    "chat.minIntervalMs",
+    "chat.maxFetchCount",
+    "chat.pollIntervalMs",
+    "chat.retentionMs",
+    "chat.maxChannelListCount",
+    "chat.channelPollIntervalMs",
+    "chat.maxSystemTextBytes",
+    "iap.maxTransactionIdLength",
+    "iap.verifyTimeoutMs",
+    "iap.notifyMaxBodyBytes",
+    "iap.notifyBodyReadTimeoutMs",
+    "iap.subscriptionSyncIntervalMs",
+    "iap.withdrawnRecordRetentionMs",
+    "iap.fakeSubscriptionPeriodMs",
+    "loot-table.maxRollCount",
+    "gacha.historyRetentionMs",
+    "ranking.aroundCount",
+    "ranking.topCacheMs",
+    "ranking.maxDisplayBytes",
+    "ranking.seasonCheckIntervalMs",
+    "ranking.seasonJobLeaseMs",
+    "ranking.rewardRetryInitialMs",
+    "ranking.rewardRetryFactorPermille",
+    "ranking.rewardRetryMaxIntervalMs",
+    "ranking.rewardRetryMaxAttempts",
+    "ranking.seasonRetentionMs",
+    "storage.dbMaxConnections",
+    "InputBlockCore.maxDurationMs",
+    "LogCore.fileMaxBytes",
+    "LogCore.fileMaxCount",
+    "LogCore.fileWriteIntervalMs",
+    "LogCore.sendIntervalMs",
+    "LogCore.errorQueueMaxCount",
+    "LogCore.eventQueueMaxCount",
+    "LogCore.sendTextMaxLength",
+    "LogCore.sendTagMaxLength",
+    "LogCore.eventNameMaxLength",
+    "LogCore.eventParamMaxCount",
+    "LogCore.eventParamNameMaxLength",
+    "LogCore.eventStringMaxLength",
+    "LocalDataCore.writeIntervalMs",
+    "LocalDataCore.fileMaxBytes",
+    "DataCore.downloadedFileMaxBytes",
+    "MessageCore.toastResource",
+    "MessageCore.blackBoxResource",
+    "MessageCore.toastDurationMs",
+    "MessageCore.blackBoxDurationMs",
+    "MessageCore.toastEnterTween",
+    "MessageCore.toastExitTween",
+    "MessageCore.blackBoxEnterTween",
+    "MessageCore.blackBoxExitTween",
+    "BootstrapCore.realtimeRelayOnly",
+    "NetworkCore.retryCount",
+    "NetworkCore.retryDelayMs",
+    "NetworkCore.retryDelayFactorPermille",
+    "NetworkCore.retryDelayMaxMs",
+    "NetworkCore.loadingIconDelayMs",
+    "NetworkCore.responseMaxBytes",
+    "NetworkCore.devRequestRecordCount",
+    "GameUpdateCore.stallTimeoutMs",
+    "GameUpdateCore.deployListMaxBytes",
+    "GameUpdateCore.signatureMaxBytes",
+    "GameUpdateCore.fileMaxBytes",
+    "NoticeCore.cacheTtlMs",
+    "NoticeCore.maintenanceRetryMs",
+    "NoticeCore.imageMaxBytes",
+    "NoticeCore.imageTimeoutMs",
+    "ResolutionCore.fillColor",
+    "ResolutionCore.fillImage",
+    "SafeAreaCore.rotationCheckIntervalMs",
+    "LocalizationCore.downloadedFileMaxBytes",
+    "LocalizationCore.maxFormattedLength",
+    "PoolCore.defaultPrefillCount",
+    "PoolCore.maxPoolSize",
+    "AuthCore.tokenRefreshMarginMs",
+    "AuthCore.webLinkPromptLogins",
+    "PushCore.deviceTokenTimeoutMs",
+    "AuthCore.desktopSignInTimeoutMs",
+    "TimeCore.reachMarginMs",
+    "TimeCore.jumpThresholdMs",
+    "CutsceneCore.typingIntervalMs",
+    "CutsceneCore.autoAdvanceDelayMs",
+    "CutsceneCore.fastForwardDelayMs",
+    "CutsceneCore.lineHistoryMaxCount",
+    "SceneCore.loadingMinDisplayMs",
+    "SceneCore.prepareRetryCount",
+    "InputCore.longPressMs",
+    "InputCore.maxJudgePointers",
+    "InputCore.maxKeysPerAction",
+    "InputCore.maxPadButtonsPerAction",
+    "InputCore.moveThreshold",
+    "InputCore.padAxisWaitThreshold",
+    "InputCore.swipeMaxMs",
+    "InputCore.swipeMinDistance",
+    "SoundCore.bgmCrossfadeMs",
+    "SoundCore.maxConcurrent",
+    "SoundCore.maxConcurrentPerKey",
+    "SoundCore.masterPeakMaxDbtp",
+    "SoundCore.masterLimiterMarginDb",
+    "SoundCore.busLoudnessLufs",
+    "SoundCore.busPeakMaxDbtp",
+    "SoundCore.devHapticLogCount",
+    "RealtimeCore.connectTimeoutMs",
+    "RealtimeCore.reconnectTimeoutMs",
+    "RealtimeCore.backgroundTimeoutMs",
+    "RealtimeCore.messageMaxBytes",
+    "RealtimeCore.pendingMessageMax",
+    "RealtimeCore.simLatencyMs",
+    "RealtimeCore.simJitterMs",
+    "RealtimeCore.simLossPermille",
+    "TweenCore.maxDurationMs",
+    "TweenCore.maxRepeatCount",
+    "UICore.buttonClickIntervalMs",
+    "UICore.dimResource",
+    "UICore.dimOpacity",
+    "UICore.loadingIconResource",
+    "UICore.systemPopupResource",
+    "UICore.scrollLoadThresholdItems",
+    "UICore.keyboardGap",
+    "UICore.systemPopupScrollStep",
+    "QualityCore.levels",
+    "QualityCore.deviceClasses",
+    "QualityCore.autoDowngradeEnabled",
+    "QualityCore.autoDowngradeWindowMs",
+    "QualityCore.autoDowngradeFpsPermille",
+    "QualityCore.hitchFrameMs",
+    "AdCore.fakePresentMs",
+    "BadgeCore.refreshIntervalMs",
+    "BadgeCore.maxDisplayCount",
+    "BadgeCore.dotResource",
+    "CameraCore.minZoom",
+    "CameraCore.maxZoom",
+    "CameraCore.shakeMaxOffset",
+    "CameraCore.shakeMaxRotationDeg",
+    "CameraCore.shakeFrequencyHz",
+    "CameraCore.shakeDecayPerSecond",
+    "PaymentCore.storeCallTimeoutMs",
+    "PaymentCore.deliveryRetryDelayMs",
+    "RequirementCore.maxBatchRounds",
+    "RequirementCore.timeRecheckMs",
+    "AccessibilityCore.textScales",
+    "AccessibilityCore.subtitlesDefault",
+    "AccessibilityCore.colorFilterEnabled",
+    "AccessibilityCore.colorMatrices",
+    "AccessibilityCore.reducedShakePermille",
+    "AccessibilityCore.reducedFlashMaxOpacity",
+    "AccessibilityCore.subtitleWidthPermille",
+    "AccessibilityCore.subtitleBoxOpacity",
+    "AccessibilityCore.subtitleFontSize",
+    "AccessibilityCore.subtitlePadding",
+    "AccessibilityCore.subtitleBottomMargin",
+    "VirtualPadCore.deadZonePermille",
+    "VirtualPadCore.sensitivityPermille",
+    "TutorialCore.anchorWaitWarnMs",
+    "UnitTestCore.testTimeLimitMs",
+    "UnitTestCore.runTimeLimitMs",
+    "NativeUiCore.reviewMinIntervalMs",
+    "NativeUiCore.shareTextMaxChars",
+    "NativeUiCore.shareImageMaxBytes",
+    "ChatCore.maxWatchedChannels",
+    "ChatCore.failureRetryMs",
+    "RemoteConfigCore.refreshIntervalMs",
+    "QACore.commandTimeoutMs",
+    "QACore.channelMessageMaxBytes",
+    "QACore.statsRefreshMs",
+    "QACore.textMaxChars",
+    "QACore.videoFps",
+    "QACore.videoMaxMs",
+    "QACore.feedbackWindowMs",
+    "QACore.idleThresholdMs",
+    "QACore.telemetryMaxRecords",
+    "QACore.softlockBlockMs",
+    "QACore.softlockNoResponseMs",
+    "QACore.softlockNoResponseInputs",
+    "QACore.stepMaxMs",
+    "QACore.frameIntervalMaxCount",
+    "QACore.rewardPresentationWindowMs",
+    "storage.dbAnswerWaitMs",
+    "AdCore.sdkCallTimeoutMs",
+    "AuthCore.storageCallTimeoutMs",
+    "PushCore.permissionReadTimeoutMs",
+    "storage.schemaAnswerWaitMs",
+    "InputCore.padAxisDeadzone",
+    "QACore.touchIndexCount",
+    "QACore.timeScaleMaxPermille",
+    "LocalizationCore.bodyFontWeight",
+    "LocalizationCore.headingFontWeight",
+    "SoundCore.sfxPitchVariationCents",
+    "SoundCore.sfxVolumeVariationDb",
+    "SoundCore.voiceDuckDb",
+    "SoundCore.voiceDuckAttackMs",
+    "SoundCore.voiceDuckReleaseMs",
+    "public-profile.findPerMinute",
+    "QACore.captureJpgQuality",
+    "UnitTestCore.startTimeLimitMs",
+    "storage.sweepBatchSize",
+    "storage.sweepTableBudgetMs",
+    "coupon.maxCodePicks",
+    "matchmaker.roomCodeMaxPicks",
+    "InputCore.padAxisSensitivities",
+    "auth.loginTokenIdleTtlMs",
+    "iap.refundLookupIntervalMs",
+    "iap.refundLookupBackMs",
+    "iap.refundLookupPageCount",
+    "iap.refundRetryCount",
+    "iap.refundRetryBatchSize",
+    "item-ledger.onceKeyRetentionMs",
+    "logging.metricsDurationBucketsMs",
+    "logging.alertWindowMs",
+    "logging.alertMinRequests",
+    "logging.alertErrorRatioPermille",
+    "logging.alertSlowRequestMs",
+    "logging.alertSlowRatioPermille",
+    "logging.alertErrorLogCount",
+    "matchmaker.flagWindowMs",
+    "matchmaker.flagDisagreeCount",
+    "matchmaker.flagForfeitCount",
+    "matchmaker.flagMissingCount",
+    "routing.requestWorkers",
+    "routing.opsReportIntervalMs",
+    "routing.readyMaxReportAgeMs",
+    "termsPopup",
+    "agePopup",
+    "privacyPopup",
+    "consent.ageConfirmation",
+    "consent.privacyChoices",
+    "consent.version",
+    "consent.trackingRequest",
+    "pushConsent.adPush",
+    "pushConsentPopup",
+    "loginGoogle.serverClientId",
+    "loginGoogle.iosClientId",
+    "loginGoogle.desktopClientId",
+    "titleScene",
+    "firstScene",
+    "environments.DEV.adapters",
+    "environments.STG.adapters",
+    "environments.PROD.adapters",
+    "environments.DEV.adUnits",
+    "environments.STG.adUnits",
+    "environments.PROD.adUnits",
+    "sourceLanguage",
+    "supportedLanguages",
+    "baseResolution",
+    "maxResolution",
+    "loadingScreen",
+    "dailyResetOffsetMs",
+    "environments.DEV.adminOperators",
+    "environments.STG.adminOperators",
+    "environments.PROD.adminOperators",
+    "environments.DEV.adminAllowedCidrs",
+    "environments.STG.adminAllowedCidrs",
+    "environments.PROD.adminAllowedCidrs",
+    "environments.DEV.secrets.accessTokenKey",
+    "environments.STG.secrets.accessTokenKey",
+    "environments.PROD.secrets.accessTokenKey",
+    "termsDocuments",
+    "appId",
+    "appleTeamId",
+    "loginApple.keyId",
+    "environments.DEV.secrets.loginApple",
+    "environments.STG.secrets.loginApple",
+    "environments.PROD.secrets.loginApple",
+    "environments.DEV.secrets.loginGoogleDesktop",
+    "environments.STG.secrets.loginGoogleDesktop",
+    "environments.PROD.secrets.loginGoogleDesktop",
+    "consent.ageBandBoundaries",
+    "consent.minimumAge",
+    "environments.DEV.adapters.login-apple",
+    "environments.STG.adapters.login-apple",
+    "environments.PROD.adapters.login-apple",
+    "environments.DEV.adapters.login-google",
+    "environments.STG.adapters.login-google",
+    "environments.PROD.adapters.login-google",
+    "environments.DEV.serverUrl",
+    "environments.STG.serverUrl",
+    "environments.PROD.serverUrl",
+    "environments.DEV.secrets.devAccess",
+    "environments.STG.secrets.devAccess",
+    "environments.PROD.secrets.devAccess",
+    "environments.DEV.devAllowedCidrs",
+    "environments.STG.devAllowedCidrs",
+    "environments.PROD.devAllowedCidrs",
+    "environments.DEV.secrets.updateSigningKey",
+    "environments.STG.secrets.updateSigningKey",
+    "environments.PROD.secrets.updateSigningKey",
+    "environments.DEV.updatePublicKeys",
+    "environments.STG.updatePublicKeys",
+    "environments.PROD.updatePublicKeys",
+    "environments.DEV.secrets.cdn",
+    "environments.STG.secrets.cdn",
+    "environments.PROD.secrets.cdn",
+    "environments.DEV.cdnR2",
+    "environments.STG.cdnR2",
+    "environments.PROD.cdnR2",
+    "environments.DEV.adapters.cdn",
+    "environments.STG.adapters.cdn",
+    "environments.PROD.adapters.cdn",
+    "environments.DEV.adapters.analytics",
+    "environments.STG.adapters.analytics",
+    "environments.PROD.adapters.analytics",
+    "environments.DEV.analyticsGa4.measurementId",
+    "environments.STG.analyticsGa4.measurementId",
+    "environments.PROD.analyticsGa4.measurementId",
+    "environments.DEV.secrets.analytics",
+    "environments.STG.secrets.analytics",
+    "environments.PROD.secrets.analytics",
+    "environments.DEV.analyticsGa4.propertyId",
+    "environments.STG.analyticsGa4.propertyId",
+    "environments.PROD.analyticsGa4.propertyId",
+    "environments.DEV.analyticsGa4.serviceAccountEmail",
+    "environments.STG.analyticsGa4.serviceAccountEmail",
+    "environments.PROD.analyticsGa4.serviceAccountEmail",
+    "environments.DEV.secrets.analyticsServiceAccount",
+    "environments.STG.secrets.analyticsServiceAccount",
+    "environments.PROD.secrets.analyticsServiceAccount",
+    "environments.DEV.trustedProxyCount",
+    "environments.STG.trustedProxyCount",
+    "environments.PROD.trustedProxyCount",
+    "environments.DEV.corsAllowedOrigins",
+    "environments.STG.corsAllowedOrigins",
+    "environments.PROD.corsAllowedOrigins",
+    "environments.DEV.secrets.db",
+    "environments.STG.secrets.db",
+    "environments.PROD.secrets.db",
+    "coreVersion"
+  ],
+  "additionalProperties": false
+}

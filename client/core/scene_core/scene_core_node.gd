@@ -1,5 +1,5 @@
 extends Node
-## Core node of `SceneCore`: runs the frame check of the transition, hides the nodes that enter the scene holder
+## Core node of `SceneCore`: runs the frame check of the transition, hides and stops the nodes under the scene holder
 ## while the new scene is not shown yet and keeps the scene UI root of that scene on the safe area.
 
 

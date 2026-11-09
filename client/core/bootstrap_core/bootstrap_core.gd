@@ -60,6 +60,7 @@ const _NATIVE_UI_PLUGIN_PLATFORMS: PackedStringArray = ["android", "ios", "macos
 const _SETTING_TITLE_SCENE: String = "titleScene"
 const _SETTING_FIRST_SCENE: String = "firstScene"
 const _SETTING_RELAY_ONLY: String = "BootstrapCore.realtimeRelayOnly"
+const _SETTING_MAIN_SCENE: String = "application/run/main_scene"
 const _UNIT_TEST_CORE: String = "UnitTestCore"
 
 const _FAILURE_POPUP_NONE: int = 0
@@ -88,6 +89,7 @@ static var _update_set: _UPDATE_SET = _UPDATE_SET.new()
 static var _is_update_reboot: bool = false
 static var _title_scene: String = ""
 static var _relay_only: bool = false
+## The scene the engine opened first, when it called `start_boot`. `TitleScene` frees it.
 static var _boot_entry_scene: Node = null
 static var _boot_started_ms: int = 0
 static var _stage_started_ms: int = 0
@@ -110,6 +112,14 @@ static var _pending_log_messages: PackedStringArray = PackedStringArray()
 ## DEV state. Launch values by name, read once from the launch value file.
 static var _launch_values: Dictionary[String, String] = {}
 static var _launch_values_read: bool = false
+## DEV state. The error of the first launch value that is not a JSON string, empty when there is none. A dev run with
+## it is fatal in `InitModules` 1.
+static var _launch_value_error: String = ""
+## DEV state. The random base and the frame step fps of the launch values of a dev run, set with its build info and
+## passed to `TimeCore` in `InitModules` 2 of every boot. fps 0 is no frame step.
+static var _has_random_base: bool = false
+static var _random_base: int = 0
+static var _frame_step_fps: int = 0
 ## Core test state. When true, a process end request is counted instead of sent to the engine.
 static var _test_hold_quit: bool = false
 static var _quit_request_count: int = 0
@@ -134,6 +144,15 @@ static var _test_downloads: _UPDATE_SET = null
 ## Core test state. When not empty, `InitModules` 1 reads the build info file at this path instead of the build info
 ## file of the build.
 static var _test_build_info_path: String = ""
+## Core test state. When not empty, the launch values are read from the launch value file at this path instead of the
+## one of the command line.
+static var _test_launch_values_path: String = ""
+## Core test state. When not empty, the launch values the export holds are read from this path instead of
+## `res://generated/launch_values.json`.
+static var _test_export_launch_values_path: String = ""
+## Core test state. When not empty, `start_boot` takes the current scene of this scene file as the boot entry scene
+## instead of the current scene of the project main scene.
+static var _test_main_scene_path: String = ""
 
 
 ## Starts the boot. `modules` empty means the generated module list. `replacements` holds the test replacements
@@ -160,8 +179,6 @@ static func start_boot(
 	_pending_log_messages.clear()
 	if modules.is_empty():
 		_modules = _generated_modules()
-		var tree := Engine.get_main_loop() as SceneTree
-		_boot_entry_scene = tree.current_scene
 	else:
 		_modules = modules.duplicate()
 	if replacements != null:
@@ -172,10 +189,27 @@ static func start_boot(
 			_replacements = replacements
 	elif _dev != null:
 		_add_dev_modules()
+	_boot_entry_scene = _find_boot_entry_scene()
 	_entries.clear()
 	for entry: CoreModuleEntry in _modules:
 		_entries[entry.name] = entry
 	_run_boot(false)
+
+
+## The boot entry scene: the current scene when it is the scene of the project main scene. A boot with test
+## replacements was started by a test, not by the boot entry scene, so it has none.
+static func _find_boot_entry_scene() -> Node:
+	if _replacements != null:
+		return null
+	var scene := (Engine.get_main_loop() as SceneTree).current_scene
+	if scene == null:
+		return null
+	var main_scene := _test_main_scene_path
+	if main_scene.is_empty():
+		main_scene = str(ProjectSettings.get_setting(_SETTING_MAIN_SCENE, ""))
+	if main_scene.is_empty() or scene.scene_file_path != main_scene:
+		return null
+	return scene
 
 
 ## Adds the DEV modules the module list does not hold at its end.
@@ -777,6 +811,7 @@ static func _pass_adapters() -> void:
 	if _has("NativeUiCore"):
 		_pass_native_adapter()
 	if _dev != null:
+		_dev.pass_time_launch_values()
 		_dev.apply_test_replacements()
 
 
@@ -1237,7 +1272,9 @@ static func _request_quit() -> void:
 # --- DEV shutdown ---
 
 
-## `shutdown`: back to the state before the first `start_boot`. Releases every lifecycle module but `UnitTestCore`.
+## `shutdown`: back to the state before the first `start_boot`. Calls `AuthCore.clear_dev_values`, then releases every
+## lifecycle module but `UnitTestCore`, also the modules that are not initialized: their `release` deletes only the
+## values set before `init`.
 static func _shutdown() -> void:
 	_ensure_node()
 	_find_dev()
@@ -1250,6 +1287,8 @@ static func _shutdown() -> void:
 	if _content_inited:
 		_content_inited = false
 		_call_content_release()
+	if _dev != null:
+		_dev.before_shutdown_release()
 	var released: Dictionary[String, bool] = {}
 	for i: int in range(_modules.size() - 1, -1, -1):
 		var entry: CoreModuleEntry = _modules[i]
@@ -1277,6 +1316,12 @@ static func _shutdown() -> void:
 	_is_update_reboot = false
 	_launch_values.clear()
 	_launch_values_read = false
+	_launch_value_error = ""
+	_has_random_base = false
+	_random_base = 0
+	_frame_step_fps = 0
+	_test_launch_values_path = ""
+	_test_export_launch_values_path = ""
 	_test_downloads = null
 	_test_build_info_path = ""
 	_trace_enabled = false
@@ -1299,8 +1344,10 @@ static func _release_entry(entry: CoreModuleEntry, released: Dictionary[String, 
 	if entry.name == _UNIT_TEST_CORE or released.has(entry.name):
 		return
 	released[entry.name] = true
+	# The trace holds the releases of initialized modules; a module that is not initialized is released too.
 	if _to_bool(entry.is_initialized.call()):
-		entry.release.call()
+		_trace_call("%s.release" % entry.name)
+	entry.release.call()
 
 
 # --- helpers ---

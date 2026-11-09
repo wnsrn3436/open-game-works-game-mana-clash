@@ -2,17 +2,20 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import * as CoreContract from '../../generated/contract/core_contract.ts';
 import * as GameContract from '../../generated/contract/game_contract.ts';
 import type * as GameData from '../../generated/data/game_data.ts';
+import { counting_adapter, DbMeter } from './db/meter.ts';
 import type { PgLimits } from './db/pg_messages.ts';
 import { PostgresAdapter } from './db/postgres.ts';
 import { SqliteAdapter } from './db/sqlite.ts';
 import { DbError, type DbAdapter } from './db/types.ts';
 import {
   read_settings,
+  StorageMisuse,
   type DbHandle,
   type FailureCode,
   type GameTx,
   type ItemConverter,
   type Pass,
+  type SeedProvider,
   type StorageCore,
   type StorageSettings,
   type TimeSource,
@@ -31,6 +34,7 @@ import {
   export_user_rows,
   find_user_by_public_code,
   get_user_record,
+  get_user_records,
   read_game_rows,
   read_user_rows,
   replace_game_rows,
@@ -45,6 +49,7 @@ import {
   type RawRow,
   type SweepResult,
   type UserRecord,
+  type UserRecordEntry,
 } from './rows.ts';
 import { apply_schema, schema_lock, table_def, type ColumnType, type Scope } from './schema.ts';
 import {
@@ -53,6 +58,7 @@ import {
   delete_state,
   get_game_state,
   get_state,
+  get_states,
   list_game_state,
   list_state,
   put_core_state,
@@ -66,8 +72,10 @@ import {
   add_item_mail,
   after_commit,
   db,
+  fail_transaction,
   lock_game_row,
   lock_game_row_content,
+  make_seed,
   on_commit,
   read_db,
   run_game_transaction,
@@ -93,16 +101,28 @@ export { StorageMisuse } from './core.ts';
 export { canonical_json } from './canonical_json.ts';
 /** `NoAccessTokenRpc` (`server-core` `## request`). */
 export { NO_ACCESS_TOKEN_RPC } from './request_sets.ts';
-export type { DbHandle, FailureCode, GameTx, ItemConverter, Pass, UserChangeApply, UserChangeFail, UserChangeFailure } from './core.ts';
+export type { DbHandle, FailureCode, GameTx, ItemConverter, Pass, SeedProvider, UserChangeApply, UserChangeFail, UserChangeFailure } from './core.ts';
 export type { FullStateResult, ResponseDelta, TakenDelta } from './delta.ts';
 export type { KindClass, KindValue } from './kinds.ts';
 export type { Random } from './random.ts';
-export type { NewUser, RawRow, SweepFailure, SweepResult, UserRecord } from './rows.ts';
+export type { NewUser, RawRow, SweepFailure, SweepResult, UserRecord, UserRecordEntry } from './rows.ts';
 /** The `## API` operation `is_public_code_input`. */
 export { is_public_code_input } from './public_code.ts';
 export type { ColumnType, Scope } from './schema.ts';
 export type { PublicStateEntry } from './state.ts';
 export type { RequestFields, UserTxResult } from './tx.ts';
+
+/** The output of `read_db_metrics`: counts from the server start of the server instance. */
+export interface DbMetrics {
+  /** The number of synchronous DB calls. */
+  readonly sync_calls: number;
+  /** The sum of the waits of the synchronous DB calls, in real elapsed ms. */
+  readonly sync_wait_ms: number;
+  readonly lock_failures: number;
+  readonly connection_failures: number;
+  /** On PostgreSQL, whether `pg_stat_archiver` shows a WAL archiving failure after the last archived WAL. */
+  readonly wal_archive_failing: boolean;
+}
 
 /** A column of `register_table`. */
 export interface ColumnInput {
@@ -132,6 +152,7 @@ export interface StorageInput {
 export interface Storage {
   get_state(ctx: RequestCtx, kind: KindClass, item_id: bigint): KindValue | null;
   list_state(ctx: RequestCtx, kind: KindClass): KindValue[];
+  get_states(ctx: RequestCtx, kind: KindClass, item_ids: readonly bigint[]): KindValue[];
   put_state(ctx: RequestCtx, value: KindValue): void;
   delete_state(ctx: RequestCtx, kind: KindClass, item_id: bigint): void;
   put_core_state(ctx: RequestCtx, value: KindValue): void;
@@ -154,6 +175,7 @@ export interface Storage {
   run_read_only<T>(ctx_or_tx: RequestCtx | GameTx, fn: () => T): T;
   lock_game_row(ctx_or_tx: RequestCtx | GameTx, table: string, key: readonly unknown[]): 'FAILED' | undefined;
   after_commit(ctx_or_tx: RequestCtx | GameTx, fn: () => unknown): void;
+  fail_transaction(ctx_or_tx: RequestCtx | GameTx): void;
   on_commit(ctx_or_tx: RequestCtx | GameTx, fn: () => void): void;
   send_user_change(ctx: RequestCtx, target_id: bigint, name: string, payload: Uint8Array): void;
   register_user_change(name: string, apply: UserChangeApply, fail: UserChangeFail): void;
@@ -163,6 +185,7 @@ export interface Storage {
   create_user(tx: GameTx): NewUser;
   delete_user(ctx: RequestCtx): void;
   get_user_record(db: DbHandle, user_id: bigint): UserRecord | null;
+  get_user_records(db: DbHandle, user_ids: readonly bigint[]): UserRecordEntry[];
   find_user_by_public_code(db: DbHandle, public_code: string): bigint | null;
   is_public_code_input(text: string): boolean;
   set_user_created_at(ctx: RequestCtx, time: bigint): void;
@@ -194,12 +217,15 @@ export interface Storage {
   random_shuffle(source: RandomSource, n: number): number[];
   create_random(seed: bigint): Random;
   make_purpose_seed(name: string, base: bigint): bigint;
+  make_seed(purpose: string): bigint;
   canonical_json(value: unknown): string;
+  watch_db_wait(array: Int32Array): void;
+  read_db_metrics(): DbMetrics;
   begin_start(): void;
   complete_start(): string | null;
   stop(): void;
   /** Called by the DEV code only (`dev/index.ts`). */
-  set_seed_provider(fn: (request_id: string) => bigint | null): void;
+  set_seed_provider(fn: SeedProvider): void;
   /** Called by the DEV code only (`dev/index.ts`). */
   wait_after_commit(): Promise<void>;
   readonly content: StorageContent;
@@ -257,9 +283,11 @@ function secret(input: StorageInput, name: string, what: string): string {
 }
 
 /**
- * The waits of the PostgreSQL adapter: a connect answers within `storage.dbAnswerWaitMs`, and a statement within its
- * lock wait limit (where `lock_timeout` ends its lock wait) plus that, or plus `storage.schemaAnswerWaitMs` in the
- * schema lock transaction (`complete_start`). TCP keepalive starts after twice `storage.userLockWaitMs`.
+ * The waits of the PostgreSQL adapter: a connect answers within `storage.dbAnswerWaitMs`. PostgreSQL aborts a statement
+ * `storage.dbAnswerWaitMs` after its lock wait limit (where `lock_timeout` ends its lock wait), or
+ * `storage.schemaAnswerWaitMs` after it in the schema lock transaction (`complete_start`), and the adapter waits
+ * `storage.dbAnswerWaitMs` past that abort time for the answer. TCP keepalive starts after twice
+ * `storage.userLockWaitMs`.
  */
 function pg_limits(settings: StorageSettings): PgLimits {
   return {
@@ -270,14 +298,42 @@ function pg_limits(settings: StorageSettings): PgLimits {
   };
 }
 
-/** The DB adapter of the server start arguments (`### DB adapter`). */
-function adapter_for(input: StorageInput, settings: StorageSettings): DbAdapter {
+/** The DB adapter of the server start arguments (`### DB adapter`), whose calls go to `meter`. */
+function adapter_for(input: StorageInput, settings: StorageSettings, meter: DbMeter): DbAdapter {
   const target = input.server.db;
-  if (target === 'postgresql') return new PostgresAdapter(secret(input, 'db', '--db postgresql: the secret db'), pg_limits(settings));
-  if (target !== null) return new SqliteAdapter(target);
+  const pg = (connection_string: string): DbAdapter => new PostgresAdapter(connection_string, pg_limits(settings), undefined, meter);
+  if (target === 'postgresql') return counting_adapter(pg(secret(input, 'db', '--db postgresql: the secret db')), meter);
+  if (target !== null) return counting_adapter(new SqliteAdapter(target, meter, settings.schema_lock_wait_ms), meter);
   const name = input.settings['environments.<ENV>.secrets.db'];
   if (typeof name !== 'string' || name === '') throw new DbError('connection', 'secret', `game settings environments.${input.server.env}.secrets.db names no secret`);
-  return new PostgresAdapter(secret(input, name, `the secret ${name}`), pg_limits(settings));
+  return counting_adapter(pg(secret(input, name, `the secret ${name}`)), meter);
+}
+
+/** The WAL archiving state of `pg_stat_archiver`, as microseconds since the epoch. */
+const ARCHIVER_SQL =
+  'SELECT CAST(EXTRACT(EPOCH FROM last_archived_time) * 1000000 AS BIGINT) AS last_archived_time, CAST(EXTRACT(EPOCH FROM last_failed_time) * 1000000 AS BIGINT) AS last_failed_time FROM pg_stat_archiver';
+
+/**
+ * `wal_archive_failing` (`### DB adapter` DB metrics): on PostgreSQL, a failure after the last archived WAL, or a
+ * failure with none archived. False on SQLite and when the statement fails.
+ */
+function wal_archive_failing(core: StorageCore): boolean {
+  if (core.adapter?.dialect !== 'postgresql') return false;
+  try {
+    const row = read_db(core).query(ARCHIVER_SQL)[0];
+    const archived = row?.['last_archived_time'] ?? null;
+    const failed = row?.['last_failed_time'] ?? null;
+    if (typeof failed !== 'bigint') return false;
+    return typeof archived !== 'bigint' || archived < failed;
+  } catch {
+    return false;
+  }
+}
+
+/** `read_db_metrics`: the counts before its own statement, which the next call counts. */
+function read_db_metrics(core: StorageCore): DbMetrics {
+  const counts = core.meter.counts();
+  return { ...counts, wal_archive_failing: wal_archive_failing(core) };
 }
 
 function time_of(modules: Readonly<Record<string, unknown>>): TimeSource {
@@ -294,7 +350,7 @@ function registration(core: StorageCore, what: string, error: string | null): vo
 function begin_start(core: StorageCore, input: StorageInput): void {
   core.phase = 'starting';
   try {
-    const adapter = adapter_for(input, core.settings);
+    const adapter = adapter_for(input, core.settings, core.meter);
     adapter.open();
     core.adapter = adapter;
   } catch (error) {
@@ -360,6 +416,7 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
     open: new Set(),
     background: new Set(),
     seed_provider: null,
+    meter: new DbMeter(),
     phase: 'created',
     start_errors: [],
   };
@@ -371,6 +428,7 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
   const storage: Omit<Storage, 'content'> = {
     get_state: (ctx, kind, item_id) => get_state(core, ctx, kind, item_id),
     list_state: (ctx, kind) => list_state(core, ctx, kind),
+    get_states: (ctx, kind, item_ids) => get_states(core, ctx, kind, item_ids),
     put_state: (ctx, value) => {
       put_state(core, ctx, value);
     },
@@ -414,6 +472,9 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
     on_commit: (ctx_or_tx, fn) => {
       on_commit(core, ctx_or_tx, fn);
     },
+    fail_transaction: (ctx_or_tx) => {
+      fail_transaction(core, ctx_or_tx);
+    },
     send_user_change: (ctx, target_id, name, payload) => {
       send_user_change(core, ctx, target_id, name, payload);
     },
@@ -426,12 +487,13 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
       delete_user(core, ctx);
     },
     get_user_record: (handle, user_id) => get_user_record(handle, user_id),
+    get_user_records: (handle, user_ids) => get_user_records(core, handle, user_ids),
     find_user_by_public_code: (handle, public_code) => find_user_by_public_code(handle, public_code),
     is_public_code_input,
     set_user_created_at: (ctx, time) => {
       set_user_created_at(core, ctx, time);
     },
-    scan_users: (handle, after, max, version) => scan_users(handle, after, max, version),
+    scan_users: (handle, after, max, version) => scan_users(core, handle, after, max, version),
     sample_users: (handle, max) => sample_users(core, handle, max),
     read_full_state: (ctx) => read_full_state(core, ctx),
     read_user_rows: (ctx) => read_user_rows(core, ctx),
@@ -454,7 +516,14 @@ export function create_storage_with(input: StorageInput, contract: StorageContra
     sweep_expired: () => sweep_expired(core),
     ...random_api(core),
     create_random: (seed) => create_random_instance(seed),
+    make_seed: (purpose) => make_seed(core, purpose),
     canonical_json,
+    watch_db_wait: (array) => {
+      if (core.phase !== 'created') throw new Error('storage: watch_db_wait after server start began');
+      if (!(array instanceof Int32Array) || array.length < 1) throw new StorageMisuse('storage: watch_db_wait takes an Int32Array with an element 0');
+      core.meter.watch_with(array);
+    },
+    read_db_metrics: () => read_db_metrics(core),
     begin_start: () => {
       begin_start(core, input);
     },

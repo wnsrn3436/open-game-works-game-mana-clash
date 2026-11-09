@@ -2,9 +2,9 @@
  * The DB adapter interface (`storage` `### DB adapter`): SQLite and PostgreSQL behind the same synchronous queries
  * inside a transaction. A transaction opens asynchronously, so waiting for this server instance's transactions, for a
  * free connection and for the SQLite write lock of another connection does not stop other work. A synchronous
- * PostgreSQL call blocks the thread while it waits, up to its lock wait limit plus `storage.dbAnswerWaitMs`; once one
- * went over that, the calls after it fail at once until a connect in the background succeeds. Server start's
- * `begin_sync` blocks.
+ * PostgreSQL call blocks the thread while it waits: PostgreSQL aborts its statement `storage.dbAnswerWaitMs` after its
+ * lock wait limit, and the call waits `storage.dbAnswerWaitMs` more for that answer; once one went over that, the calls
+ * after it fail at once until a connect in the background succeeds. Server start's `begin_sync` blocks.
  */
 
 /** A column value: `int64` is bigint, `int32` is number, `bool` is boolean, `bytes` is Uint8Array. */
@@ -59,8 +59,8 @@ export interface BeginOptions {
   /** The lock wait limit of the whole transaction, including the first statement. */
   readonly lock_wait_ms: number;
   /**
-   * The answer wait of each statement of the transaction past its lock wait limit; when not given, the adapter's
-   * (`storage.dbAnswerWaitMs`). SQLite has no answer wait.
+   * The time after its lock wait limit at which PostgreSQL aborts each statement of the transaction; when not given,
+   * the adapter's (`storage.dbAnswerWaitMs`). SQLite has no answer wait.
    */
   readonly answer_wait_ms?: number;
   /** A statement run as part of opening, before the transaction is handed out (for example a row lock). */
@@ -86,6 +86,20 @@ export interface DbAdapter {
   readonly read: DbConn;
   /** Closes every connection; open transactions roll back. */
   close(): void;
+}
+
+/** The SQLSTATE PostgreSQL gives a text parameter that holds U+0000. */
+const BAD_TEXT = '22021';
+
+/**
+ * Throws the `sql` DbError of a `string` parameter that holds U+0000 or is not well-formed UTF-16 (an unpaired
+ * surrogate): both DBs fail such a statement. PostgreSQL itself refuses U+0000, but both drivers would write an unpaired
+ * surrogate as U+FFFD.
+ */
+export function check_text_param(value: DbValue): void {
+  if (typeof value !== 'string') return;
+  if (value.includes('\u0000')) throw new DbError('sql', BAD_TEXT, 'a string parameter holds U+0000');
+  if (!value.isWellFormed()) throw new DbError('sql', BAD_TEXT, 'a string parameter holds an unpaired surrogate');
 }
 
 /** True for a `lock` or `connection` DbError: the operation that opened the transaction ends with `FAILED`. */

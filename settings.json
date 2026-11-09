@@ -1,6 +1,6 @@
 {
   "$schema": "../../open-game-works-core/schemas/game-settings.schema.json",
-  "coreVersion": "0.7.1",
+  "coreVersion": "0.11.0",
   "postgresqlMajor": 18,
   "environments": {
     "DEV": {

@@ -30,6 +30,10 @@ const _HEADING_TYPES: Dictionary[StringName, StringName] = {
 	&"HeadingButton": &"Button",
 	&"HeadingRichTextLabel": &"RichTextLabel",
 }
+## The spacings of a `FontVariation`.
+const _SPACINGS: Array[TextServer.SpacingType] = [
+	TextServer.SPACING_GLYPH, TextServer.SPACING_SPACE, TextServer.SPACING_TOP, TextServer.SPACING_BOTTOM,
+]
 ## What `_weight_axis` returns for a font without a `wght` axis: a minimum above the maximum.
 const _NO_WEIGHT_AXIS: Vector2i = Vector2i(1, 0)
 ## `bind_text` drops the bindings of freed elements when the bindings reach this size, and then twice the size left.
@@ -82,7 +86,7 @@ static var _prompt: InputPrompt = null
 static var _prompt_was_icon: bool = false
 ## DEV `set_test_device_language`: used in place of the device language tag when not empty.
 static var _test_device_language: String = ""
-## Core test: the device timezone offset in place of the device's when set.
+## DEV `set_test_timezone_offset`: used in place of the device timezone offset when set.
 static var _test_timezone_offset_set: bool = false
 static var _test_timezone_offset_ms: int = 0
 
@@ -117,6 +121,8 @@ static func init() -> bool:
 
 static func release() -> void:
 	_test_device_language = ""
+	_test_timezone_offset_set = false
+	_test_timezone_offset_ms = 0
 	if not _is_initialized:
 		return
 	_clean_up(true)
@@ -261,12 +267,12 @@ static func format(key: String, args: FormatArgs, icon_height: int = 0) -> Strin
 	return _build(key, args, icon_height, 0)
 
 
-## Binds a translation key to a UI text element. An empty key binds and writes the empty string.
+## Binds a translation key to a UI text element, replacing the key of a bound one. An empty key binds and writes the
+## empty string.
 static func bind_text(element: Control, key: String) -> void:
 	if not _check_initialized("bind_text"):
 		return
-	if element == null or not _is_text_element(element):
-		LogCore.log_error(_TAG, "bind_text got an object that is not a UI text element")
+	if not _check_text_element("bind_text", element):
 		return
 	if _bindings.size() >= _binding_sweep_size:
 		_drop_freed_bindings()
@@ -274,12 +280,11 @@ static func bind_text(element: Control, key: String) -> void:
 	_write_bound(element, key)
 
 
-## Unbinds a UI text element. Its text stays.
+## Unbinds a UI text element. Its text stays. An element that is not bound is left as it is, without a log.
 static func unbind_text(element: Control) -> void:
 	if not _check_initialized("unbind_text"):
 		return
-	if element == null or not _is_text_element(element):
-		LogCore.log_error(_TAG, "unbind_text got an object that is not a UI text element")
+	if not _check_text_element("unbind_text", element):
 		return
 	_bindings.erase(element.get_instance_id())
 
@@ -635,23 +640,42 @@ static func _apply_fonts(fonts: Array[Font], keys: PackedStringArray) -> void:
 
 ## The font chain of one text style: the first font, then the rest as its fallbacks in order, each font drawn with
 ## `weight`. The chain itself carries the weight of the first font, because the engine does not draw the variation of
-## a `FontVariation` that is the `base_font` of another; each fallback with the weight is a `FontVariation` of it.
+## a `FontVariation` that is the `base_font` of another; each fallback with the weight is a `FontVariation` of it. For
+## the same reason the chain, and each fallback with the weight, carries the variation of its font: a font that is a
+## `FontVariation` keeps what it sets itself (its own `wght` when it is not drawn with `weight`).
 static func _weighted_chain(fonts: Array[Font], keys: PackedStringArray, weight: int, style: String) -> FontVariation:
-	var chain: FontVariation = FontVariation.new()
-	chain.base_font = fonts[0]
+	var chain: FontVariation = _variation_of(fonts[0])
 	if _takes_weight(fonts[0], keys[0], weight, style):
 		_set_weight(chain, weight)
 	var fallbacks: Array[Font] = []
 	for i: int in range(1, fonts.size()):
 		if _takes_weight(fonts[i], keys[i], weight, style):
-			var variation: FontVariation = FontVariation.new()
-			variation.base_font = fonts[i]
+			var variation: FontVariation = _variation_of(fonts[i])
 			_set_weight(variation, weight)
 			fallbacks.append(variation)
 		else:
 			fallbacks.append(fonts[i])
 	chain.fallbacks = fallbacks
 	return chain
+
+
+## A `FontVariation` of `font` that draws it as `font` draws by itself: when `font` is a `FontVariation`, with its
+## variation coordinates, face index, embolden, transform, OpenType features, spacings and baseline offset.
+static func _variation_of(font: Font) -> FontVariation:
+	var variation: FontVariation = FontVariation.new()
+	variation.base_font = font
+	var own: FontVariation = font as FontVariation
+	if own == null:
+		return variation
+	variation.variation_opentype = own.variation_opentype.duplicate()
+	variation.variation_face_index = own.variation_face_index
+	variation.variation_embolden = own.variation_embolden
+	variation.variation_transform = own.variation_transform
+	variation.opentype_features = own.opentype_features.duplicate()
+	for spacing: TextServer.SpacingType in _SPACINGS:
+		variation.set_spacing(spacing, own.get_spacing(spacing))
+	variation.baseline_offset = own.baseline_offset
+	return variation
 
 
 ## Whether a font is drawn with `weight` through a `FontVariation`: not when `weight` is 0 or the font has no `wght`
@@ -674,13 +698,26 @@ static func _wght_tag() -> int:
 	return TextServerManager.get_primary_interface().name_to_tag("wght")
 
 
-## Sets `wght` of a `FontVariation` to `weight`. `variation_opentype` takes an untyped Dictionary: the engine looks
-## its keys up as both tags and axis names, which a typed Dictionary refuses.
+## Sets `wght` of a `FontVariation` to `weight` and keeps its other variation coordinates. `variation_opentype` takes
+## an untyped Dictionary: the engine looks its keys up as both tags and axis names, which a typed Dictionary refuses.
 # ogw:input_boundary
 static func _set_weight(variation: FontVariation, weight: int) -> void:
+	var tag: int = _wght_tag()
+	var own: Dictionary = variation.variation_opentype
 	var coordinates: Dictionary = {}
-	coordinates[_wght_tag()] = weight
+	for key: Variant in own:
+		if _axis_tag(key) != tag:
+			coordinates[key] = own[key]
+	coordinates[tag] = weight
 	variation.variation_opentype = coordinates
+
+
+## The tag of a key of `variation_opentype`: the key itself when it is a tag, else the tag of the axis name.
+# ogw:input_boundary
+static func _axis_tag(key: Variant) -> int:
+	if key is int:
+		return key
+	return TextServerManager.get_primary_interface().name_to_tag(str(key))
 
 
 ## The minimum and the maximum of the variation axis `tag` of a font; `_NO_WEIGHT_AXIS` when it has none. The axes
@@ -729,6 +766,17 @@ static func _restore_heading_types() -> void:
 ## the type does not have when the theme has a default font.
 static func _has_own_font(item: StringName, type: StringName) -> bool:
 	return _font_theme.get_font_list(type).has(item)
+
+
+## Whether `element` is a UI text element; logs an error when it is missing or is not one.
+static func _check_text_element(operation: String, element: Control) -> bool:
+	if element == null:
+		LogCore.log_error(_TAG, operation + " got no element")
+		return false
+	if not _is_text_element(element):
+		LogCore.log_error(_TAG, operation + " got a " + element.get_class() + ", not a UI text element")
+		return false
+	return true
 
 
 static func _is_text_element(node: Node) -> bool:

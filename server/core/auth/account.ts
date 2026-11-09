@@ -1,12 +1,12 @@
 /**
- * The core `rpc`s that go through `routing`'s request processing order (`Logout`, `LinkAccount`, `Withdraw`,
- * `IssueDeletionCode`, `ConfirmAge`, `UpdateConsent`, `UpdatePushConsent`) and the internal operations
- * `verify_access_token` and `prepare_link_account`.
+ * The core `rpc`s that go through `routing`'s request processing order (`Logout`, `LogoutOtherDevices`,
+ * `LinkAccount`, `Withdraw`, `IssueDeletionCode`, `ConfirmAge`, `UpdateConsent`, `UpdatePushConsent`) and the internal
+ * operations `verify_access_token` and `prepare_link_account`.
  */
 import { randomInt } from 'node:crypto';
 import * as CoreContract from '../../generated/contract/core_contract.ts';
 import { birth_year_month_valid, choice_name, tracking_name, utc_year_month } from './consent.ts';
-import { E, audit_log, deletion_url, refresh_consent, token_key, type AuthState } from './context.ts';
+import { E, audit_log, deletion_url, error_log, refresh_consent, token_key, type AuthState } from './context.ts';
 import type { CoreErrorCode, Ctx } from './deps.ts';
 import { provider_values } from './login.ts';
 import { adapter_of, social_provider, verify_credential, type SocialAccount } from './social.ts';
@@ -14,6 +14,7 @@ import {
   append_consent_records,
   birth_year_month,
   delete_login_token,
+  delete_login_tokens_of_other_sessions,
   find_social_link,
   insert_age,
   insert_social_link,
@@ -51,6 +52,19 @@ export function logout(a: AuthState, ctx: Ctx): CoreContract.LogoutResponse {
   return new CoreContract.LogoutResponse();
 }
 
+/**
+ * `LogoutOtherDevices`: in the request transaction, `session.check_current` of the request's session first (another
+ * login of that user may have committed after `routing` step 5); when it passes, deletes every login token row of
+ * the user of another session. The session and the login token rows of the request's session stay.
+ */
+export function logout_other_devices(a: AuthState, ctx: Ctx): CoreContract.LogoutOtherDevicesResponse | CoreErrorCode {
+  const { storage, session } = a.modules;
+  const current = session.check_current(ctx.user_id, ctx.session_id);
+  if (current !== 'pass') return current;
+  delete_login_tokens_of_other_sessions(storage.db(ctx), ctx.user_id, ctx.session_id);
+  return new CoreContract.LogoutOtherDevicesResponse();
+}
+
 /** `prepare_link_account`: the social account of the credential, checked outside the transaction. */
 export async function prepare_link_account(a: AuthState, user_id: bigint, request: CoreContract.LinkAccountRequest, client_ip: string): Promise<SocialAccount | CoreErrorCode> {
   const social = social_provider(request.provider);
@@ -68,9 +82,20 @@ export function link_account(a: AuthState, ctx: Ctx, account: SocialAccount): Co
   return Object.assign(new CoreContract.LinkAccountResponse(), { linked_providers: provider_values(db, ctx.user_id) });
 }
 
+/**
+ * The withdrawal of `Withdraw` and `ConfirmAge`: null when done, else `INTERNAL` (rolled back). A `CHANGED` also
+ * writes the `error` log of `## error`.
+ */
+function withdraw_in_request(a: AuthState, ctx: Ctx, request: string): CoreErrorCode | null {
+  const result = withdraw(a, ctx);
+  if (result === 'done') return null;
+  if (result === 'CHANGED') error_log(a, 'withdrawal rolled back: a remove_user is CHANGED', { user_id: ctx.user_id, request_id: ctx.request_id, request });
+  return E.CORE_ERROR_INTERNAL;
+}
+
 /** `Withdraw`. */
 export function withdraw_request(a: AuthState, ctx: Ctx): CoreContract.WithdrawResponse | CoreErrorCode {
-  return withdraw(a, ctx) === 'FAILED' ? E.CORE_ERROR_INTERNAL : new CoreContract.WithdrawResponse();
+  return withdraw_in_request(a, ctx, 'core/Withdraw') ?? new CoreContract.WithdrawResponse();
 }
 
 /** `IssueDeletionCode`. */
@@ -101,7 +126,8 @@ export function confirm_age(a: AuthState, ctx: Ctx, request: CoreContract.Confir
     state.age_confirmed_at = ctx.request_time;
   });
   if (consent.below_minimum_age) {
-    if (withdraw(a, ctx) === 'FAILED') return E.CORE_ERROR_INTERNAL;
+    const failed = withdraw_in_request(a, ctx, 'core/ConfirmAge');
+    if (failed !== null) return failed;
     const target = { user_id: ctx.user_id, request_id: ctx.request_id, request: 'core/ConfirmAge' };
     storage.after_commit(ctx, () => {
       audit_log(a, 'user below the minimum age withdrawn', target, { reason: 'age_blocked' });

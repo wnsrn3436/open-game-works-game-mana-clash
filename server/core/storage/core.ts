@@ -5,6 +5,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import type * as CoreContract from '../../generated/contract/core_contract.ts';
 import type * as GameData from '../../generated/data/game_data.ts';
 import { DbError, type DbAdapter, type DbTxConn, type DbValue, type Row } from './db/types.ts';
+import type { DbMeter } from './db/meter.ts';
 import type { KindClass, KindRegistry } from './kinds.ts';
 import type { Random } from './random.ts';
 import type { HookChangeSource, RequestCtx } from './request_ctx.ts';
@@ -124,6 +125,10 @@ export class TxState {
   active = true;
   /** A statement failed: the transaction does not commit. */
   broken = false;
+  /** The value that the statement which broke the transaction threw. */
+  broken_by: unknown = null;
+  /** `fail_transaction` marked it: every later storage operation throws, and its function ends as `FAILED`. */
+  failed = false;
   read_only = 0;
   touched = new Map<string, Touched>();
   item_changes: CoreContract.ItemChange[] = [];
@@ -219,8 +224,13 @@ export function is_write(sql: string): boolean {
  * a failed statement, so SQLite keeps the same meaning even when the caller catches the failure and goes on.
  */
 export function mark_broken(state: TxState, error: unknown): void {
-  if (error instanceof DbError && error.kind !== 'readonly') state.broken = true;
+  if (!(error instanceof DbError) || error.kind === 'readonly' || state.broken) return;
+  state.broken = true;
+  state.broken_by = error;
 }
+
+/** The seed provider of `set_seed_provider`: request ID, user ID and request name to a random seed, or none. */
+export type SeedProvider = (request_id: string, user_id: bigint, request_name: string) => bigint | null;
 
 /** Everything one `storage` instance holds. */
 export interface StorageCore {
@@ -239,7 +249,9 @@ export interface StorageCore {
   readonly states: WeakMap<object, TxState>;
   readonly open: Set<TxState>;
   readonly background: Set<Promise<void>>;
-  seed_provider: ((request_id: string) => bigint | null) | null;
+  seed_provider: SeedProvider | null;
+  /** The DB wait state and the DB metrics of this server instance. */
+  readonly meter: DbMeter;
   phase: 'created' | 'starting' | 'started' | 'stopped';
   readonly start_errors: string[];
 }
@@ -249,10 +261,19 @@ export function adapter_of(core: StorageCore): DbAdapter {
   return core.adapter;
 }
 
+/**
+ * A transaction that `fail_transaction` marked: every later storage operation on it throws a value that is not a
+ * `StorageMisuse`, as after a failed statement.
+ */
+function not_failed(state: TxState): void {
+  if (state.failed) throw new DbError('lock', 'failed', 'storage: the transaction was marked failed by fail_transaction');
+}
+
 /** The open user transaction of a ctx; misuse when it is not one. */
 export function user_state_of(core: StorageCore, ctx: unknown): TxState {
   const state = typeof ctx === 'object' && ctx !== null ? core.states.get(ctx) : undefined;
   if (state?.kind !== 'user' || !state.active) throw new StorageMisuse('storage: the ctx is not of an open transaction');
+  not_failed(state);
   return state;
 }
 
@@ -260,6 +281,7 @@ export function user_state_of(core: StorageCore, ctx: unknown): TxState {
 export function any_state_of(core: StorageCore, ctx_or_tx: unknown): TxState {
   const state = typeof ctx_or_tx === 'object' && ctx_or_tx !== null ? core.states.get(ctx_or_tx) : undefined;
   if (state === undefined || !state.active) throw new StorageMisuse('storage: the ctx or game tx is not of an open transaction');
+  not_failed(state);
   return state;
 }
 
@@ -289,6 +311,21 @@ export function q(state: TxState, sql: string, params: readonly DbValue[] = []):
     mark_broken(state, error);
     throw error;
   }
+}
+
+/**
+ * The condition that `column` is one of `ids`, with the list as the one parameter `$<index>`, so a list longer than the
+ * parameter limit of a statement is still one query: PostgreSQL reads it as a bigint array, SQLite as a JSON array.
+ */
+export function in_id_list(core: StorageCore, column: string, ids: readonly bigint[], index: number): { sql: string; param: string } {
+  const at = `$${String(index)}`;
+  if (adapter_of(core).dialect === 'postgresql') return { sql: `${column} = ANY(CAST(string_to_array(${at}, ',') AS BIGINT[]))`, param: ids.join(',') };
+  return { sql: `${column} IN (SELECT value FROM json_each(${at}))`, param: `[${ids.join(',')}]` };
+}
+
+/** The distinct bigints of a list in ascending order. */
+export function ascending_ids(ids: readonly bigint[]): bigint[] {
+  return [...new Set(ids)].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 }
 
 export function big(value: DbValue | undefined): bigint {

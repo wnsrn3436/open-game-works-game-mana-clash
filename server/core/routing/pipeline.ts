@@ -25,6 +25,8 @@ import type {
   RouteRequest,
   TokenlessHandler,
 } from './module_api.ts';
+import { create_system_clock } from '../server-time/adapters/system_clock.ts';
+import { RECEIVED_AT } from './front_link.ts';
 import { increment_counter } from './rate_limit.ts';
 import { BAN_EXEMPT_RPC, DATA_HASH_EXEMPT_RPC, NO_ACCESS_TOKEN_RPC, NO_USER_RPC, REPORT_RPC, WITHDRAWN_RESPONSE_RPC } from './spec_tables.ts';
 
@@ -59,6 +61,23 @@ function with_server_time(bytes: Uint8Array, time: bigint): Uint8Array {
   return envelope.encode();
 }
 
+/** Real elapsed time for `duration_ms`: the system clock adapter of `server-time`, never the test clock a DEV run sets. */
+const real_clock = create_system_clock();
+
+/** The real elapsed ms since `started` (`real_clock`): the `duration_ms` of a `request` log line (`logging`). */
+function elapsed_ms(started: bigint): number {
+  const now = real_clock.now();
+  return now > started ? Number(now - started) : 0;
+}
+
+/**
+ * The start of `duration_ms`: when a worker instance received the request from the front (`front_link.ts`), and
+ * otherwise when routing started handling it.
+ */
+function start_of(req: IncomingMessage): bigint {
+  return RECEIVED_AT.get(req) ?? real_clock.now();
+}
+
 function split_url(url: string): { path: string; query: string } {
   const q = url.indexOf('?');
   return q < 0 ? { path: url, query: '' } : { path: url.slice(0, q), query: url.slice(q + 1) };
@@ -69,6 +88,7 @@ export interface Exchange {
   readonly req: IncomingMessage;
   readonly res: ServerResponse;
   readonly name: string;
+  /** The real clock when routing started handling the request: `duration_ms` is real elapsed time (`logging`). */
   readonly started_at: bigint;
   readonly client_ip: string;
   /** The `Origin` header when it is an allowed origin; null otherwise. */
@@ -168,7 +188,7 @@ export class Pipeline {
       fields: {
         ...annotation.fields,
         error_code,
-        duration_ms: Number(this.s.deps.server_time.clock_now() - exchange.started_at),
+        duration_ms: elapsed_ms(exchange.started_at),
         client_version: exchange.headers?.client_version ?? null,
         platform: exchange.headers?.platform ?? null,
         seed: exchange.seed === null ? null : exchange.seed.toString(),
@@ -243,7 +263,7 @@ export class Pipeline {
 
   private client_ip_of(req: IncomingMessage): string {
     const trusted = this.s.server.env === 'LOCAL' ? 0 : this.s.settings.trusted_proxy_count;
-    return client_ip(trusted, header(req.headers, 'x-forwarded-for'), req.socket.remoteAddress);
+    return client_ip(trusted, req.headersDistinct['x-forwarded-for'], req.socket.remoteAddress);
   }
 
   new_exchange(req: IncomingMessage, res: ServerResponse, name: string, origin: string | null): Exchange {
@@ -251,7 +271,7 @@ export class Pipeline {
       req,
       res,
       name,
-      started_at: this.s.deps.server_time.clock_now(),
+      started_at: start_of(req),
       client_ip: this.client_ip_of(req),
       origin,
       headers: null,
@@ -454,7 +474,7 @@ export class Pipeline {
     }
     // 4. maintenance
     if (deps.admin_api.is_maintenance()) {
-      this.fail(exchange, E.CORE_ERROR_MAINTENANCE, 'step 4 maintenance');
+      this.fail(exchange, E.CORE_ERROR_MAINTENANCE, 'step 4 maintenance: admin-api.is_maintenance is true');
       return;
     }
     if (core !== undefined && NO_ACCESS_TOKEN_RPC.has(name)) {
@@ -489,7 +509,7 @@ export class Pipeline {
     }
     const result = validate(message);
     if (result !== 'pass') {
-      this.fail(exchange, E.CORE_ERROR_INVALID_REQUEST, `step 11 field validation: ${result.path} ${result.rule}`);
+      this.fail(exchange, E.CORE_ERROR_INVALID_REQUEST, `step 11 field validation: ${result.path}: ${result.rule}`);
       return null;
     }
     return message;
@@ -506,9 +526,13 @@ export class Pipeline {
     this.success(exchange, deps.server_time.clock_now(), null, response.encode());
   }
 
-  /** A token-less core `rpc` or `DevLogin`: the IP counter, 10, 11, then the handler of `auth`. */
+  /**
+   * A token-less core `rpc` or `DevLogin` (a `NoAccessTokenRpc` that is not a `NoUserRpc`): the IP counter, the minimum
+   * app version judgement of step 7, 10, 11, then the handler of `auth`.
+   */
   async process_tokenless(exchange: Exchange, info: CoreContract.RpcInfo, handler: TokenlessHandler, validate: (m: Message) => 'pass' | CoreContract.ValidationFailure): Promise<void> {
     if (!(await this.count_ip(exchange))) return;
+    if (!this.check_min_version(exchange)) return;
     const message = this.decode(exchange, info, validate);
     if (message === null) return;
     const output = await handler({ headers: exchange.headers as CommonHeaders, body: exchange.body ?? new Uint8Array(0), request: message, client_ip: exchange.client_ip });
@@ -524,17 +548,17 @@ export class Pipeline {
 
   /** Step 5 failures: `security` log and the IP counter, except `TOKEN_EXPIRED`. */
   private async auth_failure(exchange: Exchange, code: ErrorCode, step: string): Promise<false> {
-    if (code === E.CORE_ERROR_TOKEN_EXPIRED) return this.fail(exchange, code, `step 5 ${step}: TOKEN_EXPIRED`);
+    if (code === E.CORE_ERROR_TOKEN_EXPIRED) return this.fail(exchange, code, `step 5 authentication: ${step} TOKEN_EXPIRED`);
     this.security_log(exchange, failure_reason(code));
     if (!(await this.count_ip(exchange))) return false;
-    return this.fail(exchange, code, `step 5 ${step}: ${core_error_name(code)}`);
+    return this.fail(exchange, code, `step 5 authentication: ${step} ${core_error_name(code)}`);
   }
 
   /** A stored response of step 5: answered, or `INVALID_REQUEST` for another request name. */
   private stored(exchange: Exchange, stored: Uint8Array | null | 'NAME_MISMATCH'): boolean {
     if (stored === 'NAME_MISMATCH') {
       this.security_log(exchange, 'request_name_mismatch');
-      return this.fail(exchange, E.CORE_ERROR_INVALID_REQUEST, 'step 5: the request ID has a stored response of another request');
+      return this.fail(exchange, E.CORE_ERROR_INVALID_REQUEST, 'step 5 authentication: the request ID has a stored response of another request');
     }
     if (stored !== null) return this.respond_bytes(exchange, stored);
     return true;
@@ -586,14 +610,27 @@ export class Pipeline {
       detail.until_at = ban.until_at;
       detail.deletion_url = this.deletion_url();
       detail.public_code = storage.get_user_record(storage.read_db(), user_id)?.public_code ?? '';
-      return this.fail(exchange, E.CORE_ERROR_BANNED, 'step 6 ban', detail);
+      return this.fail(exchange, E.CORE_ERROR_BANNED, 'step 6 ban: admin-api.is_banned is true', detail);
     }
+    if (!this.check_min_version(exchange)) return false;
     const headers = exchange.headers as CommonHeaders;
     const server = this.s.server;
     const result = check_data_version(headers.data_version, server.client_data_version, server.compat_client_data_version, DATA_HASH_EXEMPT_RPC.has(target.name), headers.client_version, (v) => game_update.is_data_update_ready(v));
-    if (result === 'APP_UPDATE_REQUIRED') return this.fail(exchange, E.CORE_ERROR_APP_UPDATE_REQUIRED, 'step 7 data version: no data version with this protocol hash');
-    if (result === 'DATA_UPDATE_REQUIRED') return this.fail(exchange, E.CORE_ERROR_DATA_UPDATE_REQUIRED, 'step 7 data version: the data hash differs');
+    if (result === 'APP_UPDATE_REQUIRED') return this.fail(exchange, E.CORE_ERROR_APP_UPDATE_REQUIRED, 'step 7 app version and data version: no data version with this protocol hash');
+    if (result === 'DATA_UPDATE_REQUIRED') return this.fail(exchange, E.CORE_ERROR_DATA_UPDATE_REQUIRED, 'step 7 app version and data version: the data hash differs');
     return true;
+  }
+
+  /**
+   * The minimum app version judgement of step 7: `APP_UPDATE_REQUIRED` when `X-Ogw-Client-Version` is not empty and
+   * `game-update.is_below_min_version` is `true`. `FinishPlaySession`, `ContinuePlaySession` and `ReportMatchResult`
+   * skip it, to receive the continue and the result of a play started before `min_version` was raised.
+   */
+  private check_min_version(exchange: Exchange): boolean {
+    if (DATA_HASH_EXEMPT_RPC.has(exchange.name)) return true;
+    const headers = exchange.headers as CommonHeaders;
+    if (headers.client_version === '' || !this.s.deps.game_update.is_below_min_version(headers.client_version, headers.platform)) return true;
+    return this.fail(exchange, E.CORE_ERROR_APP_UPDATE_REQUIRED, 'step 7 app version and data version: below min_version of the deploy list');
   }
 
   /** Step 8. */
@@ -695,12 +732,12 @@ export class Pipeline {
   /** Step 17 of the transaction's outcome. */
   private finish(exchange: Exchange, outcome: TransactionOutcome, notes: TransactionNotes): void {
     if (outcome === 'WITHDRAWN') {
-      this.fail(exchange, E.CORE_ERROR_UNAUTHORIZED, 'step 13: the user is withdrawn');
+      this.fail(exchange, E.CORE_ERROR_UNAUTHORIZED, 'step 13 transaction start: the user is withdrawn');
       return;
     }
     if (outcome === 'FAILED') {
       this.error_log(exchange, 'request transaction failed', null);
-      this.fail(exchange, E.CORE_ERROR_INTERNAL, 'step 13: the request transaction failed');
+      this.fail(exchange, E.CORE_ERROR_INTERNAL, 'step 13 transaction start: the request transaction failed');
       return;
     }
     if (typeof outcome !== 'number') {
@@ -709,15 +746,15 @@ export class Pipeline {
     }
     if (notes.mismatch) {
       this.security_log(exchange, 'request_name_mismatch');
-      this.fail(exchange, outcome, 'step 14: the request ID has a stored response of another request');
+      this.fail(exchange, outcome, 'step 14 idempotency: the request ID has a stored response of another request');
       return;
     }
     if (notes.outside !== null) {
       this.error_log(exchange, `core rpc ${exchange.name} returned GameError ${String(notes.outside)}, which is not in its core_errors`, null);
-      this.fail(exchange, outcome, `step 15: GameError ${String(notes.outside)} is not in the core_errors of ${exchange.name}`);
+      this.fail(exchange, outcome, `step 15 handler run: GameError ${String(notes.outside)} is not in the core_errors of ${exchange.name}`);
       return;
     }
-    this.fail(exchange, outcome, `step 15 handler: ${outcome >= 1000 ? `GameError ${String(outcome)}` : core_error_name(outcome)}`);
+    this.fail(exchange, outcome, `step 15 handler run: ${outcome >= 1000 ? `GameError ${String(outcome)}` : core_error_name(outcome)}`);
   }
 
   /** Steps 5 to 17. */
@@ -730,7 +767,7 @@ export class Pipeline {
     if (!(await this.count_user(exchange, user_id))) return;
     // 9. kill switch
     if (!target.cheat && this.s.deps.admin_api.is_kill_switched(target.name)) {
-      this.fail(exchange, E.CORE_ERROR_FEATURE_DISABLED, 'step 9 kill switch');
+      this.fail(exchange, E.CORE_ERROR_FEATURE_DISABLED, 'step 9 kill switch: admin-api.is_kill_switched is true');
       return;
     }
     const message = this.decode(exchange, target.info, (m) => target.validate(m));
@@ -779,7 +816,7 @@ export class Pipeline {
   }
 
   async handle_route(route: RouteEntry, req: IncomingMessage, res: ServerResponse, path: string, query: string, upgrade: RouteRequest['upgrade']): Promise<void> {
-    const started_at = this.s.deps.server_time.clock_now();
+    const started_at = start_of(req);
     try {
       const output = await route.handler(this.route_request(req, path, query, upgrade), this.client_ip_of(req));
       if (output === null) {
@@ -811,11 +848,11 @@ export class Pipeline {
       request_id: null,
       request: null,
       message: 'request',
-      fields: { error_code, duration_ms: Number(this.s.deps.server_time.clock_now() - started_at), client_version: null, platform: null, seed: null },
+      fields: { error_code, duration_ms: elapsed_ms(started_at), client_version: null, platform: null, seed: null },
     });
   }
 
-  /** A WebSocket upgrade request, inside `logging.with_request_ip`: the route of its path, or the connection is closed. */
+  /** A WebSocket upgrade request, inside `logging.with_request_ip`: the route of its path, or HTTP 404 and the connection is closed. */
   handle_upgrade(req: IncomingMessage, socket: Duplex, head: Buffer): Promise<void> {
     return this.s.deps.logging.with_request_ip(this.client_ip_of(req), () => this.upgrade(req, socket, head));
   }
@@ -824,13 +861,14 @@ export class Pipeline {
     const { path, query } = split_url(req.url ?? '/');
     const route = this.find_route(req.method ?? '', path);
     if (route === null) {
-      socket.destroy();
+      // A path without a route gets 404 as on the path table, with no `request` log.
+      answer_and_close(socket, 'HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\nConnection: close\r\n\r\n');
       return;
     }
-    const started_at = this.s.deps.server_time.clock_now();
+    const started_at = start_of(req);
     try {
       const output = await route.handler(this.route_request(req, path, query, { socket, head: new Uint8Array(head), raw: req }), this.client_ip_of(req));
-      if (output !== null) socket.end(`HTTP/1.1 ${String(output.status)} \r\nConnection: close\r\n\r\n`);
+      if (output !== null) answer_and_close(socket, `HTTP/1.1 ${String(output.status)} \r\nConnection: close\r\n\r\n`);
       this.route_log(started_at, 0);
     } catch (error) {
       this.error_log(null, `route ${route.key} failed`, error);
@@ -838,4 +876,14 @@ export class Pipeline {
       this.route_log(started_at, E.CORE_ERROR_INTERNAL);
     }
   }
+}
+
+/**
+ * Writes the answer of an upgrade request that is not taken over, and closes the connection once it is written, as
+ * `node:http` closes a `Connection: close` answer: the client does not keep the connection, or its request, open.
+ */
+function answer_and_close(socket: Duplex, head: string): void {
+  socket.end(head, () => {
+    socket.destroy();
+  });
 }

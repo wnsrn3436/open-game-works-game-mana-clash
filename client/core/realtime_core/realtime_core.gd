@@ -175,6 +175,8 @@ static func init() -> bool:
 
 static func release() -> void:
 	if not _is_initialized:
+		# Not initialized: deletes only what was set before `init` (the transport).
+		_transport = null
 		return
 	var node: Node = _node
 	if is_instance_valid(node) and EventCore.is_initialized():
@@ -288,13 +290,13 @@ static func leave() -> void:
 				return
 			var waiter: _MATCH_WAITER = _waiter
 			_transport.cancel_matching()
-			_transport.close()
+			_transport.close(false)
 			_set_none()
 			_finish(waiter, MatchJoinStatus.CANCELLED, 0)
 		MatchState.CONNECTING:
 			var waiter: _MATCH_WAITER = _waiter
 			_send_leave_notice(_LEAVE_LEFT)
-			_transport.close()
+			_transport.close(false)
 			_set_none()
 			_finish(waiter, MatchJoinStatus.CANCELLED, 0)
 		MatchState.PLAYING:
@@ -402,7 +404,7 @@ static func leave_room() -> void:
 		_transport.leave_room()
 		# The transport may hold a match it read in this `poll`, whose match found the rest of the `poll` discards.
 		if _state == MatchState.NONE:
-			_transport.close()
+			_transport.close(false)
 		waiter.finish(false, 0)
 		return
 	if _room == null:
@@ -608,24 +610,22 @@ static func _on_match_found(info: MatchInfo) -> void:
 		# In `None` the server still holds this client in that match. In `Connecting` and `Playing`, `close` would end the
 		# running match.
 		if _state == MatchState.NONE:
-			_transport.close()
+			_transport.close(false)
 		return
 	if member_start:
 		_begin_match(MatchOrigin.ROOM_MEMBER)
-	if _origin == MatchOrigin.ROOM_MEMBER and not _room_started_published:
-		var change_count: int = _change_count
-		_publish_room_match_started()
-		# A subscriber that left the room or released the module ended this match. In `None`, what `_begin_match` set stays
-		# unless it is cleared here.
-		if change_count != _change_count:
-			if _is_initialized and _state == MatchState.NONE:
-				_set_none()
-			return
 	if not _is_valid_info(info):
 		_fail_match(CoreContract.MatchFailReason.MATCH_FAIL_REASON_UNSPECIFIED, 0, "match found failed the MatchInfo check", true)
 		return
 	_info = info._copy()
 	_enter_connecting()
+	# A member that receives its match found in `None` became `Connecting` only now, so the event goes out in `Connecting`.
+	if _origin == MatchOrigin.ROOM_MEMBER and not _room_started_published:
+		var waiter: _MATCH_WAITER = _waiter
+		_publish_room_match_started()
+		# A subscriber that left the match or released the module ended it. `leave_room` in `Connecting` does not.
+		if waiter != _waiter:
+			return
 	for i: int in _peer_states.size():
 		if i != _info.my_index:
 			_transport.connect_peer(i)
@@ -764,7 +764,8 @@ static func _leave_handling(participant: int, reason: PeerLeaveReason) -> void:
 
 static func _end_match_now(reason: MatchEndReason) -> void:
 	_send_leave_notice(_LEAVE_ENDED if reason == MatchEndReason.ENDED else _LEAVE_LEFT)
-	_transport.close()
+	# Only `Ended` is a match end that does not forfeit (`Left` and `BackgroundTimeout` do).
+	_transport.close(reason != MatchEndReason.ENDED)
 	var match_id: String = _info.match_id
 	_set_none()
 	var event: MatchEndedEvent = EventCore.acquire(MatchEndedEvent) as MatchEndedEvent
@@ -792,7 +793,7 @@ static func _fail_match(reason: CoreContract.MatchFailReason, error_code: int, m
 		LogCore.log_warn(_TAG, message)
 	var waiter: _MATCH_WAITER = _waiter
 	if _transport != null:
-		_transport.close()
+		_transport.close(false)
 	_set_none()
 	if waiter != null:
 		waiter.finish(MatchJoinStatus.FAILED, reason, error_code)
@@ -1109,7 +1110,7 @@ static func _on_room_updated(info: RoomInfo) -> void:
 		elif _room.status == CoreContract.RoomStatus.ROOM_STATUS_OPEN and (_origin == MatchOrigin.ROOM_MEMBER or _room_matching_received):
 			var waiter: _MATCH_WAITER = _waiter
 			# The transport may hold a match it read in this `poll`, whose match found the rest of the `poll` discards.
-			_transport.close()
+			_transport.close(false)
 			_set_none()
 			_finish(waiter, MatchJoinStatus.CANCELLED, 0)
 	elif _state == MatchState.NONE and _room.status == CoreContract.RoomStatus.ROOM_STATUS_MATCHING:
@@ -1162,8 +1163,9 @@ static func _on_room_kicked() -> void:
 		return
 	_room = null
 	_change_count += 1
+	var matching: _MATCH_WAITER = _matching_waiter()
 	_publish_room_changed(RoomChangeReason.KICKED)
-	_cancel_room_matching()
+	_cancel_room_matching(matching)
 
 
 ## `leave_room` in a room.
@@ -1171,23 +1173,29 @@ static func _leave_room_now() -> void:
 	_transport.leave_room()
 	# The transport may hold a match it read in this `poll`, whose match found the rest of the `poll` discards.
 	if _state == MatchState.NONE:
-		_transport.close()
+		_transport.close(false)
 	_room = null
 	_change_count += 1
 	_room_leave_count += 1
 	# `Matching` ends below. A match in `Connecting` or `Playing` goes on, so its other notifications stay handled.
 	if _state == MatchState.NONE or _state == MatchState.MATCHING:
 		_room_leave_none_count += 1
+	var matching: _MATCH_WAITER = _matching_waiter()
 	_publish_room_changed(RoomChangeReason.LEFT)
-	_cancel_room_matching()
+	_cancel_room_matching(matching)
 
 
-## Ends `Matching` with `close`, `None` and `Cancelled` after leaving the room.
-static func _cancel_room_matching() -> void:
-	if _state != MatchState.MATCHING:
+## The waiter of the current `Matching`; null in other states.
+static func _matching_waiter() -> _MATCH_WAITER:
+	return _waiter if _state == MatchState.MATCHING else null
+
+
+## Ends with `close`, `None` and `Cancelled` the `Matching` of `waiter` that was running when the room was left. A
+## `Matching` that a `RoomChangedEvent` subscriber started belongs to no room and goes on.
+static func _cancel_room_matching(waiter: _MATCH_WAITER) -> void:
+	if waiter == null or _state != MatchState.MATCHING or _waiter != waiter:
 		return
-	var waiter: _MATCH_WAITER = _waiter
-	_transport.close()
+	_transport.close(false)
 	_set_none()
 	_finish(waiter, MatchJoinStatus.CANCELLED, 0)
 

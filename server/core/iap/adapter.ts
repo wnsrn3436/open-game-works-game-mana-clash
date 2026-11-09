@@ -1,6 +1,6 @@
 /**
  * The store adapter interface of `iap` (adapter keys `iap-apple`, `iap-google`): receipt verification, subscription
- * status lookup, purchase acknowledgement and store notification parsing. The fake adapter (`dev/adapters/fake.ts`),
+ * status lookup, purchase acknowledgement, the refund list (`### refund lookup`) and store notification parsing. The fake adapter (`dev/adapters/fake.ts`),
  * `iap-apple`, `iap-apple-sandbox` and `iap-google` (`adapters/`) implement it.
  */
 import type * as CoreContract from '../../generated/contract/core_contract.ts';
@@ -50,6 +50,13 @@ export interface SubscriptionSnapshot {
   readonly test: boolean;
 }
 
+/**
+ * The subscription status lookup result `gone` (`### store notification`, `SyncSubscriptions`): the store no longer
+ * answers for that subscription because it ended long ago (`iap-google` HTTP 410), so there is no snapshot. In the
+ * grant order it is `INVALID` without store transaction info.
+ */
+export type LookupGone = 'gone';
+
 export type AckKind = 'consume' | 'acknowledge' | 'subscription_acknowledge';
 
 export type NotificationKind = 'REFUND' | 'SUBSCRIPTION' | 'OTHER';
@@ -59,6 +66,17 @@ export interface StoreNotification {
   readonly notification_id: string;
   readonly kind: NotificationKind;
   readonly value: string;
+}
+
+/**
+ * One page of the store's refund list (`### refund lookup`): the transaction IDs of the refunds of that page in list
+ * order, the next page token (empty on the last page), and the number of list elements the adapter left out because
+ * their signature check failed (iap leaves one `error` log per element).
+ */
+export interface RefundPage {
+  readonly transaction_ids: readonly string[];
+  readonly next_page_token: string;
+  readonly unverified: number;
 }
 
 /**
@@ -74,9 +92,17 @@ export interface AdapterCall {
 
 export interface StoreAdapter {
   verify(receipt: string, call: AdapterCall): Promise<Verification | AdapterFailure>;
-  /** `latest` is the store transaction just verified, or null when the lookup comes from a notification or a sync. */
-  lookup_subscription(original_transaction_id: string, latest: StoreTransaction | null, call: AdapterCall): Promise<SubscriptionSnapshot | AdapterFailure>;
+  /**
+   * `latest` is the store transaction just verified, or null when the lookup comes from a notification or a sync.
+   * `gone` is the lookup result of a subscription the store no longer answers for.
+   */
+  lookup_subscription(original_transaction_id: string, latest: StoreTransaction | null, call: AdapterCall): Promise<SubscriptionSnapshot | LookupGone | AdapterFailure>;
   acknowledge(transaction: StoreTransaction, kind: AckKind, call: AdapterCall): Promise<null | AdapterFailure>;
+  /**
+   * `list_refunds`: one page of the refunds of the window `[window_start, window_end)` (Unix ms). `rejected` is the store
+   * not accepting the request; any other failure is an adapter call failure.
+   */
+  list_refunds(window_start: bigint, window_end: bigint, page_token: string, call: AdapterCall): Promise<RefundPage | AdapterFailure>;
   /**
    * Checks the signature and reads a store notification. The fake adapter has none: its signature uses the server
    * instance's fake notification key, which the DEV code holds.
